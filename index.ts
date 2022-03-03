@@ -1,14 +1,31 @@
 import { PrismaClient } from "@prisma/client";
-
+ 
+interface Shops {
+  name: string;
+  direction: string;
+  image: string;
+  description: string;
+}
 const prisma = new PrismaClient()
 async function main() {
     await prisma.$connect()
     await prisma.shops.create({
-  data: {
+   data: {
     name : "mariano",
     direction : "lasdas 123",
     image : "asd",
-    description : "lala"
+    description : "lala",
+    products : {
+      create : [{
+        name : "papa",
+        image : "as",
+        description : "asd",
+        price : 2,
+        stock : 3,
+
+      }
+      ]
+    }
   }
 })
 const allUsers = await prisma.shops.findMany()
