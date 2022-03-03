@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { allUsersList } from "./user.controller";
+import { allProducts } from "./product.controller";
 
 const prisma: PrismaClient = new PrismaClient();
 
@@ -29,4 +30,15 @@ export const getShops = async (req: Request, res: Response) => {
     if (isShop) {
     }
   } catch (error) {}
+};
+
+export const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    await prisma.$connect();
+    const products = await allProducts(prisma);
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.send(error);
+  }
 };
