@@ -1,5 +1,5 @@
 /**
- * Required External Modules and Interfaces
+ * Required External Modules
  */
 import { Router } from "express";
 import { getAllUsers } from "../controllers";

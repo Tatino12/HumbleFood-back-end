@@ -1,16 +1,19 @@
+/**
+ * Required External Modules and Interfaces
+ */
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { allUsersList } from "./user.controller";
 import { allProducts } from "./product.controller";
 
-const prisma: PrismaClient = new PrismaClient();
+
+const prisma: PrismaClient = new PrismaClient()
+prisma.$connect().then(() => console.log('listo'))
 
 export const getAllUsers = async (req: Request, res: Response) => {
-  try {
-    await prisma.$connect();
-
-    const userList = await allUsersList(prisma);
-    if (!userList) throw new Error();
+    try {
+        const userList = await allUsersList(prisma);
+        if(!userList) throw new Error()
 
     res.status(200).json(userList);
   } catch (error) {
@@ -25,11 +28,15 @@ export const getAllUsers = async (req: Request, res: Response) => {
  *
  */
 export const getShops = async (req: Request, res: Response) => {
-  try {
-    const { isShop } = req.query;
-    if (isShop) {
+
+    try {
+        const { isShop } = req.query;
+        if(isShop) {
+
+        }
+    catch (error) {
+        
     }
-  } catch (error) {}
 };
 
 export const getAllProducts = async (req: Request, res: Response) => {
