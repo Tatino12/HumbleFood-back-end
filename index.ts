@@ -1,7 +1,7 @@
 //import { PrismaClient } from "@prisma/client";
 import express from "express";
 //import routes from "./src/routes";
-import {router } from './src/routes/index'
+import {router } from './src/routes/routes'
 
 
 // class Server {
