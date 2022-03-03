@@ -1,28 +1,22 @@
 import { PrismaClient } from "@prisma/client";
 
-interface Shops {
-  name: string;
-  direction: string;
-  image: string;
-  description: string;
-}
 const prisma = new PrismaClient();
 async function main() {
   await prisma.$connect();
   await prisma.users.create({
     data: {
-      name: "algo",
-      name_user: "fdsa",
-      email: "fdsafdsa",
-      direction: "asdf",
-      rol: 23,
+      name: "pikachu",
+      name_user: "tati",
+      email: "elmejor@gmail.com",
+      direction: "tucasa 123",
+      rol: 3,
       shops: {
         create: [
           {
-            name: "fdsa",
-            direction: "fdsa",
-            image: "fdsa",
-            description: "fdsa",
+            name: "asd",
+            direction: "lcdth 12",
+            image: "asd.png",
+            description: "lalala",
           },
         ],
       },

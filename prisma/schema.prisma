@@ -52,7 +52,7 @@ model Products {
   categoriesId    String[] @db.ObjectId
   shop            Shops @relation(fields: [shopId], references: [id])
   shopId          String @db.ObjectId
-  order           Orders @relation(fields: [orderId], references: [id])
+  order           Orders? @relation(fields: [orderId], references: [id])
   orderId         String @db.ObjectId
 }
 
