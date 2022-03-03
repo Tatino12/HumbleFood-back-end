@@ -2,11 +2,11 @@
   "name": "back-end",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.ts",
   "scripts": {
     "tsc": "tsc -w",
-    "start": "tsc && node ./buld/index.js",
-    "dev": "nodemon server.js"
+    "start": "tsc && node ./build/index.js",
+    "dev": "nodemon index.ts"
   },
   "repository": {
     "type": "git",
