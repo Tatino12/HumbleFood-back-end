@@ -1,19 +1,18 @@
 // routes
 import { Request, Response } from "express";
 import { Router } from "express";
-import { Products } from "../controllers/aux";
-import { User } from '../Items/User.interface'
-import { PrismaClient } from "@prisma/client"
+import { User } from "../Items/User.interface";
+import { PrismaClient } from "@prisma/client";
 
-export const router = Router()
-const prisma: PrismaClient = new PrismaClient()
+export const router = Router();
+const prisma: PrismaClient = new PrismaClient();
 
-router.get('/', async (req: Request, res: Response) => {
-    await prisma.$connect()
-    const users = await prisma.users.findMany()
-    console.log(users)
-    res.json(users)
-})
+router.get("/", async (req: Request, res: Response) => {
+  await prisma.$connect();
+  const users = await prisma.users.findMany();
+  console.log(users);
+  res.json(users);
+});
 
 // class Routes {
 //     router : Router
@@ -36,7 +35,5 @@ router.get('/', async (req: Request, res: Response) => {
 // const routes = new Routes()
 // routes.routes()
 // export default routes.router
-
-
 
 // module.exports = router
