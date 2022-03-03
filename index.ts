@@ -1,22 +1,42 @@
 import { PrismaClient } from "@prisma/client";
+import express from "express";
+
+class Server {
+  app: express.Application;
+
+  constructor() {
+    this.app = express();
+    this.config();
+  }
+
+  config() {
+    this.app.use(express.json());
+  }
+
+  start() {
+    this.app.listen(3001, () => {
+      console.log("servidor en el purto 3001");
+    });
+  }
+}
 
 const prisma = new PrismaClient();
 async function main() {
   await prisma.$connect();
   await prisma.users.create({
     data: {
-      name: "pikachu",
-      name_user: "tati",
-      email: "elmejor@gmail.com",
-      direction: "tucasa 123",
+      name: "pikachu2",
+      name_user: "tati2",
+      email: "elmejo2r@gmail.com",
+      direction: "tucasa 1232",
       rol: 3,
       shops: {
         create: [
           {
-            name: "asd",
-            direction: "lcdth 12",
-            image: "asd.png",
-            description: "lalala",
+            name: "asd2",
+            direction: "lcdth 122",
+            image: "asd2.png",
+            description: "lal2ala",
           },
         ],
       },
@@ -33,3 +53,6 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
+const server = new Server();
+server.start();
