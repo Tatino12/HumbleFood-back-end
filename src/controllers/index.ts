@@ -12,7 +12,6 @@ export const getAllUsers = async (req: Request, res: Response) => {
         if(!userList) throw new Error()
 
         res.status(200).json(userList);
-
     } catch (error) {
         res.status(500).json({msg: "Error"})
     }
@@ -28,11 +27,7 @@ export const getShops = async (req: Request, res: Response) => {
     try {
         const { isShop } = req.query;
         if(isShop) {
-
         }
-
-        
-
     } catch (error) {
         
     }
