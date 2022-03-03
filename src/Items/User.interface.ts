@@ -1,4 +1,3 @@
-import { Shop } from "./Shop.interface";
 
 export interface BaseUser {
   name: string
@@ -12,4 +11,7 @@ export interface User extends BaseUser {
   id: string
 }
 
+export interface Users {
+  [key: number]: User
+}
 

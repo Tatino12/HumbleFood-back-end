@@ -10,6 +10,14 @@ prisma.$connect().then(() => console.log('listo'))
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
+        // let { pageBase } = req.query;
+        // const pageAsNumber = parseInt(pageBase);
+
+        // if(!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+        //     pageBase = pageAsNumber
+        // }
+
+
         const userList = await allUsersList(prisma);
         if(!userList) throw new Error()
 
