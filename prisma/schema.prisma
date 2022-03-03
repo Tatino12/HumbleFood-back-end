@@ -15,7 +15,7 @@ model Users {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   name_user String
-  email     String
+  email     String @unique
   direction String
   rol       Int
   shops     Shops[] 
