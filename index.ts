@@ -9,15 +9,26 @@ interface Shops {
 const prisma = new PrismaClient();
 async function main() {
   await prisma.$connect();
-  await prisma.shops.create({
+  await prisma.users.create({
     data: {
-      name: "mariano",
-      direction: "lasdas 123",
-      image: "asd",
-      description: "lala",
+      name: "algo",
+      name_user: "fdsa",
+      email: "fdsafdsa",
+      direction: "asdf",
+      rol: 23,
+      shops: {
+        create: [
+          {
+            name: "fdsa",
+            direction: "fdsa",
+            image: "fdsa",
+            description: "fdsa",
+          },
+        ],
+      },
     },
   });
-  const allUsers = await prisma.shops.findMany();
+  const allUsers = await prisma.users.findMany();
   console.log(allUsers);
 }
 
