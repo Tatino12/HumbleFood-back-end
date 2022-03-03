@@ -1,13 +1,15 @@
+/**
+ * Required External Modules and Interfaces
+ */
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client"
 import { allUsersList } from "./user.controller"
 
 const prisma: PrismaClient = new PrismaClient()
+prisma.$connect().then(() => console.log('listo'))
 
 export const getAllUsers = async (req: Request, res: Response) => {
     try {
-        await prisma.$connect()
-
         const userList = await allUsersList(prisma);
         if(!userList) throw new Error()
 
@@ -31,7 +33,7 @@ export const getShops = async (req: Request, res: Response) => {
 
         }
 
-        
+
 
     } catch (error) {
         
