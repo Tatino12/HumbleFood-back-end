@@ -7,10 +7,17 @@ class Server {
   constructor() {
     this.app = express()
     this.config()
+    this.routes()
   }
 
   config() {
     this.app.use(express.json())
+  }
+
+  routes() {
+    this.app.use('/',(req, res) => {
+      res.send("hola")
+    })
   }
   
   start() {
