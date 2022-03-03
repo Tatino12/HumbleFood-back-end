@@ -1,20 +1,32 @@
-// controllers
+import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { allUsersList } from "./user.controller";
 
-export class Products {
-  prisma: PrismaClient;
-  constructor() {
-    this.prisma = new PrismaClient();
-    this.conection();
-  }
-  async conection() {
-    await this.prisma.$connect();
-  }
-  async getProducts() {
-    const allProducts = await this.prisma.products.findMany();
-    return allProducts;
-  }
-}
+const prisma: PrismaClient = new PrismaClient();
 
-const products = new Products();
-export default products;
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    await prisma.$connect();
+
+    const userList = await allUsersList(prisma);
+    if (!userList) throw new Error();
+
+    res.status(200).json(userList);
+  } catch (error) {
+    res.status(500).json({ msg: "Error" });
+  }
+};
+
+/**
+ * Params
+ *      all shops
+ * id   un tienda
+ *
+ */
+export const getShops = async (req: Request, res: Response) => {
+  try {
+    const { isShop } = req.query;
+    if (isShop) {
+    }
+  } catch (error) {}
+};
