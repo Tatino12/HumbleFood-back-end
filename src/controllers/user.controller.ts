@@ -8,6 +8,7 @@ export const allUsersList = async (prisma: PrismaClient, page: number): Promise<
       take: 10,
       where: {}
     });
+    
     return usersLis;
   } catch (error) {
     return null;
