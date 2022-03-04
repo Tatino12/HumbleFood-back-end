@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { Product } from "../Items/Product.interface";
 
+const prisma: PrismaClient = new PrismaClient();
+
 export const getProducts = async (
   prisma: PrismaClient
 ): Promise<null | Product[]> => {
@@ -12,43 +14,45 @@ export const getProducts = async (
   }
 };
 
-export const filterbyCategory = (products: any, category: any) => {
-  let filteredProducts = [];
-  for (let i = 0; i < products.length; i++) {
-    if (products[i].categoriesId.includes(category)) {
-      filteredProducts.push(products[i]);
+export const filterbyCategory = async (category: any) => {
+  const idProduct : any[] = await prisma.categories.findMany({
+    where: {
+      name: category
+    }, 
+    select:{
+      productId: true
     }
-  }
-  return filteredProducts;
-};
-
-export const filterByName = (products: any, name: any) => {
-  let filteredProducts = [];
-  for (let i = 0; i < products.length; i++) {
-    if (products[i].name === name) {
-      filteredProducts.push(products[i]);
+  })
+  
+  const filterCategory : any[] = await prisma.products.findMany({
+    where: {
+      id: { in: idProduct}
     }
-  }
-  return filteredProducts;
+  })
+  return filterCategory
 };
 
-export const filterById = (products: any, id: any) => {
-let filteredProducts = [];
-for (let i = 0; i < products.length; i++) {
-  if (products[i].id === id) {
-    filteredProducts.push(products[i]);
-  }
-}
-return filteredProducts;
+export const filterByName = async ( name: any) => {
+  const filterName : any[] = await prisma.products.findMany({
+      where:{
+        name
+      }
+  })
+  return filterName;
+};
+
+export const filterById = async (id: any) => {
+  const filterID : any[] = await prisma.products.findMany({
+    where: {
+      id
+    }
+  })
+  return filterID;
 };
 
 
 
-export const saveNewProduct = async (
-  prisma: PrismaClient,
-  product: any,
-  data: any
-) => {
+export const saveNewProduct = async (prisma: PrismaClient, data: any) => {
   try {
     const newProduct = await prisma.products.create({
       data: data,

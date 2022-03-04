@@ -27,11 +27,13 @@
      }
      
      const userList = await allUsersList(prisma, pageBase);
+     //console.log(userList);
+     
      if (!userList) throw new Error();
  
      res.status(200).json(userList);
    } catch (error) {
-     console.log(error)
+     //console.log(error)
      res.status(500).json({ msg: "Error" });
    }
  };
@@ -52,21 +54,21 @@
  
  export const getAllProducts = async (req: Request, res: Response) => {
    try {
-     await prisma.$connect();
      let filteredProducts = [];
-     let { category } = req.query;
+     let { category } = req.query; //nombre de la categoria, no el id
      let { name } = req.query;
      let { id } = req.query;
+    //  console.log(req.query);
      
      const products = await getProducts(prisma);
      if (category) {
-       filteredProducts = filterbyCategory(products, category);
+       filteredProducts = await filterbyCategory(category);
        res.status(200).json(filteredProducts);
      } else if (name) {
-       filteredProducts = filterByName(products, name);
+       filteredProducts = await filterByName(name);
       res.status(200).json(filteredProducts);
      } else if (id){
-       filteredProducts = filterById(products, id);
+       filteredProducts = await filterById(id);
        res.status(200).json(filteredProducts)
      }
      else {
@@ -80,44 +82,47 @@
  
  export const saveProduct = async (req: Request, res: Response) => {
    try {
-    const {
-      name,
-      image,
-      description,
-      price,
-      discount,
-      stock,
-      categoriesId,
-      shopId,
-    } = req.body;
-    const data = {
-      name,
-      image,
-      description,
-      price,
-      discount,
-      stock,
-      categoriesId,
-      shopId,
-    };
-     const resultado = await saveNewProduct(prisma, req.body, data);
+    // const {
+    //   name,
+    //   image,
+    //   description,
+    //   price,
+    //   discount,
+    //   stock,
+    //   categoriesId,
+    //   shopId,
+    // } = req.body;
+    const data = req.body
+    // const data = {
+    //   name,
+    //   image,
+    //   description,
+    //   price,
+    //   discount,
+    //   stock,
+    //   categoriesId,
+    //   shopId,
+    // };
+    console.log(data);
+    
+     const resultado = await saveNewProduct(prisma, data);
      console.log(resultado);
  
-     res.json(resultado);
+     res.status(201).json({msj: "Producto creado correctamente", product: resultado});
    } catch (error) {
      console.error(error);
-     res.status(400).json({ msg: "error" });
+     res.status(401).json({ msg: "error", error: error });
    }
  };
 
  export const addUser = async (req: Request, res: Response) => {
-try {
-  const { userId, name, name_user, email, direction, rol, shopsId } = req.body;
-  const data = { userId, name, name_user, email, direction, rol, shopsId }
-  const user = await saveNewUser(prisma, data)
-  res.status(200).send(user);
-} catch (error) {
-  console.error(error);
-     res.status(400).json({ msg: "error" });
-}
+    try {
+      const { userId, name, name_user, email, direction, rol, shopsId } = req.body;
+      const data = { userId, name, name_user, email, direction, rol, shopsId }
+      const user = await saveNewUser(prisma, data)
+      res.status(201).send({msj: "Usuario creado correctamente", user: user});
+    } catch (error) {
+      console.error(error);
+        res.status(401).json({ msg: "error", error: error });
+    }
  }

@@ -13,11 +13,8 @@ export const router = Router();
  */
 
 router.get("/shop");
-
 router.get("/users", getAllUsers);
 router.post("/user", addUser);
-
 router.get("/products", getAllProducts);
-
 router.post("/product", saveProduct);
 
