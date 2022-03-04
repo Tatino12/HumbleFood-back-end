@@ -5,10 +5,10 @@
  import { PrismaClient } from "@prisma/client";
  import { allUsersList } from "./user.controller";
  import {
-   allProducts,
+  getProducts,
    saveNewProduct,
    filterbyCategory,
-   searchName
+   filterByName,
  } from "./product.controller";
  import { Product } from "../Items/Product.interface";
  
@@ -53,11 +53,16 @@
      await prisma.$connect();
      let filteredProducts = [];
      let { category } = req.query;
-     const products = await allProducts(prisma);
+     let { name } = req.query;
+     const products = await getProducts(prisma);
      if (category) {
        filteredProducts = filterbyCategory(products, category);
        res.status(200).json(filteredProducts);
-     } else {
+     } else if (name) {
+       filteredProducts = filterByName(products, name);
+      res.status(200).json(filteredProducts);
+     } 
+     else {
        res.status(200).json(products);
      }
    } catch (error) {
@@ -65,30 +70,30 @@
    }
  };
 
- export const getProducts = async (req: Request, res: Response) => {
-  try {
-    await prisma.$connect();
-    let search = []
-    let { name } = req.query;
-    const prod = await allProducts(prisma)
-    if (name) {
-      search = await searchName(prod, name);
-      res.status(200).json(search);
-    } else {
-      res.status(400).send(prod)
-    }
-
-  } catch (err) {
-    res.status(404).send("Not found");
-  }
-};
-
-
-
  
  export const saveProduct = async (req: Request, res: Response) => {
    try {
-     const resultado = await saveNewProduct(prisma, req.body);
+    const {
+      name,
+      image,
+      description,
+      price,
+      discount,
+      stock,
+      categoriesId,
+      shopId,
+    } = req.body;
+    const data = {
+      name,
+      image,
+      description,
+      price,
+      discount,
+      stock,
+      categoriesId,
+      shopId,
+    };
+     const resultado = await saveNewProduct(prisma, req.body, data);
      console.log(resultado);
  
      res.json(resultado);

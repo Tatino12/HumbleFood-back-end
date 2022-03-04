@@ -1,11 +1,14 @@
 export interface Product {
-  id: String;
-  name: String;
-  description: String;
-  price: Number;
-  discount: String;
-  stock: Number;
-  categoriesId: String[];
-  shopId: String[];
-  orderId: String[];
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  discount: string;
+  stock: number;
+  categoriesId: string[];
+  shopId: string;
+}
+
+export interface Products {
+  [key: number]: Product;
 }
