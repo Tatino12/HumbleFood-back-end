@@ -18,7 +18,7 @@ model Users {
   email     String @unique
   direction String
   rol       Int
-  //shops     Shops[] 
+  shopsId     String[] 
   
 }
 
@@ -35,9 +35,9 @@ model Shops {
 
 model Categories {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
+  name      String     @unique
   //products  Products[] @relation(fields: [productId], references: [id])
-  productId String
+  productId String[]
 }
 
 model Products {
@@ -53,18 +53,21 @@ model Products {
   //shop            Shops @relation(fields: [shopId], references: [id])
   shopId          String
   //order           Orders? @relation(fields: [orderId], references: [id])
-  orderId         String
+  // orderId         String
 }
 
 model Orders {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
-  //products    Products[]
+  state       Int
+  shopId     String
+  productsId  String[]
   //cart        Cart @relation(fields: [cartId], references: [id])
-  cartId      String @db.ObjectId
+  cartId      String //@db.ObjectId Cuidado con este
 }
 
 model Cart {
   id      String     @id @default(auto()) @map("_id") @db.ObjectId
   total   Int
-  //orders  Orders[]
+  ordersId  String[]
+  userId  String 
 }
