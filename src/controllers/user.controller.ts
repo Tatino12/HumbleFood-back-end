@@ -13,3 +13,14 @@ export const allUsersList = async (prisma: PrismaClient, page: number): Promise<
     return null;
   }
 };
+
+export const saveNewUser = async (prisma: PrismaClient, data: any) => {
+  try {
+    const newUser = await prisma.users.create({
+      data
+    })
+    if(newUser) return newUser;
+  } catch (error) {
+    return null;
+  }
+}

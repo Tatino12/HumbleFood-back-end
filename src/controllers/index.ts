@@ -3,14 +3,15 @@
  */
  import { Request, Response } from "express";
  import { PrismaClient } from "@prisma/client";
- import { allUsersList } from "./user.controller";
+ import { allUsersList, saveNewUser } from "./user.controller";
  import {
   getProducts,
    saveNewProduct,
    filterbyCategory,
    filterByName,
+   filterById,
  } from "./product.controller";
- import { Product } from "../Items/Product.interface";
+ 
  
  const prisma: PrismaClient = new PrismaClient();
  prisma.$connect().then(() => console.log("listo"));
@@ -24,12 +25,13 @@
      if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
        pageBase = pageAsNumber;
      }
- 
+     
      const userList = await allUsersList(prisma, pageBase);
      if (!userList) throw new Error();
  
      res.status(200).json(userList);
    } catch (error) {
+     console.log(error)
      res.status(500).json({ msg: "Error" });
    }
  };
@@ -54,6 +56,8 @@
      let filteredProducts = [];
      let { category } = req.query;
      let { name } = req.query;
+     let { id } = req.query;
+     
      const products = await getProducts(prisma);
      if (category) {
        filteredProducts = filterbyCategory(products, category);
@@ -61,7 +65,10 @@
      } else if (name) {
        filteredProducts = filterByName(products, name);
       res.status(200).json(filteredProducts);
-     } 
+     } else if (id){
+       filteredProducts = filterById(products, id);
+       res.status(200).json(filteredProducts)
+     }
      else {
        res.status(200).json(products);
      }
@@ -102,3 +109,15 @@
      res.status(400).json({ msg: "error" });
    }
  };
+
+ export const addUser = async (req: Request, res: Response) => {
+try {
+  const { userId, name, name_user, email, direction, rol, shopsId } = req.body;
+  const data = { userId, name, name_user, email, direction, rol, shopsId }
+  const user = await saveNewUser(prisma, data)
+  res.status(200).send(user);
+} catch (error) {
+  console.error(error);
+     res.status(400).json({ msg: "error" });
+}
+ }
