@@ -12,3 +12,13 @@ export const allProducts = async (
     return null;
   }
 };
+
+export const filterbyCategory = (products: any, category: any) => {
+  let filteredProducts = [];
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].name === category) {
+      filteredProducts.push(category);
+    }
+  }
+  return filteredProducts;
+};
