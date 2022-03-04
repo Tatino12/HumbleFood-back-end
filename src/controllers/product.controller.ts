@@ -1,11 +1,20 @@
 import { PrismaClient } from "@prisma/client";
-import { Product } from "../Items/Product.interface";
+import { Product, ProductOptions } from "../Items/Product.interface";
 
 export const getProducts = async (
-  prisma: PrismaClient
+  prisma: PrismaClient,
+  options: ProductOptions
 ): Promise<null | Product[]> => {
   try {
-    const products: any = await prisma.products.findMany();
+    console.log(options)
+    const products: any = await prisma.products.findMany({
+      where: {
+        id: {
+          equals: "6222055af23dc2135189343d"
+        }
+      },
+    });
+    console.log(products)
     return products;
   } catch (error) {
     return null;

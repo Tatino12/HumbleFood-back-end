@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export interface Product {
   id: string;
   name: string;
@@ -11,4 +13,11 @@ export interface Product {
 
 export interface Products {
   [key: number]: Product;
+}
+
+
+export type ProductOptions = {
+  id?: string
+  name?: string,
+  categoriesId?: string
 }
