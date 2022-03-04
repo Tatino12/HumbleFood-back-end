@@ -22,6 +22,28 @@ export const filterbyCategory = (products: any, category: any) => {
   return filteredProducts;
 };
 
+export const filterByName = (products: any, name: any) => {
+  let filteredProducts = [];
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].name === name) {
+      filteredProducts.push(products[i]);
+    }
+  }
+  return filteredProducts;
+};
+
+export const filterById = (products: any, id: any) => {
+let filteredProducts = [];
+for (let i = 0; i < products.length; i++) {
+  if (products[i].id === id) {
+    filteredProducts.push(products[i]);
+  }
+}
+return filteredProducts;
+};
+
+
+
 export const saveNewProduct = async (
   prisma: PrismaClient,
   product: any,
