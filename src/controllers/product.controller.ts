@@ -22,3 +22,29 @@ export const filterbyCategory = (products: any, category: any) => {
   }
   return filteredProducts;
 };
+
+export const saveNewProduct = async (prisma: PrismaClient, product: any) => {
+  try {
+    let name = "mariano";
+    const newProduct = await prisma.products.create({
+      data: {
+        name: "ethan",
+        image: "http://",
+        description: "un producto",
+        price: 34,
+        discount: "10",
+        stock: 3,
+        categoriesId: "",
+        shopId: "",
+        orderId: "",
+      },
+    });
+
+    if (newProduct) return newProduct;
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
