@@ -8,6 +8,7 @@
    allProducts,
    saveNewProduct,
    filterbyCategory,
+   searchName
  } from "./product.controller";
  import { Product } from "../Items/Product.interface";
  
@@ -63,6 +64,27 @@
      res.send(error);
    }
  };
+
+ export const getProducts = async (req: Request, res: Response) => {
+  try {
+    await prisma.$connect();
+    let search = []
+    let { name } = req.query;
+    const prod = await allProducts(prisma)
+    if (name) {
+      search = await searchName(prod, name);
+      res.status(200).json(search);
+    } else {
+      res.status(400).send(prod)
+    }
+
+  } catch (err) {
+    res.status(404).send("Not found");
+  }
+};
+
+
+
  
  export const saveProduct = async (req: Request, res: Response) => {
    try {

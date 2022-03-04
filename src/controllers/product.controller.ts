@@ -23,6 +23,17 @@ export const filterbyCategory = (products: any, category: any) => {
   return filteredProducts;
 };
 
+export const searchName = (products: any, name: any) => {
+  let search = [];
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].name === name) {
+      search.push(name);
+    }
+  }
+  return search;
+};
+
+
 export const saveNewProduct = async (prisma: PrismaClient, product: any) => {
   try {
     let name = "mariano";
@@ -36,7 +47,7 @@ export const saveNewProduct = async (prisma: PrismaClient, product: any) => {
         stock: 3,
         categoriesId: "",
         shopId: "",
-        orderId: "",
+        
       },
     });
 
