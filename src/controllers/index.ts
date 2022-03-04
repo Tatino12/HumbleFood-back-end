@@ -5,7 +5,7 @@
  import { PrismaClient } from "@prisma/client";
  import { allUsersList } from "./user.controller";
  import {
-   allProducts,
+  getProducts,
    saveNewProduct,
    filterbyCategory,
  } from "./product.controller";
@@ -52,7 +52,7 @@
      await prisma.$connect();
      let filteredProducts = [];
      let { category } = req.query;
-     const products = await allProducts(prisma);
+     const products = await getProducts(prisma);
      if (category) {
        filteredProducts = filterbyCategory(products, category);
        res.status(200).json(filteredProducts);
@@ -66,7 +66,27 @@
  
  export const saveProduct = async (req: Request, res: Response) => {
    try {
-     const resultado = await saveNewProduct(prisma, req.body);
+    const {
+      name,
+      image,
+      description,
+      price,
+      discount,
+      stock,
+      categoriesId,
+      shopId,
+    } = req.body;
+    const data = {
+      name,
+      image,
+      description,
+      price,
+      discount,
+      stock,
+      categoriesId,
+      shopId,
+    };
+     const resultado = await saveNewProduct(prisma, req.body, data);
      console.log(resultado);
  
      res.json(resultado);
