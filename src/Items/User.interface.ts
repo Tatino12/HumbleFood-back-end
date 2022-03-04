@@ -1,4 +1,3 @@
-import { Shop } from "./Shop.interface";
 
 export interface BaseUser {
   name: string;
