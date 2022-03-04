@@ -2,8 +2,7 @@
  * Required External Modules
  */
 import { Router } from "express";
-import { getAllUsers, getAllProducts, saveProduct } from "../controllers";
-
+import { getAllUsers, saveProduct, getAllProducts } from "../controllers";
 /**
  * Router Definition
  */
@@ -19,4 +18,4 @@ router.get("/users", getAllUsers);
 
 router.get("/products", getAllProducts);
 
-router.post('/product', saveProduct)
+router.post("/product", saveProduct);

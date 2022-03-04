@@ -1,13 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { Product } from "../Items/Product.interface";
-import { Products } from "../Items/Products.interface";
 
-export const allProducts = async (
+export const getProducts = async (
   prisma: PrismaClient
-): Promise<null | Products[]> => {
+): Promise<null | Product[]> => {
   try {
-    const productList: Products[] = await prisma.products.findMany();
-    return productList;
+    const products: any = await prisma.products.findMany();
+    return products;
   } catch (error) {
     return null;
   }
@@ -16,28 +15,21 @@ export const allProducts = async (
 export const filterbyCategory = (products: any, category: any) => {
   let filteredProducts = [];
   for (let i = 0; i < products.length; i++) {
-    if (products[i].name === category) {
-      filteredProducts.push(category);
+    if (products[i].categoriesId.includes(category)) {
+      filteredProducts.push(products[i]);
     }
   }
   return filteredProducts;
 };
 
-export const saveNewProduct = async (prisma: PrismaClient, product: any) => {
+export const saveNewProduct = async (
+  prisma: PrismaClient,
+  product: any,
+  data: any
+) => {
   try {
-    let name = "mariano";
     const newProduct = await prisma.products.create({
-      data: {
-        name: "ethan",
-        image: "http://",
-        description: "un producto",
-        price: 34,
-        discount: "10",
-        stock: 3,
-        categoriesId: "",
-        shopId: "",
-        orderId: "",
-      },
+      data: data,
     });
 
     if (newProduct) return newProduct;
