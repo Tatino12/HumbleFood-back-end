@@ -1,23 +1,15 @@
 import { PrismaClient } from "@prisma/client";
-import { Shop } from "../Items/Shop.interface";
 import { User } from "../Items/User.interface";
 
-export const allUsersList = async (
-  prisma: PrismaClient
-): Promise<null | User[]> => {
+export const allUsersList = async (prisma: PrismaClient, page: number): Promise<null | User[]> => {
   try {
-    const usersLis: User[] = await prisma.users.findMany();
+    const usersLis: User[] = await prisma.users.findMany({
+      skip: 10 * page,
+      take: 10,
+      where: {}
+    });
     return usersLis;
   } catch (error) {
     return null;
-  }
-};
-
-export const findAllShops = async (prisma: PrismaClient) => {
-  try {
-    const shopList: Shop[] = await prisma.shops.findMany();
-    return shopList;
-  } catch (error) {
-    return new Error();
   }
 };

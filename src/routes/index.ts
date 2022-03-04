@@ -1,7 +1,6 @@
 // routes
 import { Request, Response } from "express";
 import { Router } from "express";
-import { Products } from "../controllers/aux";
 import { User } from "../Items/User.interface";
 import { PrismaClient } from "@prisma/client";
 
