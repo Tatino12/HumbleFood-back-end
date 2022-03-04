@@ -2,8 +2,9 @@ import { PrismaClient } from "@prisma/client";
 import { Product } from "../Items/Product.interface";
 import { Products } from "../Items/Products.interface";
 
-
-export const allProducts = async (prisma: PrismaClient ): Promise<null | Products[]> => {
+export const allProducts = async (
+  prisma: PrismaClient
+): Promise<null | Products[]> => {
   try {
     const productList: Products[] = await prisma.products.findMany();
     return productList;
@@ -12,9 +13,19 @@ export const allProducts = async (prisma: PrismaClient ): Promise<null | Product
   }
 };
 
+export const filterbyCategory = (products: any, category: any) => {
+  let filteredProducts = [];
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].name === category) {
+      filteredProducts.push(category);
+    }
+  }
+  return filteredProducts;
+};
+
 export const saveNewProduct = async (prisma: PrismaClient, product: any) => {
   try {
-    let name = "mariano"
+    let name = "mariano";
     const newProduct = await prisma.products.create({
       data: {
         name: "ethan",
@@ -25,15 +36,15 @@ export const saveNewProduct = async (prisma: PrismaClient, product: any) => {
         stock: 3,
         categoriesId: "",
         shopId: "",
-        orderId: ""
-      }
-    })
+        orderId: "",
+      },
+    });
 
-    if(newProduct) return newProduct
+    if (newProduct) return newProduct;
 
-    return null
+    return null;
   } catch (error) {
-    console.error(error)
-    return null
+    console.error(error);
+    return null;
   }
-}
+};
