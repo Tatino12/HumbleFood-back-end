@@ -143,5 +143,5 @@ server.use(express.json());
 server.use("/", router);
 
 server.listen(3001, () => {
-  console.log("servidor en el puerto 3000");
+  console.log("servidor en el puerto 3001");
 });

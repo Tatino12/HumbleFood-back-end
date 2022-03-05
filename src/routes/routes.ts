@@ -16,6 +16,8 @@ router.get("/shop");
 
 router.get("/users", getAllUsers);
 
+router.post("/user");
+
 router.get("/products", getAllProducts);
 
 router.post("/product", saveProduct);
