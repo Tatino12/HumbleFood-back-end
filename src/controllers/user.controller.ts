@@ -11,12 +11,14 @@ export const allUsersList = async (
       take: 10,
       where: {},
     });
+    
     return usersLis;
   } catch (error) {
     return null;
   }
 };
 
+<<<<<<< HEAD
 // export const getUsers = async (
 //   prisma: PrismaClient
 // ): Promise<null | User[]> => {
@@ -27,3 +29,15 @@ export const allUsersList = async (
 //     return null;
 //   }
 // };
+=======
+export const saveNewUser = async (prisma: PrismaClient, data: any) => {
+  try {
+    const newUser = await prisma.users.create({
+      data
+    })
+    if(newUser) return newUser;
+  } catch (error) {
+    return null;
+  }
+}
+>>>>>>> main

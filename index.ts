@@ -1,9 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import express from "express";
-//import routes from "./src/routes";
 import { router } from "./src/routes/routes";
-import { Shop } from "./src/Items/Shop.interface";
+const morgan = require('morgan');
 
+{
 // class Server {
 //   app: express.Application;
 
@@ -26,16 +25,6 @@ import { Shop } from "./src/Items/Shop.interface";
 //     })
 //   }
 // }
-
-const usertest = {
-  name: "hoalalaslfd",
-  name_user: "tati2",
-  email: "elmejo2r@gmail.com",
-  direction: "tucasa 1232",
-  rol: 3,
-};
-
-const prisma = new PrismaClient();
 
 // const prisma = new PrismaClient()
 // async function main() {
@@ -133,15 +122,25 @@ const prisma = new PrismaClient();
 
 // const server = new Server()
 // server.start()
+}
+
+const PORT = process.env.PORT || 3000;
 
 const server = express();
 
-// // midlewares
-server.use(express.json());
+// midlewares
+server.use(express.json({ limit: '50mb' }));
+server.use(express.urlencoded({ extended: true, limit: '50mb' }));
+server.use(morgan('dev'));
 
-// // routes
+// routes
 server.use("/", router);
 
+<<<<<<< HEAD
 server.listen(3001, () => {
   console.log("servidor en el puerto 3001");
+=======
+server.listen(PORT, () => {
+  console.log("servidor en el puerto" + PORT);
+>>>>>>> main
 });

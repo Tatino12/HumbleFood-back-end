@@ -45,8 +45,8 @@ model Products {
   name            String
   image           String
   description     String
-  price           Int
-  discount        String?
+  price           Float
+  discount        Int
   stock           Int
   //categories      Categories[]  @relation(fields: [categoriesId], references: [id])
   categoriesId    String[]
