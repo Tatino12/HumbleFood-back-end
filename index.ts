@@ -124,6 +124,8 @@ const morgan = require('morgan');
 // server.start()
 }
 
+const PORT = process.env.PORT || 3000;
+
 const server = express();
 
 // midlewares
@@ -134,6 +136,6 @@ server.use(morgan('dev'));
 // routes
 server.use("/", router);
 
-server.listen(3001, () => {
-  console.log("servidor en el puerto 3001");
+server.listen(PORT, () => {
+  console.log("servidor en el puerto" + PORT);
 });
