@@ -11,7 +11,6 @@ export const router = Router();
 /**
  * Controller Definitions
  */
-
 router.get("/shop");
 router.get("/users", getAllUsers);
 router.post("/user", addUser);
