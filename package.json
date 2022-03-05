@@ -7,7 +7,7 @@
     "tsc": "tsc",
     "start": "tsc && node ./build/index.js",
     "dev": "nodemon index.ts",
-    "postinstall": "tsc"
+    "postinstall": "npm run tsc"
   },
   "repository": {
     "type": "git",
