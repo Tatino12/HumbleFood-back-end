@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "tsc": "tsc -w",
-    "start": "tsc && node ./build/index.js",
+    "start": "npx ts-node index.ts",
     "dev": "nodemon index.ts"
   },
   "repository": {
