@@ -6,7 +6,8 @@
   "scripts": {
     "tsc": "tsc -w",
     "start": "npx ts-node index.ts",
-    "dev": "nodemon index.ts"
+    "dev": "nodemon index.ts",
+    "postinstall": "tsc"
   },
   "repository": {
     "type": "git",
