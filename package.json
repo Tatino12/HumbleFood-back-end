@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "tsc": "tsc -w",
-    "start": "npx ts-node index.ts",
+    "tsc": "tsc",
+    "start": "tsc && node ./build/index.js",
     "dev": "nodemon index.ts",
     "postinstall": "tsc"
   },
