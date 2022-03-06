@@ -53,12 +53,10 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
 export const saveProduct = async (req: Request, res: Response) => {
   try {
-    const data = req.body;
-    const resultado = await saveNewProduct(data);
-    console.log(resultado);
-    res
-      .status(201)
-      .json({ msj: "Producto creado correctamente", product: resultado });
+   const data = req.body
+   console.log(data);
+   const resultado = await saveNewProduct(data);
+   res.status(201).json({msj: "Producto creado correctamente", product: resultado});
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
@@ -119,12 +117,11 @@ export const getAllCategories = async (req: Request, res: Response) => {
 
 export const postCategory = async (req: Request, res: Response) => {
   try {
-    const { name, productId } = req.body;
-    const result = await saveNewCategory({ name, productId });
-    res
-      .status(201)
-      .json({ msj: "Categoria creada correctamente", product: result });
+    const {name} = req.body
+    const result = await saveNewCategory({name});
+    res.status(201).json({msj: "Categoria creada correctamente", product: result});
   } catch (error) {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+

@@ -57,11 +57,37 @@ export const filterById = async (id: any) => {
 
 
 export const saveNewProduct = async (data: any) => {
+  // TODO: especificar los datos que se deben de recibir de forma obligatoria
   try {
-    const newProduct = await prisma.products.create({
+    const newProduct : any = await prisma.products.create({
       data: data,
     });
 
+    for (let i = 0; i < data.categoriesId.length; i++) {
+      
+      let idPro = await prisma.categories.findUnique({
+        where: {
+          id: data.categoriesId[i] 
+        },
+        select: {
+          productId: true
+        }
+      })
+      idPro?.productId.push(newProduct.id)
+      
+      
+      const category = await prisma.categories.update({
+        where: {
+          id: data.categoriesId[i]
+        },
+        data: {
+          productId: idPro?.productId
+        }
+      })
+
+      //console.log(idPro);
+      
+    }
     if (newProduct) return newProduct;
 
     return null;
