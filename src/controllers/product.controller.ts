@@ -7,7 +7,29 @@ export const getProducts = async (
   prisma: PrismaClient
 ): Promise<null | Product[]> => {
   try {
-    const products: any = await prisma.products.findMany();
+    let products: any = await prisma.products.findMany();
+    for (let i = 0; i < products.length; i++) {
+      let arrCategories :any[] = await prisma.categories.findMany({
+        where: {
+          id: { in: products[i].categoriesId}
+        },
+        select: {
+          name: true
+        }
+      })
+      products[i] = {
+        name: products[i].name,
+        image: products[i].image,
+        description: products[i].description,
+        price: products[i].price,
+        discount: products[i].discount ,
+        stock: products[i].stock,
+        categories: arrCategories.map(el => el.name)
+      }
+      
+      //console.log(products[i]);
+    }
+    
     return products;
   } catch (error) {
     return null;
