@@ -10,14 +10,73 @@ import {
   filterbyCategory,
   filterByName,
   filterById,
-  infoProduct,
 } from "./product.controller";
+import { getCategories, saveNewCategory } from "./categories.controller";
 
+// CONEXION CON BASE DE DATOS
 
-export const prisma: PrismaClient = new PrismaClient();
+const prisma: PrismaClient = new PrismaClient();
 prisma.$connect().then(() => console.log("listo"));
 
-// ========= Users
+/* -------------------------------------------------------------------------------------------- */
+
+// SHOPS
+export const getShops = async (req: Request, res: Response) => {
+  try {
+    const { isShop } = req.query;
+    if (isShop) {
+    }
+  } catch (error) {}
+};
+
+/* -------------------------------------------------------------------------------------------- */
+
+// PRODUCTS
+
+export const getAllProducts = async (req: Request, res: Response) => {
+  try {
+    let filteredProducts = [];
+    let { category } = req.query; //nombre de la categoria, no el id
+    let { name } = req.query;
+    let { id } = req.query;
+    //  console.log(req.query);
+
+    const products = await getProducts(prisma);
+    if (category) {
+      filteredProducts = await filterbyCategory(category);
+      res.status(200).json(filteredProducts);
+    } else if (name) {
+      filteredProducts = await filterByName(name);
+      res.status(200).json(filteredProducts);
+    } else if (id) {
+      filteredProducts = await filterById(id);
+      res.status(200).json(filteredProducts);
+    } else {
+      res.status(200).json(products);
+    }
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+export const saveProduct = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    const resultado = await saveNewProduct(prisma, data);
+    console.log(resultado);
+    res
+      .status(201)
+      .json({ msj: "Producto creado correctamente", product: resultado });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+/* -------------------------------------------------------------------------------------------- */
+
+// USERS
+
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
     let pageBase: number = 0,
@@ -53,68 +112,27 @@ export const addUser = async (req: Request, res: Response) => {
   }
 };
 
-// ========= Shops
-export const getShops = async (req: Request, res: Response) => {
-  try {
-    const { isShop } = req.query;
-    if (isShop) {
-    }
-  } catch (error) {}
-};
+/* -------------------------------------------------------------------------------------------- */
 
-// ========= Products
-export const getAllProducts = async (req: Request, res: Response) => {
-  try {
-    let filteredProducts = [];
-    let { category } = req.query; //nombre de la categoria, no el id
-    let { name } = req.query;
-    let { id } = req.query;
+// CATEGORIES
 
-    const products = await getProducts();
-    if (category) {
-      filteredProducts = await filterbyCategory(category);
-      res.status(200).json(filteredProducts);
-    } else if (name) {
-      filteredProducts = await filterByName(name);
-      res.status(200).json(filteredProducts);
-    } else if (id) {
-      filteredProducts = await filterById(id);
-      res.status(200).json(filteredProducts);
-    } else {
-      res.status(200).json(products);
-    }
+export const getAllCategories = async (req: Request, res: Response) => {
+  try {
+    const info = await getCategories();
+    res.status(200).json(info);
   } catch (error) {
-    res.send(error);
+    res.status(400).json({ msg: "error", error: error });
   }
 };
 
-export const saveProduct = async (req: Request, res: Response) => {
+export const postCategory = async (req: Request, res: Response) => {
   try {
-    const data = req.body;
-    const resultado = await saveNewProduct(data);
-
+    const { name, productId } = req.body;
+    const result = await saveNewCategory({ name, productId });
     res
       .status(201)
-      .json({ msj: "Producto creado correctamente", product: resultado });
+      .json({ msj: "Categoria creada correctamente", product: result });
   } catch (error) {
-    console.error(error);
     res.status(401).json({ msg: "error", error: error });
   }
 };
-
-export const getInfoProduct = async (req: Request, res: Response) => {
-  try {
-    const { idProduct } = req.params;
-    if(!idProduct) throw new Error();
-
-    const product = await infoProduct(idProduct);
-
-    if(!product) throw new Error();
-
-    res.json(product)
-  } catch (error) {
-    res.status(404).json({ msg: "id no valido" })
-  }
-}
-
-

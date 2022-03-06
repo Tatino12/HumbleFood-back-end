@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "tsc": "tsc -w",
-    "start": "tsc && node ./build/index.js",
-    "dev": "nodemon index.ts"
+    "tsc": "tsc",
+    "start": "node ./build/index.js",
+    "dev": "nodemon index.ts",
+    "postinstall": "npm run tsc"
   },
   "repository": {
     "type": "git",
