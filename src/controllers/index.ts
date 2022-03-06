@@ -2,7 +2,6 @@
  * Required External Modules and Interfaces
  */
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import { allUsersList, saveNewUser } from "./user.controller";
 import {
   getProducts,
@@ -12,13 +11,6 @@ import {
   filterById,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
-
-// CONEXION CON BASE DE DATOS
-
-const prisma: PrismaClient = new PrismaClient();
-prisma.$connect().then(() => console.log("listo"));
-
-/* -------------------------------------------------------------------------------------------- */
 
 // SHOPS
 export const getShops = async (req: Request, res: Response) => {
@@ -41,7 +33,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { id } = req.query;
     //  console.log(req.query);
 
-    const products = await getProducts(prisma);
+    const products = await getProducts();
     if (category) {
       filteredProducts = await filterbyCategory(category);
       res.status(200).json(filteredProducts);
@@ -62,7 +54,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 export const saveProduct = async (req: Request, res: Response) => {
   try {
     const data = req.body;
-    const resultado = await saveNewProduct(prisma, data);
+    const resultado = await saveNewProduct(data);
     console.log(resultado);
     res
       .status(201)
@@ -87,7 +79,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
       pageBase = pageAsNumber;
     }
 
-    const userList = await allUsersList(prisma, pageBase);
+    const userList = await allUsersList(pageBase);
     //console.log(userList);
 
     if (!userList) throw new Error();
@@ -104,7 +96,7 @@ export const addUser = async (req: Request, res: Response) => {
     const { userId, name, name_user, email, direction, rol, shopsId } =
       req.body;
     const data = { userId, name, name_user, email, direction, rol, shopsId };
-    const user = await saveNewUser(prisma, data);
+    const user = await saveNewUser(data);
     res.status(201).send({ msj: "Usuario creado correctamente", user: user });
   } catch (error) {
     console.error(error);

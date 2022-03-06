@@ -1,6 +1,6 @@
 import { Products } from "@prisma/client";
+import prisma from "../database/db";
 import { Product, ProductOptions } from "../Items/Product.interface";
-import { prisma } from "./index";
 
 export const getProducts = async ( options?: ProductOptions ): Promise<null | Product[]> => {
   try {
