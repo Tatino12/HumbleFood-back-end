@@ -54,12 +54,12 @@ export const filterbyCategory = async (category: any) => {
 };
 
 export const filterByName = async (name: any) => {
-  const filterName: any[] = await prisma.products.findMany({
-    where: {
-      name,
-    },
-  });
-  return filterName;
+  const all: any[] = await prisma.products.findMany();
+  const filteredByName: any[] = all.filter((e) =>
+    e.name.toLowerCase().includes(name.toLowerCase())
+  );
+  console.log(filteredByName);
+  return filteredByName;
 };
 
 export const filterById = async (id: any) => {
