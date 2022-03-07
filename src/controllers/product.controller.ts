@@ -64,14 +64,6 @@ export const filterByName = async (name: any) => {
 };
 
 export const filterById = async (id: any) => {
-<<<<<<< HEAD
-  const filterID: any[] = await prisma.products.findMany({
-    where: {
-      id,
-    },
-  });
-  return filterID;
-=======
 
   let filterID = await prisma.products.findUnique({
     where: {
@@ -100,7 +92,6 @@ export const filterById = async (id: any) => {
   }
 
   
->>>>>>> main
 };
 
 export const saveNewProduct = async (data: any) => {
