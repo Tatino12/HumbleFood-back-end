@@ -27,7 +27,7 @@ export const getShops = async (req: Request, res: Response) => {
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
-    let filteredProducts = [];
+    let filteredProducts = {};
     let { category } = req.query; //nombre de la categoria, no el id
     let { name } = req.query;
     let { id } = req.query;
