@@ -41,8 +41,8 @@ export const getProducts = async (
       };
       //console.log(products[i]);
     }
+
     const pagesTotal = Math.ceil(total/10)
-    console.log(pagesTotal, page, pagesTotal -1)
     return {
       next: page < pagesTotal - 1 ? true : false,
       prev: page > 0 ? true : false,
@@ -70,7 +70,9 @@ export const filterbyCategory = async (category: any) => {
       id: { in: idProduct },
     },
   });
-  return filterCategory;
+  return {
+    products: filterCategory
+  };
 };
 
 export const filterByName = async (name: any) => {
@@ -78,7 +80,9 @@ export const filterByName = async (name: any) => {
   const filteredByName: any[] = all.filter((e) =>
     e.name.toLowerCase().includes(name.toLowerCase())
   );
-  return filteredByName;
+  return {
+    products: filteredByName
+  };
 };
 
 export const filterById = async (id: any) => {
