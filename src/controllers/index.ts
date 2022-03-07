@@ -123,7 +123,7 @@ export const postCategory = async (req: Request, res: Response) => {
   try {
     const {name} = req.body
     const result = await saveNewCategory({name});
-    res.status(201).json({msj: "Categoria creada correctamente", product: result});
+    res.status(201).json({msj: "Categoria creada correctamente", category: result});
   } catch (error) {
     res.status(401).json({ msg: "error", error: error });
   }
