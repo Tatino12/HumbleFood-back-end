@@ -4,14 +4,29 @@ import { Product, ProductOptions } from "../Items/Product.interface";
 
 export const getProducts = async ( options?: ProductOptions ): Promise<null | Product[]> => {
   try {
-    const products: any = await prisma.products.findMany({
-      where: {
-        id: {
-          equals: "6222055af23dc2135189343d"
+    let products: any = await prisma.products.findMany();
+    for (let i = 0; i < products.length; i++) {
+      let arrCategories :any[] = await prisma.categories.findMany({
+        where: {
+          id: { in: products[i].categoriesId}
+        },
+        select: {
+          name: true
         }
-      },
-    });
-    console.log(products)
+      })
+      products[i] = {
+        name: products[i].name,
+        image: products[i].image,
+        description: products[i].description,
+        price: products[i].price,
+        discount: products[i].discount ,
+        stock: products[i].stock,
+        categories: arrCategories.map(el => el.name)
+      }
+      
+      //console.log(products[i]);
+    }
+    
     return products;
   } catch (error) {
     return null;
