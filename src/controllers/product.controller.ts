@@ -66,11 +66,11 @@ export const filterByName = async (name: any) => {
   const filteredByName: any[] = all.filter((e) =>
     e.name.toLowerCase().includes(name.toLowerCase())
   );
-  console.log(filteredByName);
   return filteredByName;
 };
 
 export const filterById = async (id: any) => {
+
 
   let filterID = await prisma.products.findUnique({
     where: {
@@ -79,19 +79,19 @@ export const filterById = async (id: any) => {
   })
   let arrCategories : any[] = await namesCategories(filterID)
   let shop = await prisma.shops.findUnique({where: {id: filterID?.shopId}, select: {name: true}})
+
   return {
     id: filterID?.id,
     name: filterID?.name,
     image: filterID?.image,
     description: filterID?.description,
     price: filterID?.price,
-    discount: filterID?.discount ,
+    discount: filterID?.discount,
     stock: filterID?.stock,
+
     categories: arrCategories.map(el => el.name),
     shop: shop
   }
-
-  
 };
 
 export const saveNewProduct = async (data: any) => {
