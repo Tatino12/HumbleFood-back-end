@@ -1,71 +1,72 @@
 /**
  * Required External Modules and Interfaces
  */
- import { Request, Response } from "express";
- import { PrismaClient } from "@prisma/client";
- import { allUsersList, saveNewUser } from "./user.controller";
- import {
+import { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
+import { allUsersList, saveNewUser } from "./user.controller";
+import {
   getProducts,
-   saveNewProduct,
-   filterbyCategory,
-   filterByName,
-   filterById,
- } from "./product.controller";
- import { getCategories, saveNewCategory} from "./categories.controller";
- 
- // CONEXION CON BASE DE DATOS
+  saveNewProduct,
+  filterbyCategory,
+  filterByName,
+  filterById,
+} from "./product.controller";
+import { getCategories, saveNewCategory } from "./categories.controller";
 
- const prisma: PrismaClient = new PrismaClient();
- prisma.$connect().then(() => console.log("listo"));
+// CONEXION CON BASE DE DATOS
+
+const prisma: PrismaClient = new PrismaClient();
+prisma.$connect().then(() => console.log("listo"));
 
 /* -------------------------------------------------------------------------------------------- */
 
 // SHOPS
- export const getShops = async (req: Request, res: Response) => {
-   try {
-     const { isShop } = req.query;
-     if (isShop) {
-     }
-   } catch (error) {}
- };
- 
+export const getShops = async (req: Request, res: Response) => {
+  try {
+    const { isShop } = req.query;
+    if (isShop) {
+    }
+  } catch (error) {}
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // PRODUCTS
 
- export const getAllProducts = async (req: Request, res: Response) => {
-   try {
-     let filteredProducts = [];
-     let { category } = req.query; //nombre de la categoria, no el id
-     let { name } = req.query;
-     let { id } = req.query;
-    //  console.log(req.query);
-     
-     const products = await getProducts(prisma);
-     if (category) {
-       filteredProducts = await filterbyCategory(category);
-       res.status(200).json(filteredProducts);
-     } else if (name) {
-       filteredProducts = await filterByName(name);
-      res.status(200).json(filteredProducts);
-     } else if (id){
-       filteredProducts = await filterById(id);
-       res.status(200).json(filteredProducts)
-     }
-     else {
-       res.status(200).json(products);
-     }
-   } catch (error) {
-     res.send(error);
-   }
- };
-
- export const saveProduct = async (req: Request, res: Response) => {
+export const getAllProducts = async (req: Request, res: Response) => {
   try {
-   const data = req.body
-   const resultado = await saveNewProduct(prisma, data);
-   console.log(resultado);
-   res.status(201).json({msj: "Producto creado correctamente", product: resultado});
+    let filteredProducts = [];
+    let { category } = req.query; //nombre de la categoria, no el id
+    let { name } = req.query;
+    let { id } = req.query;
+    //  console.log(req.query);
+
+    const products = await getProducts(prisma);
+    if (category) {
+      filteredProducts = await filterbyCategory(category);
+      res.status(200).json(filteredProducts);
+    } else if (name) {
+      filteredProducts = await filterByName(name);
+      res.status(200).json(filteredProducts);
+    } else if (id) {
+      filteredProducts = await filterById(id);
+      res.status(200).json(filteredProducts);
+    } else {
+      res.status(200).json(products);
+    }
+  } catch (error) {
+    res.send(error);
+  }
+};
+
+export const saveProduct = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    const resultado = await saveNewProduct(prisma, data);
+    console.log(resultado);
+    res
+      .status(201)
+      .json({ msj: "Producto creado correctamente", product: resultado });
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
@@ -85,10 +86,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
     if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
       pageBase = pageAsNumber;
     }
-    
+
     const userList = await allUsersList(prisma, pageBase);
     //console.log(userList);
-    
+
     if (!userList) throw new Error();
 
     res.status(200).json(userList);
@@ -98,17 +99,18 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
- export const addUser = async (req: Request, res: Response) => {
-    try {
-      const { userId, name, name_user, email, direction, rol, shopsId } = req.body;
-      const data = { userId, name, name_user, email, direction, rol, shopsId }
-      const user = await saveNewUser(prisma, data)
-      res.status(201).send({msj: "Usuario creado correctamente", user: user});
-    } catch (error) {
-      console.error(error);
-        res.status(401).json({ msg: "error", error: error });
-    }
- }
+export const addUser = async (req: Request, res: Response) => {
+  try {
+    const { userId, name, name_user, email, direction, rol, shopsId } =
+      req.body;
+    const data = { userId, name, name_user, email, direction, rol, shopsId };
+    const user = await saveNewUser(prisma, data);
+    res.status(201).send({ msj: "Usuario creado correctamente", user: user });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
 
 /* -------------------------------------------------------------------------------------------- */
 
@@ -116,19 +118,21 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
-    const info = await getCategories()
-    res.status(200).json(info)
+    const info = await getCategories();
+    res.status(200).json(info);
   } catch (error) {
     res.status(400).json({ msg: "error", error: error });
   }
-}
+};
 
 export const postCategory = async (req: Request, res: Response) => {
   try {
-    const {name, productId} = req.body
-    const result = await saveNewCategory({name, productId});
-    res.status(201).json({msj: "Categoria creada correctamente", product: result});
+    const { name, productId } = req.body;
+    const result = await saveNewCategory({ name, productId });
+    res
+      .status(201)
+      .json({ msj: "Categoria creada correctamente", product: result });
   } catch (error) {
     res.status(401).json({ msg: "error", error: error });
   }
-}
+};

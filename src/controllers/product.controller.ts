@@ -15,42 +15,40 @@ export const getProducts = async (
 };
 
 export const filterbyCategory = async (category: any) => {
-  const idProduct : any[] = await prisma.categories.findMany({
+  const idProduct: any[] = await prisma.categories.findMany({
     where: {
-      name: category
-    }, 
-    select:{
-      productId: true
-    }
-  })
-  
-  const filterCategory : any[] = await prisma.products.findMany({
+      name: category,
+    },
+    select: {
+      productId: true,
+    },
+  });
+
+  const filterCategory: any[] = await prisma.products.findMany({
     where: {
-      id: { in: idProduct}
-    }
-  })
-  return filterCategory
+      id: { in: idProduct },
+    },
+  });
+  return filterCategory;
 };
 
-export const filterByName = async ( name: any) => {
-  const filterName : any[] = await prisma.products.findMany({
-      where:{
-        name
-      }
-  })
+export const filterByName = async (name: any) => {
+  const filterName: any[] = await prisma.products.findMany({
+    where: {
+      name,
+    },
+  });
   return filterName;
 };
 
 export const filterById = async (id: any) => {
-  const filterID : any[] = await prisma.products.findMany({
+  const filterID: any[] = await prisma.products.findMany({
     where: {
-      id
-    }
-  })
+      id,
+    },
+  });
   return filterID;
 };
-
-
 
 export const saveNewProduct = async (prisma: PrismaClient, data: any) => {
   try {

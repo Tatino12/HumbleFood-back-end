@@ -1,16 +1,15 @@
-
 export interface BaseShop {
-    name: string
-    direction: string
-    image: string
-    description: string
-    userId: string
+  name: string;
+  direction: string;
+  image: string;
+  description: string;
+  userId: string;
 }
 
 export interface Shop extends BaseShop {
-    id: string
+  id: string;
 }
 
 export interface Shops {
-    [kek: number]: Shop
+  [kek: number]: Shop;
 }
