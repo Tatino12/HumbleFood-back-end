@@ -1,4 +1,3 @@
-
 export interface BaseUser {
   name: string;
   name_user: string;
@@ -9,6 +8,7 @@ export interface BaseUser {
 
 export interface User extends BaseUser {
   id: string;
+  userId: string;
 }
 
 export interface Users {
