@@ -5,6 +5,6 @@ import { PrismaClient } from "@prisma/client";
 const prisma: PrismaClient = new PrismaClient();
 prisma.$connect().then(() => console.log("listo"));
 
-export default prisma
+export default prisma;
 
 /* -------------------------------------------------------------------------------------------- */
