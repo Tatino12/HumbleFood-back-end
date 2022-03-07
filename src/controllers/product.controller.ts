@@ -2,20 +2,27 @@ import { Products } from "@prisma/client";
 import prisma from "../database/db";
 import { Product, ProductOptions } from "../Items/Product.interface";
 
+async function namesCategories(product : any) {
+  let arrCategories: any[] = await prisma.categories.findMany({
+    where: {
+      id: { in: product.categoriesId },
+    },
+    select: {
+      name: true,
+    },
+  });
+
+  return arrCategories;
+}
+
+
 export const getProducts = async (
   options?: ProductOptions
 ): Promise<null | Product[]> => {
   try {
     let products: any = await prisma.products.findMany();
     for (let i = 0; i < products.length; i++) {
-      let arrCategories: any[] = await prisma.categories.findMany({
-        where: {
-          id: { in: products[i].categoriesId },
-        },
-        select: {
-          name: true,
-        },
-      });
+      let arrCategories :any[] = await namesCategories(products[i])
       products[i] = {
         id: products[i].id,
         name: products[i].name,
@@ -63,23 +70,16 @@ export const filterByName = async (name: any) => {
 };
 
 export const filterById = async (id: any) => {
+
+
   let filterID = await prisma.products.findUnique({
     where: {
-      id,
-    },
-  });
-  let arrCategories: any[] = await prisma.categories.findMany({
-    where: {
-      id: { in: filterID?.categoriesId },
-    },
-    select: {
-      name: true,
-    },
-  });
-  let shop = await prisma.shops.findUnique({
-    where: { id: filterID?.shopId },
-    select: { name: true },
-  });
+      id
+    }
+  })
+  let arrCategories : any[] = await namesCategories(filterID)
+  let shop = await prisma.shops.findUnique({where: {id: filterID?.shopId}, select: {name: true}})
+
   return {
     id: filterID?.id,
     name: filterID?.name,
@@ -88,9 +88,10 @@ export const filterById = async (id: any) => {
     price: filterID?.price,
     discount: filterID?.discount,
     stock: filterID?.stock,
-    categories: arrCategories.map((el) => el.name),
-    shop: shop,
-  };
+
+    categories: arrCategories.map(el => el.name),
+    shop: shop
+  }
 };
 
 export const saveNewProduct = async (data: any) => {
