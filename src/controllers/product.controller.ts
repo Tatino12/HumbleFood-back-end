@@ -17,10 +17,14 @@ async function namesCategories(product : any) {
 
 
 export const getProducts = async (
-  options?: ProductOptions
+  page: number
 ): Promise<null | Product[]> => {
   try {
-    let products: any = await prisma.products.findMany();
+    let products: any = await prisma.products.findMany({
+      skip: 10 * page,
+      take: 10
+    });
+    
     for (let i = 0; i < products.length; i++) {
       let arrCategories :any[] = await namesCategories(products[i])
       products[i] = {
