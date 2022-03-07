@@ -15,6 +15,7 @@ export const getProducts = async ( options?: ProductOptions ): Promise<null | Pr
         }
       })
       products[i] = {
+        id: products[i].id,
         name: products[i].name,
         image: products[i].image,
         description: products[i].description,
