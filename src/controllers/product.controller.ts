@@ -18,8 +18,10 @@ async function namesCategories(product : any) {
 
 export const getProducts = async (
   page: number
-): Promise<null | Product[]> => {
+) => {
   try {
+    let total: number = await prisma.products.count()
+    console.log(total)
     let products: any = await prisma.products.findMany({
       skip: 10 * page,
       take: 10
@@ -37,12 +39,18 @@ export const getProducts = async (
         stock: products[i].stock,
         categories: arrCategories.map((el) => el.name),
       };
-
       //console.log(products[i]);
     }
-
-    return products;
+    const pagesTotal = Math.ceil(total/10)
+    console.log(pagesTotal, page, pagesTotal -1)
+    return {
+      next: page < pagesTotal - 1 ? true : false,
+      prev: page > 0 ? true : false,
+      pagesTotal,
+      products
+    }
   } catch (error) {
+    console.error(error)
     return null;
   }
 };
