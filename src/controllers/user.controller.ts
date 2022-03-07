@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
+import prisma from "../database/db";
 import { User } from "../Items/User.interface";
 
-export const allUsersList = async (prisma: PrismaClient, page: number): Promise<null | User[]> => {
+export const allUsersList = async (page: number): Promise<null | User[]> => {
   try {
     const usersLis: User[] = await prisma.users.findMany({
       skip: 10 * page,
@@ -15,7 +16,7 @@ export const allUsersList = async (prisma: PrismaClient, page: number): Promise<
   }
 };
 
-export const saveNewUser = async (prisma: PrismaClient, data: any) => {
+export const saveNewUser = async (data: any) => {
   try {
     const newUser = await prisma.users.create({
       data

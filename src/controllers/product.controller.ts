@@ -1,11 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-import { Product } from "../Items/Product.interface";
+import { Products } from "@prisma/client";
+import prisma from "../database/db";
+import { Product, ProductOptions } from "../Items/Product.interface";
 
-const prisma: PrismaClient = new PrismaClient();
-
-export const getProducts = async (
-  prisma: PrismaClient
-): Promise<null | Product[]> => {
+export const getProducts = async ( options?: ProductOptions ): Promise<null | Product[]> => {
   try {
     let products: any = await prisma.products.findMany();
     for (let i = 0; i < products.length; i++) {
@@ -74,7 +71,7 @@ export const filterById = async (id: any) => {
 
 
 
-export const saveNewProduct = async (prisma: PrismaClient, data: any) => {
+export const saveNewProduct = async (data: any) => {
   try {
     const newProduct : any = await prisma.products.create({
       data: data,
@@ -113,3 +110,12 @@ export const saveNewProduct = async (prisma: PrismaClient, data: any) => {
     return null;
   }
 };
+
+export const infoProduct = async (idProduct: string): Promise<Products | null> => {
+  try {
+    let product: Products | null = await prisma.products.findUnique({where: {id: idProduct}})
+    return product
+  } catch (error) {
+    return null
+  }
+}
