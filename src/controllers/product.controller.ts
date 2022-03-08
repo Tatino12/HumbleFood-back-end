@@ -34,6 +34,7 @@ export const getProducts = async (
     }
     else{
       total = await prisma.products.count()
+      //console.log(total);
       products = await prisma.products.findMany({
         where: {
           stock: {
@@ -45,7 +46,6 @@ export const getProducts = async (
       });
     }
     
-    console.log(products);
     for (let i = 0; i < products.length; i++) {
       let arrCategories: any[] = await namesCategories(products[i]);
       products[i] = {
