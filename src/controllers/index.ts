@@ -11,14 +11,28 @@ import {
   filterById,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
+import { getShops, saveNewShop } from "./shop.controller";
 
 // SHOPS
-export const getShops = async (req: Request, res: Response) => {
+export const getAllShops = async (req: Request, res: Response) => {
   try {
-    const { isShop } = req.query;
-    if (isShop) {
-    }
-  } catch (error) {}
+    const shops = await getShops();
+    res.status(200).send(shops);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const addShop = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    const shop = await saveNewShop(data);
+    res.status(200).send(shop);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
 };
 
 /* -------------------------------------------------------------------------------------------- */
@@ -32,8 +46,15 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { name } = req.query;
     let { id } = req.query;
     //  console.log(req.query);
+    let pageBase: number = 0,
+      myPage: string = req.query.page as string;
+    const pageAsNumber: number = parseInt(myPage);
 
-    const products = await getProducts();
+    if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+      pageBase = pageAsNumber;
+    }
+
+    const products = await getProducts(pageBase);
     if (category) {
       filteredProducts = await filterbyCategory(category);
       res.status(200).json(filteredProducts);
