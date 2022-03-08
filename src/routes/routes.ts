@@ -9,6 +9,8 @@ import {
   addUser,
   getAllCategories,
   postCategory,
+  addShop,
+  getAllShops,
 } from "../controllers";
 /**
  * Router Definition
@@ -18,7 +20,8 @@ export const router = Router();
 /**
  * Controller Definitions
  */
-router.get("/shop");
+router.get("/shops", getAllShops);
+router.post("/shop", addShop);
 
 router.get("/users", getAllUsers);
 router.post("/user", addUser);
