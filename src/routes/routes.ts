@@ -27,6 +27,7 @@ router.get("/users", getAllUsers);
 router.post("/user", addUser);
 
 router.get("/products", getAllProducts);
+router.get("/productShop/:shopId", getAllProducts)
 router.post("/product", saveProduct);
 
 router.get("/categories", getAllCategories);

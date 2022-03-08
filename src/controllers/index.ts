@@ -13,6 +13,7 @@ import {
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop } from "./shop.controller";
 
+
 // SHOPS
 export const getAllShops = async (req: Request, res: Response) => {
   try {
@@ -45,6 +46,8 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { category } = req.query; //nombre de la categoria, no el id
     let { name } = req.query;
     let { id } = req.query;
+    let { shopId } = req.params; 
+    
     //  console.log(req.query);
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
@@ -54,7 +57,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       pageBase = pageAsNumber;
     }
 
-    const products = await getProducts(pageBase);
+    let products = await getProducts(pageBase);
     if (category) {
       filteredProducts = await filterbyCategory(category);
       res.status(200).json(filteredProducts);
@@ -64,13 +67,19 @@ export const getAllProducts = async (req: Request, res: Response) => {
     } else if (id) {
       filteredProducts = await filterById(id);
       res.status(200).json(filteredProducts);
-    } else {
+    } else if (shopId){
+      //console.log(shopId);
+      products = await getProducts(pageBase, shopId)
+      res.status(200).json(products);
+    }
+    else {
       res.status(200).json(products);
     }
   } catch (error) {
     res.send(error);
   }
 };
+
 
 export const saveProduct = async (req: Request, res: Response) => {
   try {
