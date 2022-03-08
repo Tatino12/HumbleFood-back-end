@@ -37,3 +37,4 @@ export const saveNewUser = async (data: any) => {
     return null;
   }
 };
+
