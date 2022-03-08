@@ -88,6 +88,7 @@ export const filterByName = async (name: any) => {
 
 export const filterById = async (id: any) => {
   let filterID = await prisma.products.findUnique({
+
     where: {
       id,
     },
