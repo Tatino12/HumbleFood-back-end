@@ -13,7 +13,7 @@ import {
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop } from "./shop.controller";
 import { addNewComment } from "./review.controller";
-
+import { order } from "./order.controller";
 // SHOPS
 export const getAllShops = async (req: Request, res: Response) => {
   try {
@@ -36,6 +36,16 @@ export const addShop = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.query
+    const shops = await order(productId);
+    res.status(201).send(shops)
+  } catch (error) {
+    console.error(error)
+    res.status(401).json({ msg: "error", error: error});
+  }
+};
 /* -------------------------------------------------------------------------------------------- */
 
 // PRODUCTS
