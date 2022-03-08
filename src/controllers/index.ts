@@ -86,6 +86,20 @@ export const saveProduct = async (req: Request, res: Response) => {
   }
 };
 
+export const updateProduct = async (req:Request, res: Response) => {
+  try {
+    const { idProduct, idShop } = req.params;
+    if(!idProduct || !idShop) throw new Error()
+
+    // TODO Verificar si el id de la tienda pertenece a una tienda de verdad
+    // TODO La misma verificación pero para el producto
+    
+
+  } catch (error) {
+    res.status(400).json({ msg: "Datos requeridos no enviados"})
+  }
+}
+
 /* -------------------------------------------------------------------------------------------- */
 
 // USERS

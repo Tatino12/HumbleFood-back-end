@@ -167,3 +167,11 @@ export const infoProduct = async (
     return null;
   }
 };
+
+export const updateInfoProduct =async (idProduct:string, idShop: string) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
