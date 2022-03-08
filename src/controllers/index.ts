@@ -45,7 +45,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       filteredProducts = await filterbyCategory(category);
       res.status(200).json(filteredProducts);
     } else if (name) {
-      filteredProducts = await filterByName(name);
+      filteredProducts = await filterByName(name, pageBase);
       res.status(200).json(filteredProducts);
     } else if (id) {
       filteredProducts = await filterById(id);

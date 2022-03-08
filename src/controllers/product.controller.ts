@@ -75,8 +75,15 @@ export const filterbyCategory = async (category: any) => {
   };
 };
 
-export const filterByName = async (name: any) => {
-  const all: any[] = await prisma.products.findMany();
+export const filterByName = async (name: any, page: number) => {
+
+  const total = await prisma.products.count({where: { name: name }})
+  const all: any[] = await prisma.products.findMany({
+    skip: 10 * page,
+    take: 10
+  });
+
+  console.log(total)
   const filteredByName: any[] = all.filter((e) =>
     e.name.toLowerCase().includes(name.toLowerCase())
   );
