@@ -128,7 +128,6 @@ export const addUser = async (req: Request, res: Response) => {
 
 export const addCommentUser = async (req: Request, res: Response) => {
   try {
-    console.log("hola")
     const { userId, productId, contentReview, pointProduct } = req.body;
      if (!userId || !productId || !contentReview || !pointProduct) 
      throw new Error()
