@@ -18,13 +18,12 @@ async function namesCategories(product: any) {
 export const getProducts = async (page: number) => {
   try {
     let total: number = await prisma.products.count();
-    console.log(total);
     let products: any = await prisma.products.findMany({
-      // where: {
-      //   stock: {
-      //     not: 0,
-      //   },
-      // },
+      where: {
+        stock: {
+          not: 0,
+        },
+      },
       skip: 10 * page,
       take: 10,
     });
