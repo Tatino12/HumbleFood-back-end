@@ -7,6 +7,7 @@ export interface Product {
   discount: number;
   stock: number;
   categoriesId: string[];
+  categories: string[];
   shopId: string;
 }
 
