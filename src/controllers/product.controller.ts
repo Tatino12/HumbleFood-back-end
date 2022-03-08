@@ -2,7 +2,7 @@ import { Products } from "@prisma/client";
 import prisma from "../database/db";
 import { Product, ProductOptions } from "../Items/Product.interface";
 
-async function namesCategories(product : any) {
+async function namesCategories(product: any) {
   let arrCategories: any[] = await prisma.categories.findMany({
     where: {
       id: { in: product.categoriesId },
@@ -35,6 +35,11 @@ export const getProducts = async (
     else{
       total = await prisma.products.count()
       products = await prisma.products.findMany({
+        where: {
+          stock: {
+            not: 0,
+          },
+        },
         skip: 10 * page,
         take: 10
       });
@@ -42,7 +47,7 @@ export const getProducts = async (
     
     console.log(products);
     for (let i = 0; i < products.length; i++) {
-      let arrCategories :any[] = await namesCategories(products[i])
+      let arrCategories: any[] = await namesCategories(products[i]);
       products[i] = {
         id: products[i].id,
         name: products[i].name,
@@ -56,7 +61,7 @@ export const getProducts = async (
       //console.log(products[i]);
     }
 
-    const pagesTotal = Math.ceil(total/10)
+    const pagesTotal = Math.ceil(total / 10);
     return {
       next: page < pagesTotal - 1 ? true : false,
       prev: page > 0 ? true : false,
@@ -65,7 +70,7 @@ export const getProducts = async (
     }
     
   } catch (error) {
-    console.error(error)
+    console.error(error);
     return null;
   }
 };
@@ -86,7 +91,7 @@ export const filterbyCategory = async (category: any) => {
     },
   });
   return {
-    products: filterCategory
+    products: filterCategory,
   };
 };
 
@@ -96,20 +101,22 @@ export const filterByName = async (name: any) => {
     e.name.toLowerCase().includes(name.toLowerCase())
   );
   return {
-    products: filteredByName
+    products: filteredByName,
   };
 };
 
 export const filterById = async (id: any) => {
-
-
   let filterID = await prisma.products.findUnique({
+
     where: {
-      id
-    }
-  })
-  let arrCategories : any[] = await namesCategories(filterID)
-  let shop = await prisma.shops.findUnique({where: {id: filterID?.shopId}, select: {name: true}})
+      id,
+    },
+  });
+  let arrCategories: any[] = await namesCategories(filterID);
+  let shop = await prisma.shops.findUnique({
+    where: { id: filterID?.shopId },
+    select: { name: true },
+  });
 
   return {
     id: filterID?.id,
@@ -120,9 +127,9 @@ export const filterById = async (id: any) => {
     discount: filterID?.discount,
     stock: filterID?.stock,
 
-    categories: arrCategories.map(el => el.name),
-    shop: shop
-  }
+    categories: arrCategories.map((el) => el.name),
+    shop: shop,
+  };
 };
 
 export const saveNewProduct = async (data: any) => {

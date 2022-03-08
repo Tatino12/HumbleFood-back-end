@@ -11,7 +11,10 @@ import {
   postCategory,
   addShop,
   getAllShops,
+  addCommentUser,
+  
 } from "../controllers";
+
 /**
  * Router Definition
  */
@@ -32,3 +35,5 @@ router.post("/product", saveProduct);
 
 router.get("/categories", getAllCategories);
 router.post("/category", postCategory);
+
+router.post("/review", addCommentUser);
