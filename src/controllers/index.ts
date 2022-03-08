@@ -11,14 +11,28 @@ import {
   filterById,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
+import { getShops, saveNewShop } from "./shop.controller";
 
 // SHOPS
-export const getShops = async (req: Request, res: Response) => {
+export const getAllShops = async (req: Request, res: Response) => {
   try {
-    const { isShop } = req.query;
-    if (isShop) {
-    }
-  } catch (error) {}
+    const shops = await getShops();
+    res.status(200).send(shops);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const addShop = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    const shop = await saveNewShop(data);
+    res.status(200).send(shop);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
 };
 
 /* -------------------------------------------------------------------------------------------- */
@@ -135,4 +149,3 @@ export const postCategory = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
-
