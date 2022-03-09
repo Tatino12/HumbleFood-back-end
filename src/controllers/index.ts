@@ -2,7 +2,7 @@
  * Required External Modules and Interfaces
  */
 import { Request, Response } from "express";
-import { allUsersList, saveNewUser} from "./user.controller";
+import { allUsersList, saveNewUser, getUserId} from "./user.controller";
 import {
   getProducts,
   saveNewProduct,
@@ -172,11 +172,27 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+export const getUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const user = await getUserId(userId);
+    if(user){
+      res.status(200).json({user: user})
+    }
+    else{
+      res.status(400).json({user: user})
+    }
+
+  } catch (error) {
+    res.status(404).json({ msg: "Error" });
+  }
+}
+
 export const addUser = async (req: Request, res: Response) => {
   try {
     const { userId, name, name_user, email, direction, rol, shopsId } =
       req.body;
-    const data = { userId, name, name_user, email, direction, rol, shopsId };
+    const data: any = { userId, name, name_user, email, direction, rol, shopsId };
     const user = await saveNewUser(data);
     res.status(201).send({ msj: "Usuario creado correctamente", user: user });
   } catch (error) {

@@ -14,7 +14,7 @@ import {
   addCommentUser,
   deleteProduct,
   updateProduct,
-  
+  getUser
 } from "../controllers";
 
 /**
@@ -29,6 +29,7 @@ router.get("/shops", getAllShops);
 router.post("/shop", addShop);
 
 router.get("/users", getAllUsers);
+router.get("/user", getUser);
 router.post("/user", addUser);
 
 router.get("/products", getAllProducts);

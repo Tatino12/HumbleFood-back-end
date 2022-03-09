@@ -76,7 +76,7 @@ model Orders {
 
 model Cart {
   id      String     @id @default(auto()) @map("_id") @db.ObjectId
-  total   Int
+  total   Float
   ordersId  String[]
   userId  String 
 }
