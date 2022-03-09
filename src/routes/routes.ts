@@ -13,6 +13,7 @@ import {
   getAllShops,
   addCommentUser,
   deleteProduct,
+  updateProduct,
   
 } from "../controllers";
 
@@ -33,7 +34,8 @@ router.post("/user", addUser);
 router.get("/products", getAllProducts);
 router.get("/productShop/:shopId", getAllProducts)
 router.post("/product", saveProduct);
-router.delete("/product/:productId", deleteProduct);
+router.delete("/product/delete/:productId", deleteProduct);
+router.put('/product/update', updateProduct)
 
 router.get("/categories", getAllCategories);
 router.post("/category", postCategory);
