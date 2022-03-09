@@ -3,8 +3,30 @@ import { Shops } from "@prisma/client";
 
 export async function saveNewShop(data: any) {
   try {
-    const newShop: any = await prisma.shops.create({ data });
-    if (newShop) return newShop;
+    
+    let user: any = await prisma.users.findUnique({
+      where: {
+        id: data.userId,
+      },
+      select: {
+        shopsId: true,
+      },
+    });
+    if(user){
+      const newShop: any = await prisma.shops.create({ data: data });
+      user.shopsId.push(newShop.id);
+      const users = await prisma.users.update({
+        where: {
+          id: data.userId,
+        },
+        data: {
+          shopsId: user.shopsId,
+        },
+      });
+      return newShop;
+    }
+    return null
+    
   } catch (error) {
     return null;
   }

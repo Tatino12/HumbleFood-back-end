@@ -2,7 +2,7 @@
  * Required External Modules and Interfaces
  */
 import { Request, Response } from "express";
-import { allUsersList, saveNewUser } from "./user.controller";
+import { allUsersList, saveNewUser} from "./user.controller";
 import {
   getProducts,
   saveNewProduct,
@@ -12,6 +12,8 @@ import {
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop } from "./shop.controller";
+import { addNewComment } from "./review.controller";
+
 
 // SHOPS
 export const getAllShops = async (req: Request, res: Response) => {
@@ -27,8 +29,15 @@ export const getAllShops = async (req: Request, res: Response) => {
 export const addShop = async (req: Request, res: Response) => {
   try {
     const data = req.body;
+    
     const shop = await saveNewShop(data);
-    res.status(200).send(shop);
+    if(shop){
+      res.status(201).json(shop);
+    }
+    else{
+      res.status(401).json({ msg: "Error! no se pudo crear la Tienda" });
+    }
+    console.log(shop);
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
@@ -45,6 +54,8 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { category } = req.query; //nombre de la categoria, no el id
     let { name } = req.query;
     let { id } = req.query;
+    let { shopId } = req.params; 
+    
     //  console.log(req.query);
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
@@ -54,7 +65,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       pageBase = pageAsNumber;
     }
 
-    const products = await getProducts(pageBase);
+    let products = await getProducts(pageBase);
     if (category) {
       filteredProducts = await filterbyCategory(category);
       res.status(200).json(filteredProducts);
@@ -64,13 +75,19 @@ export const getAllProducts = async (req: Request, res: Response) => {
     } else if (id) {
       filteredProducts = await filterById(id);
       res.status(200).json(filteredProducts);
-    } else {
+    } else if (shopId){
+      //console.log(shopId);
+      products = await getProducts(pageBase, shopId)
+      res.status(200).json(products);
+    }
+    else {
       res.status(200).json(products);
     }
   } catch (error) {
     res.send(error);
   }
 };
+
 
 export const saveProduct = async (req: Request, res: Response) => {
   try {
@@ -139,6 +156,19 @@ export const addUser = async (req: Request, res: Response) => {
   }
 };
 
+export const addCommentUser = async (req: Request, res: Response) => {
+  try {
+    const { userId, productId, contentReview, pointProduct } = req.body;
+     if (!userId || !productId || !contentReview || !pointProduct) 
+     throw new Error()
+
+    const user = await addNewComment(req.body);
+    res.status(201).send({ msg : "Comentario creado exitosamente", user: user });
+  } catch (error) {
+    console.error(error)
+    res.status(401).json({ msg: "error", error: error });
+  }
+}
 /* -------------------------------------------------------------------------------------------- */
 
 // CATEGORIES
