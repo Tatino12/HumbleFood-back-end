@@ -15,37 +15,32 @@ async function namesCategories(product: any) {
   return arrCategories;
 }
 
-
-export const getProducts = async (
-  page: number,
-  shopId?: string
-) => {
+export const getProducts = async (page: number, shopId?: string) => {
   try {
     let total: number;
     //console.log(total)
     let products: any[];
-    if(shopId){
-      total = await prisma.products.count({where: {shopId: shopId}})
+    if (shopId) {
+      total = await prisma.products.count({ where: { shopId: shopId } });
       products = await prisma.products.findMany({
-        where: {shopId: shopId},
+        where: { shopId: shopId },
         skip: 10 * page,
-        take: 10
+        take: 10,
       });
-    }
-    else{
-      total = await prisma.products.count()
+    } else {
+      total = await prisma.products.count();
       //console.log(total);
       products = await prisma.products.findMany({
-        where: {
-          stock: {
-            not: 0,
-          },
-        },
+        // where: {
+        //   stock: {
+        //     not: 0,
+        //   },
+        // },
         skip: 10 * page,
-        take: 10
+        take: 10,
       });
     }
-    
+
     for (let i = 0; i < products.length; i++) {
       let arrCategories: any[] = await namesCategories(products[i]);
       products[i] = {
@@ -66,9 +61,8 @@ export const getProducts = async (
       next: page < pagesTotal - 1 ? true : false,
       prev: page > 0 ? true : false,
       pagesTotal,
-      products
-    }
-    
+      products,
+    };
   } catch (error) {
     console.error(error);
     return null;
@@ -96,14 +90,13 @@ export const filterbyCategory = async (category: any) => {
 };
 
 export const filterByName = async (name: any, page: number) => {
-
-  const total = await prisma.products.count({where: { name: name }})
+  const total = await prisma.products.count({ where: { name: name } });
   const all: any[] = await prisma.products.findMany({
     skip: 10 * page,
-    take: 10
+    take: 10,
   });
 
-  console.log(total)
+  console.log(total);
   const filteredByName: any[] = all.filter((e) =>
     e.name.toLowerCase().includes(name.toLowerCase())
   );
@@ -114,7 +107,6 @@ export const filterByName = async (name: any, page: number) => {
 
 export const filterById = async (id: any) => {
   let filterID = await prisma.products.findUnique({
-
     where: {
       id,
     },
@@ -194,49 +186,52 @@ export const deletePro = async (productId: string) => {
   try {
     let product = await prisma.products.delete({
       where: {
-        id: productId
-      }
-    })
+        id: productId,
+      },
+    });
     return product;
   } catch (error) {
     return null;
   }
-}
-  export const updateInfoProduct = async (idProduct:string, producto: Producto) => {
-    try {
-      const product = await prisma.products.update({
+};
+export const updateInfoProduct = async (
+  idProduct: string,
+  producto: Producto
+) => {
+  try {
+    const product = await prisma.products.update({
+      where: {
+        id: idProduct,
+      },
+      data: producto,
+    });
+
+    for (let i = 0; i < producto.categoriesId.length; i++) {
+      let idPro = await prisma.categories.findUnique({
         where: {
-          id: idProduct
+          id: producto.categoriesId[i],
         },
-        data: producto
-      })
-  
-      for (let i = 0; i < producto.categoriesId.length; i++) {
-        let idPro = await prisma.categories.findUnique({
-          where: {
-            id: producto.categoriesId[i],
-          },
-          select: {
-            productId: true,
-          },
-        });
-        idPro?.productId.push(product.id);
-  
-        const category = await prisma.categories.update({
-          where: {
-            id: producto.categoriesId[i],
-          },
-          data: {
-            productId: idPro?.productId,
-          },
-        });
-  
-        //console.log(idPro);
-      }
-  
-      return product
-    } catch (error) {
-      console.log(error)
-      return null
+        select: {
+          productId: true,
+        },
+      });
+      idPro?.productId.push(product.id);
+
+      const category = await prisma.categories.update({
+        where: {
+          id: producto.categoriesId[i],
+        },
+        data: {
+          productId: idPro?.productId,
+        },
+      });
+
+      //console.log(idPro);
     }
+
+    return product;
+  } catch (error) {
+    console.log(error);
+    return null;
   }
+};
