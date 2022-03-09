@@ -29,8 +29,15 @@ export const getAllShops = async (req: Request, res: Response) => {
 export const addShop = async (req: Request, res: Response) => {
   try {
     const data = req.body;
+    
     const shop = await saveNewShop(data);
-    res.status(200).send(shop);
+    if(shop){
+      res.status(201).json(shop);
+    }
+    else{
+      res.status(401).json({ msg: "Error! no se pudo crear la Tienda" });
+    }
+    console.log(shop);
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
