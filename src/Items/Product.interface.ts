@@ -1,3 +1,4 @@
+import { type } from "os";
 import internal from "stream";
 
 export interface Product {
@@ -32,3 +33,5 @@ export type Producto = {
   stock: number,
   categoriesId: string[];
 }
+
+
