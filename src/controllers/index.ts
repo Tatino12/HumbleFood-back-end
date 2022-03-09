@@ -16,7 +16,7 @@ import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop } from "./shop.controller";
 import { addNewComment } from "./review.controller";
 import { getOrders } from "./order.controller";
-
+import { getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
 
 
@@ -235,3 +235,17 @@ export const postCategory = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
+/* -------------------------------------------------------------------------------------------- */
+
+// CART
+
+export const getCart = async (req: Request, res: Response) => {
+  try {
+    const {total, productos, userId} = req.body
+    const cart = await getInfoCart(total, productos, userId)
+    res.status(201).send( {msg: "ok"})
+  } catch (error) {
+    res.status(401).json({ msg: "error", error: error });
+  }
+}

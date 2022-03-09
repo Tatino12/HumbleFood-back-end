@@ -15,6 +15,7 @@ import {
   getAllOrders,
   deleteProduct,
   updateProduct,
+  getCart,
   
 } from "../controllers";
 
@@ -44,4 +45,6 @@ router.post("/category", postCategory);
 router.post("/review", addCommentUser);
 
 router.get("/orders/:id", getAllOrders);
+
+router.post("/cart", getCart);
 

@@ -73,11 +73,13 @@ model Orders {
   //cart        Cart @relation(fields: [cartId], references: [id])
   cartId      String //@db.ObjectId Cuidado con este
   total       Float
+  userId      String 
+
 }
 
 model Cart {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
   total     Float
   ordersId  String[]
-  userId    String 
+  userId    String @unique
 }
