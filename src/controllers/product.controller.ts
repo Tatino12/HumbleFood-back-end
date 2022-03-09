@@ -1,6 +1,6 @@
 import { Products } from "@prisma/client";
 import prisma from "../database/db";
-import { Product, ProductOptions } from "../Items/Product.interface";
+import { Product, Producto, ProductOptions } from "../Items/Product.interface";
 
 async function namesCategories(product: any) {
   let arrCategories: any[] = await prisma.categories.findMany({
@@ -95,8 +95,15 @@ export const filterbyCategory = async (category: any) => {
   };
 };
 
-export const filterByName = async (name: any) => {
-  const all: any[] = await prisma.products.findMany();
+export const filterByName = async (name: any, page: number) => {
+
+  const total = await prisma.products.count({where: { name: name }})
+  const all: any[] = await prisma.products.findMany({
+    skip: 10 * page,
+    take: 10
+  });
+
+  console.log(total)
   const filteredByName: any[] = all.filter((e) =>
     e.name.toLowerCase().includes(name.toLowerCase())
   );
@@ -182,3 +189,42 @@ export const infoProduct = async (
     return null;
   }
 };
+
+export const updateInfoProduct = async (idProduct:string, producto: Producto) => {
+  try {
+    const product = await prisma.products.update({
+      where: {
+        id: idProduct
+      },
+      data: producto
+    })
+
+    for (let i = 0; i < producto.categoriesId.length; i++) {
+      let idPro = await prisma.categories.findUnique({
+        where: {
+          id: producto.categoriesId[i],
+        },
+        select: {
+          productId: true,
+        },
+      });
+      idPro?.productId.push(product.id);
+
+      const category = await prisma.categories.update({
+        where: {
+          id: producto.categoriesId[i],
+        },
+        data: {
+          productId: idPro?.productId,
+        },
+      });
+
+      //console.log(idPro);
+    }
+
+    return product
+  } catch (error) {
+    console.log(error)
+    return null
+  }
+}
