@@ -38,3 +38,29 @@ export const saveNewUser = async (data: any) => {
   }
 };
 
+export const userToAdmin = async (email: any) => {
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (user) {
+      const updatedUser = await prisma.users.update({
+        where: {
+          email,
+        },
+        data: {
+          rol: 2,
+        },
+      });
+
+      return updatedUser;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+};
