@@ -9,6 +9,7 @@ import {
   filterbyCategory,
   filterByName,
   filterById,
+  deletePro,
   updateInfoProduct,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
@@ -118,6 +119,20 @@ export const saveProduct = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const resultado = await deletePro(productId);
+    if(resultado){
+      res.status(200).json({ msg: "Producto eliminado con exito", deleted: resultado})
+    }
+    else{
+      res.status(401).json({ msg: "Producto no eliminado", deleted: resultado });
+    } 
+  } catch (error) {
+    res.status(401).json({ msg: "error", error: error });
+  }
+}
 export const updateProduct = async (req:Request, res: Response) => {
   try {
     const { idProduct, name, image, description, price, discount, stock, categoriesId } = req.body;
