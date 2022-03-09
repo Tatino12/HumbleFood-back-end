@@ -182,3 +182,16 @@ export const infoProduct = async (
     return null;
   }
 };
+
+export const deletePro = async (productId: string) => {
+  try {
+    let product = await prisma.products.delete({
+      where: {
+        id: productId
+      }
+    })
+    return product;
+  } catch (error) {
+    return null;
+  }
+}
