@@ -41,4 +41,5 @@ router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
 
-router.get("/orders", getAllOrders);
+router.get("/orders/:id", getAllOrders);
+

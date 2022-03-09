@@ -50,7 +50,9 @@ export const addShop = async (req: Request, res: Response) => {
 
 export const getAllOrders = async (req: Request, res: Response) => {
   try {    
-    const orders = await getOrders();
+    const { id } = req.params 
+    console.log(id)
+    const orders = await getOrders(id);
     res.status(201).send(orders)
   } catch (error) {
     console.error(error)
