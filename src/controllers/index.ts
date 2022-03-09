@@ -9,10 +9,12 @@ import {
   filterbyCategory,
   filterByName,
   filterById,
+  updateInfoProduct,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop } from "./shop.controller";
 import { addNewComment } from "./review.controller";
+import { Producto } from "../Items/Product.interface";
 
 
 // SHOPS
@@ -105,14 +107,26 @@ export const saveProduct = async (req: Request, res: Response) => {
 
 export const updateProduct = async (req:Request, res: Response) => {
   try {
-    const { idProduct, idShop } = req.params;
-    if(!idProduct || !idShop) throw new Error()
+    const { idProduct, name, image, description, price, discount, stock, categoriesId } = req.body;
+    if(!idProduct || !name || !image || !description || !price || !discount || !stock || !categoriesId) throw new Error().message = "datos"
 
-    // TODO Verificar si el id de la tienda pertenece a una tienda de verdad
     // TODO La misma verificación pero para el producto
-    
+    const productoUpdated: Producto = {
+      name,
+      image,
+      description,
+      price: Number.parseInt(price),
+      discount: Number.parseInt(discount),
+      stock: Number.parseInt(stock),
+      categoriesId: categoriesId.split(',')
+    };
+
+    const respuesta = await updateInfoProduct(idProduct, productoUpdated);
+
+    res.json(respuesta)
 
   } catch (error) {
+    console.log(error)
     res.status(400).json({ msg: "Datos requeridos no enviados"})
   }
 }
