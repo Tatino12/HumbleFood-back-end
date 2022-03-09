@@ -190,41 +190,53 @@ export const infoProduct = async (
   }
 };
 
-export const updateInfoProduct = async (idProduct:string, producto: Producto) => {
+export const deletePro = async (productId: string) => {
   try {
-    const product = await prisma.products.update({
+    let product = await prisma.products.delete({
       where: {
-        id: idProduct
-      },
-      data: producto
+        id: productId
+      }
     })
-
-    for (let i = 0; i < producto.categoriesId.length; i++) {
-      let idPro = await prisma.categories.findUnique({
-        where: {
-          id: producto.categoriesId[i],
-        },
-        select: {
-          productId: true,
-        },
-      });
-      idPro?.productId.push(product.id);
-
-      const category = await prisma.categories.update({
-        where: {
-          id: producto.categoriesId[i],
-        },
-        data: {
-          productId: idPro?.productId,
-        },
-      });
-
-      //console.log(idPro);
-    }
-
-    return product
+    return product;
   } catch (error) {
-    console.log(error)
-    return null
+    return null;
   }
 }
+  export const updateInfoProduct = async (idProduct:string, producto: Producto) => {
+    try {
+      const product = await prisma.products.update({
+        where: {
+          id: idProduct
+        },
+        data: producto
+      })
+  
+      for (let i = 0; i < producto.categoriesId.length; i++) {
+        let idPro = await prisma.categories.findUnique({
+          where: {
+            id: producto.categoriesId[i],
+          },
+          select: {
+            productId: true,
+          },
+        });
+        idPro?.productId.push(product.id);
+  
+        const category = await prisma.categories.update({
+          where: {
+            id: producto.categoriesId[i],
+          },
+          data: {
+            productId: idPro?.productId,
+          },
+        });
+  
+        //console.log(idPro);
+      }
+  
+      return product
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  }
