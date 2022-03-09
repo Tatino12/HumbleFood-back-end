@@ -9,10 +9,12 @@ import {
   filterbyCategory,
   filterByName,
   filterById,
+  updateInfoProduct,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop } from "./shop.controller";
 import { addNewComment } from "./review.controller";
+import { Producto } from "../Items/Product.interface";
 
 
 // SHOPS
@@ -70,7 +72,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       filteredProducts = await filterbyCategory(category);
       res.status(200).json(filteredProducts);
     } else if (name) {
-      filteredProducts = await filterByName(name);
+      filteredProducts = await filterByName(name, pageBase);
       res.status(200).json(filteredProducts);
     } else if (id) {
       filteredProducts = await filterById(id);
@@ -102,6 +104,32 @@ export const saveProduct = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
+export const updateProduct = async (req:Request, res: Response) => {
+  try {
+    const { idProduct, name, image, description, price, discount, stock, categoriesId } = req.body;
+    if(!idProduct || !name || !image || !description || !price || !discount || !stock || !categoriesId) throw new Error().message = "datos"
+
+    // TODO La misma verificación pero para el producto
+    const productoUpdated: Producto = {
+      name,
+      image,
+      description,
+      price: Number.parseInt(price),
+      discount: Number.parseInt(discount),
+      stock: Number.parseInt(stock),
+      categoriesId: categoriesId.split(',')
+    };
+
+    const respuesta = await updateInfoProduct(idProduct, productoUpdated);
+
+    res.json(respuesta)
+
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ msg: "Datos requeridos no enviados"})
+  }
+}
 
 /* -------------------------------------------------------------------------------------------- */
 

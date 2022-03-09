@@ -1,3 +1,4 @@
+import internal from "stream";
 
 export interface Product {
   id: string;
@@ -20,4 +21,14 @@ export type ProductOptions = {
   id?: string
   name?: string,
   categoriesId?: string
+}
+
+export type Producto = {
+  name: string,
+  image: string,
+  description: string,
+  price: number,
+  discount: number,
+  stock: number,
+  categoriesId: string[];
 }
