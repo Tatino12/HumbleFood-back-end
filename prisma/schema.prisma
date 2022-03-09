@@ -18,7 +18,7 @@ model Users {
   name_user String
   email     String @unique
   direction String
-  rol       Int
+  rol       Int  // 0 = User / 1 = User with Shop / 2 = Admin
   shopsId     String[] 
   
 }
