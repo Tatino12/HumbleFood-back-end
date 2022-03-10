@@ -327,8 +327,27 @@ export const getCarrito = async (req: Request, res: Response) => {
 
     const carrito = await getCarritoUser(idUser);
     
-    res.json(carrito)
+    if(carrito) {
+      return res.json(carrito)
+    }
+
+    res.status(404).json({msg: "Carrito no encontrado."})
   } catch (error) {
     res.status(500).json({msg: errores[1]})
+  }
+}
+
+export const saveCarrito = async (req: Request, res: Response) => {
+  try {
+    const idUser = req.params.idUser;
+    console.log(Array.from(req.body.products))
+
+    res.json({msg: "ok"})
+
+
+
+
+  } catch (error) {
+    
   }
 }

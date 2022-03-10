@@ -25,12 +25,28 @@ export const getCarritoUser = async (userId: string) => {
   try {
     // buscamos el carrito del usuario
     let carrito = await prisma.cart.findUnique({where: { userId }})
+    
+    if(!carrito) throw new Error()
     if(!Object.keys(carrito!.ordersId).length) return carrito
 
     return await getOrderByCartId(carrito!.ordersId)
-    
-    
   } catch (error) {
-    return {}
+    return null
+  }
+}
+
+export const saveNewCarrito = async (userId: string) => {
+  try {
+    // let carrito = await prisma.cart.upsert({
+    //   where: {
+    //     userId
+    //   },
+    //   create: {
+
+    //   },
+    //   update: {}
+    // })
+  } catch (error) {
+    
   }
 }
