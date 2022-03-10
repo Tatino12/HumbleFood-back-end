@@ -20,7 +20,12 @@ import {
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop, getShopIdUser } from "./shop.controller";
 import { addNewComment, getProductReviews } from "./review.controller";
-import { getOrders } from "./order.controller";
+import {
+  createOrder,
+  getOrders,
+  Orders,
+  updateInfoOrder,
+} from "./order.controller";
 import { getCarritoUser, getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
 import { sendEmail } from "./email.controller";
@@ -69,10 +74,22 @@ export const addShop = async (req: Request, res: Response) => {
   }
 };
 
+/* -------------------------------------------------------------------------------------------- */
+
+// ORDERS
+export const getEveryOrder = async (req: Request, res: Response) => {
+  try {
+    const orders = await Orders();
+    res.status(201).send(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const orders = await getOrders(id);
     res.status(201).send(orders);
   } catch (error) {
@@ -80,6 +97,31 @@ export const getAllOrders = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
+export const saveOrder = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    if (data) {
+      const newOrder = await createOrder(data);
+      res.status(201).send(newOrder);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const updateOrder = async (req: Request, res: Response) => {
+  try {
+    const { id, state } = req.params;
+    const updatedOrder = await updateInfoOrder(id, state);
+    res.status(201).send(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // PRODUCTS
