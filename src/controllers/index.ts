@@ -15,6 +15,8 @@ import {
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop } from "./shop.controller";
 import { addNewComment } from "./review.controller";
+import { getOrders } from "./order.controller";
+import { getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
 
 
@@ -47,6 +49,17 @@ export const addShop = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllOrders = async (req: Request, res: Response) => {
+  try {    
+    const { id } = req.params 
+    console.log(id)
+    const orders = await getOrders(id);
+    res.status(201).send(orders)
+  } catch (error) {
+    console.error(error)
+    res.status(401).json({ msg: "error", error: error});
+  }
+};
 /* -------------------------------------------------------------------------------------------- */
 
 // PRODUCTS
@@ -222,3 +235,17 @@ export const postCategory = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
+/* -------------------------------------------------------------------------------------------- */
+
+// CART
+
+export const getCart = async (req: Request, res: Response) => {
+  try {
+    const {total, productos, userId} = req.body
+    const cart = await getInfoCart(total, productos, userId)
+    res.status(201).send( {msg: "ok"})
+  } catch (error) {
+    res.status(401).json({ msg: "error", error: error });
+  }
+}
