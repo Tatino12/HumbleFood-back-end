@@ -31,7 +31,7 @@ export const router = Router();
  * Controller Definitions
  */
 router.get("/shops", getAllShops);
-router.get("/shop/:idUser", getShopUser)
+router.get("/shop/:idUser", getShopUser);
 router.post("/shop", addShop);
 
 router.get("/users", getAllUsers);
@@ -52,6 +52,5 @@ router.post("/review", addCommentUser);
 
 router.get("/orders/:id", getAllOrders);
 
-router.get("/carrito/:idUser", getCarrito)
+router.get("/carrito/:idUser", getCarrito);
 //router.post("/cart", getCart);
-
