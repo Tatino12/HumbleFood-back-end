@@ -1,5 +1,7 @@
-export interface Cart {
-  total:   number,
-  ordersId : string[],
-  userId : String 
+export interface Cart{
+    id: string,
+    total: number,
+    ordersId: String[],
+    userId: String
 }
+
