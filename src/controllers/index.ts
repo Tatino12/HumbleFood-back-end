@@ -339,13 +339,13 @@ export const addCommentUser = async (req: Request, res: Response) => {
   }
 };
 
-export const getReviews = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const reviews = await getProductReviews(id);
-    res.status(201).send(reviews);
-  } catch (error) {
-    console.error(error);
-    res.status(401).json({ msg: "error", error: error });
-  }
-};
+// export const getReviews = async (req: Request, res: Response) => {
+//   try {
+//     const { id } = req.params;
+//     const reviews = await getProductReviews(id);
+//     res.status(201).send(reviews);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(401).json({ msg: "error", error: error });
+//   }
+// };
