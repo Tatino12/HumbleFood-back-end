@@ -31,11 +31,11 @@ export const getProducts = async (page: number, shopId?: string) => {
       total = await prisma.products.count();
       //console.log(total);
       products = await prisma.products.findMany({
-        where: {
-          stock: {
-            not: 0,
-          },
-        },
+        // where: {
+        //   stock: {
+        //     not: 0,
+        //   },
+        // },
         skip: 10 * page,
         take: 10,
       });
@@ -304,3 +304,4 @@ export const getInforOfManyProducts = async (idProducts: string[]) => {
     return null
   }
 }
+
