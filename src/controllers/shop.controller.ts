@@ -40,3 +40,21 @@ export async function getShops() {
     return null;
   }
 }
+
+export async function getShopIdUser(idUser: string){
+  try {
+    const shop = await prisma.shops.findMany({ 
+      where: {
+        userId: idUser
+      }
+    })
+    if(shop){
+      console.log(idUser);
+      
+      return shop[0]
+    }
+    else  return null
+  } catch (error) {
+    
+  }
+}

@@ -19,7 +19,7 @@ model Users {
   email     String @unique
   direction String
   rol       Int
-  shopsId     String[] 
+  shopsId     String[]
   
 }
 

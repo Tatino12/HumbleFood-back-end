@@ -28,10 +28,15 @@ export const allUsersList = async (page: number): Promise<null | User[]> => {
 //   }
 // };
 
-export const saveNewUser = async (data: User) => {
+export const saveNewUser = async (data: any) => {
   try {
-    const newUser: any = await prisma.users.create({
-      data,
+    const info: any = {
+      ...data,
+      rol: 0,
+      shopsId: []
+    }
+    const newUser: any | null = await prisma.users.create({
+      data: info,
     });
     const cart = await prisma.cart.create({data:{
       total: 0,
@@ -46,9 +51,9 @@ export const saveNewUser = async (data: User) => {
 
 export const getUserId = async (userId :string) => {
   try {
-    const encontrado: User | null = await prisma.users.findUnique({
+    const encontrado: User[] | null = await prisma.users.findMany({
       where: {
-        userId
+        userId: userId
       }
     })
     if(encontrado){
@@ -58,4 +63,4 @@ export const getUserId = async (userId :string) => {
   } catch (error) {
     return null
   }
-}
+};

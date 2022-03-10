@@ -13,7 +13,7 @@ import {
   updateInfoProduct,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
-import { getShops, saveNewShop } from "./shop.controller";
+import { getShops, saveNewShop, getShopIdUser } from "./shop.controller";
 import { addNewComment } from "./review.controller";
 import { Producto } from "../Items/Product.interface";
 
@@ -28,6 +28,22 @@ export const getAllShops = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
+export const getShopUser = async (req: Request, res: Response) => {
+  try {
+    const { idUser } = req.params
+    
+    const result = await getShopIdUser(idUser);
+    if(result){
+      res.status(200).json({msg: "Tienda Encontrada", shop: result});
+    }
+    else{
+      res.status(404).json({msg: "Tienda no Encontrada", shop: result});
+    }
+  } catch (error) {
+    res.status(404).json({msg: "Error", shop: error});
+  }
+}
 
 export const addShop = async (req: Request, res: Response) => {
   try {
@@ -174,10 +190,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId: string = req.params.userId as string;
     const user = await getUserId(userId);
     if(user){
-      res.status(200).json({user: user})
+      res.status(200).json({user: user[0]})
     }
     else{
       res.status(400).json({user: user})
@@ -190,9 +206,9 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const addUser = async (req: Request, res: Response) => {
   try {
-    const { userId, name, name_user, email, direction, rol, shopsId } =
+    const { userId, name, name_user, email, direction } =
       req.body;
-    const data: any = { userId, name, name_user, email, direction, rol, shopsId };
+    const data: any = { userId, name, name_user, email, direction };
     const user = await saveNewUser(data);
     res.status(201).send({ msj: "Usuario creado correctamente", user: user });
   } catch (error) {
