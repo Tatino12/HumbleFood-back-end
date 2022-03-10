@@ -72,6 +72,7 @@ model Orders {
   productsId  String[]
   //cart        Cart @relation(fields: [cartId], references: [id])
   cartId      String //@db.ObjectId Cuidado con este
+  userId      String @unique
 }
 
 model Cart {
@@ -80,3 +81,4 @@ model Cart {
   ordersId  String[]
   userId  String @unique
 }
+

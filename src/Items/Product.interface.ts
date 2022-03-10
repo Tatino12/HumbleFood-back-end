@@ -34,4 +34,3 @@ export type Producto = {
   categoriesId: string[];
 }
 
-
