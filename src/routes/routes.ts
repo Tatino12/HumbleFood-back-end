@@ -12,8 +12,10 @@ import {
   addShop,
   getAllShops,
   addCommentUser,
+  getAllOrders,
   deleteProduct,
   updateProduct,
+  getCarrito,
   updateToAdmin,
 } from "../controllers";
 
@@ -42,3 +44,9 @@ router.get("/categories", getAllCategories);
 router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
+
+router.get("/orders/:id", getAllOrders);
+
+router.get("/carrito/:idUser", getCarrito)
+//router.post("/cart", getCart);
+
