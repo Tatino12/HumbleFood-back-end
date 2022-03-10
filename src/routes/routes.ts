@@ -15,13 +15,15 @@ import {
   getAllOrders,
   deleteProduct,
   updateProduct,
-  //getCart,
   getUser,
   getShopUser,
   getCarrito,
   saveCarrito,
   updateToAdmin,
   getReviews,
+  saveOrder,
+  getEveryOrder,
+  updateOrder,
 } from "../controllers";
 
 /**
@@ -33,7 +35,7 @@ export const router = Router();
  * Controller Definitions
  */
 router.get("/shops", getAllShops);
-router.get("/shop/:idUser", getShopUser)
+router.get("/shop/:idUser", getShopUser);
 router.post("/shop", addShop);
 
 router.get("/users", getAllUsers);
@@ -53,8 +55,11 @@ router.post("/category", postCategory);
 router.post("/review", addCommentUser);
 router.get("/reviews/:id", getReviews)
 
+
 router.get("/orders/:id", getAllOrders);
+router.get("/orders", getEveryOrder);
+router.put("/order/:id/:state", updateOrder);
+router.post("/order", saveOrder);
 
-router.get("/carrito/:idUser", getCarrito)
-router.post('/carrito/:idUser', saveCarrito)
-
+router.get("/carrito/:idUser", getCarrito);
+router.post("/carrito/:idUser", saveCarrito);

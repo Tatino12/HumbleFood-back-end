@@ -2,7 +2,12 @@
  * Required External Modules and Interfaces
  */
 import { Request, Response } from "express";
-import { allUsersList, saveNewUser, userToAdmin, getUserId } from "./user.controller";
+import {
+  allUsersList,
+  saveNewUser,
+  userToAdmin,
+  getUserId,
+} from "./user.controller";
 import {
   getProducts,
   saveNewProduct,
@@ -15,10 +20,15 @@ import {
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop, getShopIdUser } from "./shop.controller";
 import { addNewComment, getProductReviews } from "./review.controller";
-import { getOrders } from "./order.controller";
+import {
+  createOrder,
+  getOrders,
+  Orders,
+  updateInfoOrder,
+} from "./order.controller";
 import { getCarritoUser, getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
-//import { sendEmail } from "./email.controller";
+import { sendEmail } from "./email.controller";
 import { errores } from "../Items/errors";
 
 // SHOPS
@@ -34,19 +44,18 @@ export const getAllShops = async (req: Request, res: Response) => {
 
 export const getShopUser = async (req: Request, res: Response) => {
   try {
-    const { idUser } = req.params
-    
+    const { idUser } = req.params;
+
     const result = await getShopIdUser(idUser);
-    if(result){
-      res.status(200).json({msg: "Tienda Encontrada", shop: result});
-    }
-    else{
-      res.status(404).json({msg: "Tienda no Encontrada", shop: null});
+    if (result) {
+      res.status(200).json({ msg: "Tienda Encontrada", shop: result });
+    } else {
+      res.status(404).json({ msg: "Tienda no Encontrada", shop: null });
     }
   } catch (error) {
-    res.status(404).json({msg: "Error", shop: error});
+    res.status(404).json({ msg: "Error", shop: error });
   }
-}
+};
 
 export const addShop = async (req: Request, res: Response) => {
   try {
@@ -65,17 +74,54 @@ export const addShop = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllOrders = async (req: Request, res: Response) => {
-  try {    
-    const { id } = req.params 
-    console.log(id)
-    const orders = await getOrders(id);
-    res.status(201).send(orders)
+/* -------------------------------------------------------------------------------------------- */
+
+// ORDERS
+export const getEveryOrder = async (req: Request, res: Response) => {
+  try {
+    const orders = await Orders();
+    res.status(201).send(orders);
   } catch (error) {
-    console.error(error)
-    res.status(401).json({ msg: "error", error: error});
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
   }
 };
+
+export const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const orders = await getOrders(id);
+    res.status(201).send(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const saveOrder = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    if (data) {
+      const newOrder = await createOrder(data);
+      res.status(201).send(newOrder);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const updateOrder = async (req: Request, res: Response) => {
+  try {
+    const { id, state } = req.params;
+    const updatedOrder = await updateInfoOrder(id, state);
+    res.status(201).send(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // PRODUCTS
@@ -200,7 +246,6 @@ export const updateProduct = async (req: Request, res: Response) => {
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
     const pageAsNumber: number = parseInt(myPage);
@@ -225,22 +270,19 @@ export const getUser = async (req: Request, res: Response) => {
   try {
     const userId: string = req.params.userId as string;
     const user = await getUserId(userId);
-    if(user){
-      res.status(200).json({user: user[0]})
+    if (user) {
+      res.status(200).json({ user: user[0] });
+    } else {
+      res.status(400).json({ user: null });
     }
-    else{
-      res.status(400).json({user: null})
-    }
-
   } catch (error) {
     res.status(404).json({ msg: "Error" });
   }
-}
+};
 
 export const addUser = async (req: Request, res: Response) => {
   try {
-    const { userId, name, name_user, email, direction } =
-      req.body;
+    const { userId, name, name_user, email, direction } = req.body;
     const data: any = { userId, name, name_user, email, direction };
     const user = await saveNewUser(data);
     res.status(201).send({ msj: "Usuario creado correctamente", user: user });
@@ -249,8 +291,6 @@ export const addUser = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
-
-
 
 export const updateToAdmin = async (req: Request, res: Response) => {
   try {
@@ -298,39 +338,31 @@ export const postCategory = async (req: Request, res: Response) => {
 
 // CART
 
-
 export const getCarrito = async (req: Request, res: Response) => {
   try {
-    const { idUser } = req.params
+    const { idUser } = req.params;
     //TODO buscamos el usuario para verificar que el id que pasan por params es válido
 
     const carrito = await getCarritoUser(idUser);
-    
-    if(carrito) {
-      return res.json(carrito)
+
+    if (carrito) {
+      return res.json(carrito);
     }
 
-    res.status(404).json({msg: "Carrito no encontrado."})
+    res.status(404).json({ msg: "Carrito no encontrado." });
   } catch (error) {
-    res.status(500).json({msg: errores[1]})
+    res.status(500).json({ msg: errores[1] });
   }
-}
-
+};
 
 export const saveCarrito = async (req: Request, res: Response) => {
   try {
     const idUser = req.params.idUser;
-    console.log(Array.from(req.body.products))
+    console.log(Array.from(req.body.products));
 
-    res.json({msg: "ok"})
-
-
-
-
-  } catch (error) {
-    
-  }
-}
+    res.json({ msg: "ok" });
+  } catch (error) {}
+};
 /* -------------------------------------------------------------------------------------------- */
 
 // REVIEWS
@@ -351,12 +383,11 @@ export const addCommentUser = async (req: Request, res: Response) => {
 
 export const getReviews = async (req: Request, res: Response) => {
   try {
-    const {id} = req.params;
-    const reviews = await getProductReviews(id)
-    res.status(201).send(reviews)
+    const { id } = req.params;
+    const reviews = await getProductReviews(id);
+    res.status(201).send(reviews);
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
   }
-}
-
+};
