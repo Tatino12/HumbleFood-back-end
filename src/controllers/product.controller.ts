@@ -28,7 +28,7 @@ export const getProducts = async (page: number, shopId?: string) => {
         take: 10,
       });
     } else {
-      total = await prisma.products.count();
+      total = await prisma.products.count({where: {stock: {not: 0}}});
       //console.log(total);
       products = await prisma.products.findMany({
         // where: {

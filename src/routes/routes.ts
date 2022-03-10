@@ -19,7 +19,9 @@ import {
   getUser,
   getShopUser,
   getCarrito,
+  saveCarrito,
   updateToAdmin,
+  getReviews,
 } from "../controllers";
 
 /**
@@ -49,8 +51,14 @@ router.get("/categories", getAllCategories);
 router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
-
+router.get("/reviews/:id", getReviews)
 router.get("/orders/:id", getAllOrders);
 
+<<<<<<< HEAD
 router.get("/carrito/:idUser", getCarrito);
 //router.post("/cart", getCart);
+=======
+router.get("/carrito/:idUser", getCarrito)
+router.post('/carrito/:idUser', saveCarrito)
+
+>>>>>>> 5ddc966b946809230c775e8d0d54ede1073c2b44
