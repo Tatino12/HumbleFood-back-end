@@ -298,15 +298,6 @@ export const postCategory = async (req: Request, res: Response) => {
 
 // CART
 
-// export const getCart = async (req: Request, res: Response) => {
-//   try {
-//     const {total, productos, userId} = req.body
-//     const cart = await getInfoCart(total, productos, userId)
-//     res.status(201).send( {msg: "ok"})
-//   } catch (error) {
-//     res.status(401).json({ msg: "error", error: error });
-//   }
-// }
 
 export const getCarrito = async (req: Request, res: Response) => {
   try {
@@ -315,12 +306,31 @@ export const getCarrito = async (req: Request, res: Response) => {
 
     const carrito = await getCarritoUser(idUser);
     
-    res.json(carrito)
+    if(carrito) {
+      return res.json(carrito)
+    }
+
+    res.status(404).json({msg: "Carrito no encontrado."})
   } catch (error) {
     res.status(500).json({msg: errores[1]})
   }
 }
 
+
+export const saveCarrito = async (req: Request, res: Response) => {
+  try {
+    const idUser = req.params.idUser;
+    console.log(Array.from(req.body.products))
+
+    res.json({msg: "ok"})
+
+
+
+
+  } catch (error) {
+    
+  }
+}
 /* -------------------------------------------------------------------------------------------- */
 
 // REVIEWS
@@ -349,3 +359,4 @@ export const getReviews = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 }
+
