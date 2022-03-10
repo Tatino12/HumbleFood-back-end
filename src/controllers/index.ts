@@ -38,7 +38,7 @@ export const getShopUser = async (req: Request, res: Response) => {
       res.status(200).json({msg: "Tienda Encontrada", shop: result});
     }
     else{
-      res.status(404).json({msg: "Tienda no Encontrada", shop: result});
+      res.status(404).json({msg: "Tienda no Encontrada", shop: null});
     }
   } catch (error) {
     res.status(404).json({msg: "Error", shop: error});
@@ -196,7 +196,7 @@ export const getUser = async (req: Request, res: Response) => {
       res.status(200).json({user: user[0]})
     }
     else{
-      res.status(400).json({user: user})
+      res.status(400).json({user: null})
     }
 
   } catch (error) {
