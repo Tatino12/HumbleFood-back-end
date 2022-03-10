@@ -12,10 +12,13 @@ import {
   addShop,
   getAllShops,
   addCommentUser,
+  getAllOrders,
   deleteProduct,
   updateProduct,
   getUser,
-  getShopUser
+  getShopUser,
+  getCarrito,
+  updateToAdmin,
 } from "../controllers";
 
 /**
@@ -33,14 +36,21 @@ router.post("/shop", addShop);
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
 router.post("/user", addUser);
+router.put("/user/:email", updateToAdmin);
 
 router.get("/products", getAllProducts);
-router.get("/productShop/:shopId", getAllProducts)
+router.get("/productShop/:shopId", getAllProducts);
 router.post("/product", saveProduct);
 router.delete("/product/delete/:productId", deleteProduct);
-router.put('/product/update', updateProduct)
+router.put("/product/update", updateProduct);
 
 router.get("/categories", getAllCategories);
 router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
+
+router.get("/orders/:id", getAllOrders);
+
+router.get("/carrito/:idUser", getCarrito)
+//router.post("/cart", getCart);
+

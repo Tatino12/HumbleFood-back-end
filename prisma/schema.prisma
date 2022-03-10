@@ -18,8 +18,8 @@ model Users {
   name_user String
   email     String @unique
   direction String
-  rol       Int
-  shopsId     String[]
+  rol       Int  // 0 = User / 1 = User with Shop / 2 = Admin
+  shopsId     String[] 
   
 }
 
@@ -56,7 +56,7 @@ model Products {
   shopId          String
   //order           Orders? @relation(fields: [orderId], references: [id])
   // orderId         String
-  pointProduct    Float?
+  pointProduct    Float? @default(0)
 }
  model Reviews {
  id             String  @id @default(auto()) @map("_id") @db.ObjectId @unique
@@ -68,15 +68,18 @@ model Products {
 model Orders {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
   state       Int
-  shopId     String
+  shopId      String
   productsId  String[]
   //cart        Cart @relation(fields: [cartId], references: [id])
   cartId      String //@db.ObjectId Cuidado con este
+  total       Float
+  userId      String 
+
 }
 
 model Cart {
-  id      String     @id @default(auto()) @map("_id") @db.ObjectId
-  total   Float
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  total     Float
   ordersId  String[]
-  userId  String 
+  userId    String @unique
 }

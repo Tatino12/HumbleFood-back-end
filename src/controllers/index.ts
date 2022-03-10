@@ -2,7 +2,7 @@
  * Required External Modules and Interfaces
  */
 import { Request, Response } from "express";
-import { allUsersList, saveNewUser, getUserId} from "./user.controller";
+import { allUsersList, saveNewUser, userToAdmin, getUserId } from "./user.controller";
 import {
   getProducts,
   saveNewProduct,
@@ -15,8 +15,10 @@ import {
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop, getShopIdUser } from "./shop.controller";
 import { addNewComment } from "./review.controller";
+import { getOrders } from "./order.controller";
+import { getCarritoUser, getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
-
+import { errores } from "../Items/errors";
 
 // SHOPS
 export const getAllShops = async (req: Request, res: Response) => {
@@ -48,12 +50,11 @@ export const getShopUser = async (req: Request, res: Response) => {
 export const addShop = async (req: Request, res: Response) => {
   try {
     const data = req.body;
-    
+
     const shop = await saveNewShop(data);
-    if(shop){
+    if (shop) {
       res.status(201).json(shop);
-    }
-    else{
+    } else {
       res.status(401).json({ msg: "Error! no se pudo crear la Tienda" });
     }
     console.log(shop);
@@ -63,6 +64,17 @@ export const addShop = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllOrders = async (req: Request, res: Response) => {
+  try {    
+    const { id } = req.params 
+    console.log(id)
+    const orders = await getOrders(id);
+    res.status(201).send(orders)
+  } catch (error) {
+    console.error(error)
+    res.status(401).json({ msg: "error", error: error});
+  }
+};
 /* -------------------------------------------------------------------------------------------- */
 
 // PRODUCTS
@@ -73,8 +85,8 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { category } = req.query; //nombre de la categoria, no el id
     let { name } = req.query;
     let { id } = req.query;
-    let { shopId } = req.params; 
-    
+    let { shopId } = req.params;
+
     //  console.log(req.query);
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
@@ -94,19 +106,17 @@ export const getAllProducts = async (req: Request, res: Response) => {
     } else if (id) {
       filteredProducts = await filterById(id);
       res.status(200).json(filteredProducts);
-    } else if (shopId){
+    } else if (shopId) {
       //console.log(shopId);
-      products = await getProducts(pageBase, shopId)
+      products = await getProducts(pageBase, shopId);
       res.status(200).json(products);
-    }
-    else {
+    } else {
       res.status(200).json(products);
     }
   } catch (error) {
     res.send(error);
   }
 };
-
 
 export const saveProduct = async (req: Request, res: Response) => {
   try {
@@ -126,20 +136,42 @@ export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const resultado = await deletePro(productId);
-    if(resultado){
-      res.status(200).json({ msg: "Producto eliminado con exito", deleted: resultado})
+    if (resultado) {
+      res
+        .status(200)
+        .json({ msg: "Producto eliminado con exito", deleted: resultado });
+    } else {
+      res
+        .status(401)
+        .json({ msg: "Producto no eliminado", deleted: resultado });
     }
-    else{
-      res.status(401).json({ msg: "Producto no eliminado", deleted: resultado });
-    } 
   } catch (error) {
     res.status(401).json({ msg: "error", error: error });
   }
-}
-export const updateProduct = async (req:Request, res: Response) => {
+};
+export const updateProduct = async (req: Request, res: Response) => {
   try {
-    const { idProduct, name, image, description, price, discount, stock, categoriesId } = req.body;
-    if(!idProduct || !name || !image || !description || !price || !discount || !stock || !categoriesId) throw new Error().message = "datos"
+    const {
+      idProduct,
+      name,
+      image,
+      description,
+      price,
+      discount,
+      stock,
+      categoriesId,
+    } = req.body;
+    if (
+      !idProduct ||
+      !name ||
+      !image ||
+      !description ||
+      !price ||
+      !discount ||
+      !stock ||
+      !categoriesId
+    )
+      throw (new Error().message = "datos");
 
     // TODO La misma verificación pero para el producto
     const productoUpdated: Producto = {
@@ -149,18 +181,17 @@ export const updateProduct = async (req:Request, res: Response) => {
       price: Number.parseInt(price),
       discount: Number.parseInt(discount),
       stock: Number.parseInt(stock),
-      categoriesId: categoriesId.split(',')
+      categoriesId: categoriesId.split(","),
     };
 
     const respuesta = await updateInfoProduct(idProduct, productoUpdated);
 
-    res.json(respuesta)
-
+    res.json(respuesta);
   } catch (error) {
-    console.log(error)
-    res.status(400).json({ msg: "Datos requeridos no enviados"})
+    console.log(error);
+    res.status(400).json({ msg: "Datos requeridos no enviados" });
   }
-}
+};
 
 /* -------------------------------------------------------------------------------------------- */
 
@@ -220,16 +251,34 @@ export const addUser = async (req: Request, res: Response) => {
 export const addCommentUser = async (req: Request, res: Response) => {
   try {
     const { userId, productId, contentReview, pointProduct } = req.body;
-     if (!userId || !productId || !contentReview || !pointProduct) 
-     throw new Error()
+    if (!userId || !productId || !contentReview || !pointProduct)
+      throw new Error();
 
     const user = await addNewComment(req.body);
-    res.status(201).send({ msg : "Comentario creado exitosamente", user: user });
+    res.status(201).send({ msg: "Comentario creado exitosamente", user: user });
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(401).json({ msg: "error", error: error });
   }
-}
+};
+
+export const updateToAdmin = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.params;
+    if (!email) throw new Error();
+    const user = await userToAdmin(email);
+    if (user) {
+      res
+        .status(201)
+        .send({ msg: `Se cambio el rol de ${user.name} a Admin`, user: user });
+    } else {
+      res.status(401).json({ msg: "No se encontro user con ese Mail" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
 /* -------------------------------------------------------------------------------------------- */
 
 // CATEGORIES
@@ -254,3 +303,30 @@ export const postCategory = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
+/* -------------------------------------------------------------------------------------------- */
+
+// CART
+
+// export const getCart = async (req: Request, res: Response) => {
+//   try {
+//     const {total, productos, userId} = req.body
+//     const cart = await getInfoCart(total, productos, userId)
+//     res.status(201).send( {msg: "ok"})
+//   } catch (error) {
+//     res.status(401).json({ msg: "error", error: error });
+//   }
+// }
+
+export const getCarrito = async (req: Request, res: Response) => {
+  try {
+    const { idUser } = req.params
+    //TODO buscamos el usuario para verificar que el id que pasan por params es válido
+
+    const carrito = await getCarritoUser(idUser);
+    
+    res.json(carrito)
+  } catch (error) {
+    res.status(500).json({msg: errores[1]})
+  }
+}
