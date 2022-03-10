@@ -15,13 +15,12 @@ import {
   getAllOrders,
   deleteProduct,
   updateProduct,
-  //getCart,
   getUser,
   getShopUser,
   getCarrito,
   saveCarrito,
   updateToAdmin,
-  // getReviews,
+  getReviews,
 } from "../controllers";
 
 /**
@@ -51,7 +50,7 @@ router.get("/categories", getAllCategories);
 router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
-// router.get("/reviews/:id", getReviews)
+router.get("/reviews/:id", getReviews);
 router.get("/orders/:id", getAllOrders);
 
 router.get("/carrito/:idUser", getCarrito);

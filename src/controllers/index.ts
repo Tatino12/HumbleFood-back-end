@@ -19,11 +19,11 @@ import {
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop, getShopIdUser } from "./shop.controller";
-import { addNewComment } from "./review.controller";
+import { addNewComment, getProductReviews } from "./review.controller";
 import { getOrders } from "./order.controller";
 import { getCarritoUser, getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
-//import { sendEmail } from "./email.controller";
+import { sendEmail } from "./email.controller";
 import { errores } from "../Items/errors";
 
 // SHOPS
@@ -339,13 +339,13 @@ export const addCommentUser = async (req: Request, res: Response) => {
   }
 };
 
-// export const getReviews = async (req: Request, res: Response) => {
-//   try {
-//     const { id } = req.params;
-//     const reviews = await getProductReviews(id);
-//     res.status(201).send(reviews);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(401).json({ msg: "error", error: error });
-//   }
-// };
+export const getReviews = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const reviews = await getProductReviews(id);
+    res.status(201).send(reviews);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
