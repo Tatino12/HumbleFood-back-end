@@ -14,7 +14,7 @@ import {
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop, getShopIdUser } from "./shop.controller";
-import { addNewComment } from "./review.controller";
+import { addNewComment, getProductReviews } from "./review.controller";
 import { getOrders } from "./order.controller";
 import { getCarritoUser, getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
@@ -250,19 +250,7 @@ export const addUser = async (req: Request, res: Response) => {
   }
 };
 
-export const addCommentUser = async (req: Request, res: Response) => {
-  try {
-    const { userId, productId, contentReview, pointProduct } = req.body;
-    if (!userId || !productId || !contentReview || !pointProduct)
-      throw new Error();
 
-    const user = await addNewComment(req.body);
-    res.status(201).send({ msg: "Comentario creado exitosamente", user: user });
-  } catch (error) {
-    console.error(error);
-    res.status(401).json({ msg: "error", error: error });
-  }
-};
 
 export const updateToAdmin = async (req: Request, res: Response) => {
   try {
@@ -330,5 +318,34 @@ export const getCarrito = async (req: Request, res: Response) => {
     res.json(carrito)
   } catch (error) {
     res.status(500).json({msg: errores[1]})
+  }
+}
+
+/* -------------------------------------------------------------------------------------------- */
+
+// REVIEWS
+
+export const addCommentUser = async (req: Request, res: Response) => {
+  try {
+    const { userId, productId, contentReview, pointProduct } = req.body;
+    if (!userId || !productId || !contentReview || !pointProduct)
+      throw new Error();
+
+    const review = await addNewComment(req.body);
+    res.status(201).send({ msg: "Comentario creado exitosamente", review });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const getReviews = async (req: Request, res: Response) => {
+  try {
+    const {id} = req.params;
+    const reviews = await getProductReviews(id)
+    res.status(201).send(reviews)
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
   }
 }
