@@ -248,3 +248,59 @@ const orden = () => {
     
   }
 }
+
+
+const getProductoCarrito = async (id: string) => {
+  try {
+    let product = await prisma.products.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        discount: true,
+        stock: true,
+        shopId: true
+      }
+    });
+    return product;
+  } catch (error) {
+    return null;
+  }
+};
+
+
+
+export const getInforOfManyProducts = async (idProducts: string[]) => {
+  try {
+    let productosInfo = []
+
+    for await (const iterator of idProducts.map(produc => getProductoCarrito(produc))) {
+      productosInfo.push(iterator)
+    }
+
+    let newArra: any = []
+    let index: number
+
+    for (const produc of productosInfo) {
+      index = newArra.findIndex((ele: any) => ele.id === produc?.id)
+      if(index >= 0) {
+        newArra[index].amount = newArra[index].amount + 1
+      } else {
+        newArra.push({
+          id: produc?.id,
+          name: produc?.name,
+          price: produc?.price,
+          discount: produc?.discount,
+          stock: produc?.stock,
+          shopId: produc?.shopId,
+          amount: 1,
+        })
+      }
+    }
+
+    return newArra
+  } catch (error) {
+    return null
+  }
+}
