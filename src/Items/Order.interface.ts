@@ -1,15 +1,15 @@
-enum estado {
+export enum estado {
   "pendienteDeProcesamiento",
-  "procesando",
   "creado",
+  "procesando",
   "enviando",
   "completado",
   "cancelado",
 }
 export type Order = {
-  state:         estado;
-  shopId:        string;
-  productsId:    string[];
-  cartId:        string;
-  total:         number;
-}
+  state: estado;
+  shopId: string;
+  productsId: string[];
+  cartId: string;
+  total: number;
+};
