@@ -56,7 +56,7 @@ model Products {
   shopId          String
   //order           Orders? @relation(fields: [orderId], references: [id])
   // orderId         String
-  pointProduct    Float?
+  pointProduct    Float? @default(0)
 }
  model Reviews {
  id             String  @id @default(auto()) @map("_id") @db.ObjectId @unique
