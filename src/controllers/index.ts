@@ -18,6 +18,7 @@ import { addNewComment } from "./review.controller";
 import { getOrders } from "./order.controller";
 import { getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
+import { sendEmail } from "./email.controller";
 
 // SHOPS
 export const getAllShops = async (req: Request, res: Response) => {
@@ -182,6 +183,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
+    
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
     const pageAsNumber: number = parseInt(myPage);
