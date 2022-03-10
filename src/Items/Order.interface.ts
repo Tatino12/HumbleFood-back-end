@@ -1,7 +1,7 @@
 enum estado {
   "pendienteDeProcesamiento",
-  "procesando",
   "creado",
+  "procesando",
   "enviando",
   "completado",
   "cancelado",
