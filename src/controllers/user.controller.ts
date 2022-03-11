@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import prisma from "../database/db";
 import { User } from "../Items/User.interface";
+import { createNewCarrito } from "./cart.controller";
 import { Cart } from "../Items/Cart.interface";
 
 export const allUsersList = async (page: number): Promise<null | User[]> => {
@@ -38,12 +39,10 @@ export const saveNewUser = async (data: any) => {
     const newUser: any | null = await prisma.users.create({
       data: info,
     });
-    const cart = await prisma.cart.create({data:{
-      total: 0,
-      ordersId: [],
-      userId: newUser.id
-    }})
-    if (newUser) return newUser;
+    if (newUser) {
+      await createNewCarrito(newUser.id)
+      return newUser
+    }
   } catch (error) {
     return null;
   }

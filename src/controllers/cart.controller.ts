@@ -1,5 +1,5 @@
 import prisma from "../database/db";
-import { getOrderByCartId, validateOrder } from "./order.controller";
+import { validateOrder } from "./order.controller";
 
 export async function getInfoCart(total: any, productos: any, userId: any) {
   try {
@@ -29,24 +29,22 @@ export const getCarritoUser = async (userId: string) => {
     if(!carrito) throw new Error()
     if(!Object.keys(carrito!.ordersId).length) return carrito
 
-    return await getOrderByCartId(carrito!.ordersId)
+    //return await getOrderByCartId(carrito!.ordersId)
   } catch (error) {
     return null
   }
 }
 
-export const saveNewCarrito = async (userId: string) => {
+export const createNewCarrito = async (userId: string) => {
   try {
-    // let carrito = await prisma.cart.upsert({
-    //   where: {
-    //     userId
-    //   },
-    //   create: {
-
-    //   },
-    //   update: {}
-    // })
+    await prisma.cart.create({
+      data: {
+        userId,
+        ordersId: [],
+        total: 0
+      }
+    })
   } catch (error) {
-    
+    console.log(error)
   }
 }

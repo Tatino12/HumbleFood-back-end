@@ -15,6 +15,8 @@ import {
   getAllOrders,
   deleteProduct,
   updateProduct,
+  createOrden,
+  updateOrden,
   getUser,
   getShop,
   getCarrito,
@@ -54,6 +56,9 @@ router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
 router.get("/reviews/:id", getReviews);
+
+router.post("/orden", createOrden)
+router.put('/orden', updateOrden)
 
 router.get("/orders/:id", getAllOrders);
 router.get("/orders", getEveryOrder);

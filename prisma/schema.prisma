@@ -68,15 +68,19 @@ model Products {
  }
 
 model Orders {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  state       Int
-  shopId      String
-  productsId  String[]
-  //cart        Cart @relation(fields: [cartId], references: [id])
-  cartId      String //@db.ObjectId Cuidado con este
-  total       Float
-  userId      String 
+  id              String @id @default(auto()) @map("_id") @db.ObjectId
+  state           Int
+  shopId          String
+  total           Float
+  userId          String 
+  ordenProductsId String[]
+}
 
+model OrderProducts {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  productId   String
+  cantidad    Int
+  ordenId     String
 }
 
 model Cart {
