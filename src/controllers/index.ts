@@ -2,7 +2,12 @@
  * Required External Modules and Interfaces
  */
 import { Request, Response } from "express";
-import { allUsersList, saveNewUser, userToAdmin } from "./user.controller";
+import {
+  allUsersList,
+  saveNewUser,
+  userToAdmin,
+  getUserId,
+} from "./user.controller";
 import {
   getProducts,
   saveNewProduct,
@@ -13,11 +18,19 @@ import {
   updateInfoProduct,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
-import { getShops, saveNewShop } from "./shop.controller";
-import { addNewComment } from "./review.controller";
-import { createNewOrden, getOrders, updateOrdenById } from "./order.controller";
+import { getShops, saveNewShop, getShopId } from "./shop.controller";
+import { addNewComment, getProductReviews } from "./review.controller";
+import {
+  createNewOrden,
+  createOrder,
+  getOrders,
+  Orders,
+  updateInfoOrder,
+  updateOrdenById,
+} from "./order.controller";
 import { getCarritoUser, getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
+import { sendEmail } from "./email.controller";
 import { errores } from "../Items/errors";
 
 // SHOPS
@@ -28,6 +41,21 @@ export const getAllShops = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const getShop = async (req: Request, res: Response) => {
+  try {
+    const { shopId } = req.params;
+
+    const result = await getShopId(shopId);
+    if (result) {
+      res.status(200).json({ msg: "Tienda Encontrada", shop: result });
+    } else {
+      res.status(404).json({ msg: "Tienda no Encontrada", shop: null });
+    }
+  } catch (error) {
+    res.status(404).json({ msg: "Error", shop: error });
   }
 };
 
@@ -48,17 +76,54 @@ export const addShop = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllOrders = async (req: Request, res: Response) => {
-  try {    
-    const { id } = req.params 
-    console.log(id)
-    const orders = await getOrders(id);
-    res.status(201).send(orders)
+/* -------------------------------------------------------------------------------------------- */
+
+// ORDERS
+export const getEveryOrder = async (req: Request, res: Response) => {
+  try {
+    const orders = await Orders();
+    res.status(201).send(orders);
   } catch (error) {
-    console.error(error)
-    res.status(401).json({ msg: "error", error: error});
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
   }
 };
+
+export const getAllOrders = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const orders = await getOrders(id);
+    res.status(201).send(orders);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const saveOrder = async (req: Request, res: Response) => {
+  try {
+    const data = req.body;
+    if (data) {
+      const newOrder = await createOrder(data);
+      res.status(201).send(newOrder);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const updateOrder = async (req: Request, res: Response) => {
+  try {
+    const { id, state } = req.params;
+    const updatedOrder = await updateInfoOrder(id, state);
+    res.status(201).send(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // PRODUCTS
@@ -203,27 +268,26 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
-export const addUser = async (req: Request, res: Response) => {
+export const getUser = async (req: Request, res: Response) => {
   try {
-    const { userId, name, name_user, email, direction, rol, shopsId } =
-      req.body;
-    const data = { userId, name, name_user, email, direction, rol, shopsId };
-    const user = await saveNewUser(data);
-    res.status(201).send({ msj: "Usuario creado correctamente", user: user });
+    const userId: string = req.params.userId as string;
+    const user = await getUserId(userId);
+    if (user) {
+      res.status(200).json({ user: user[0] });
+    } else {
+      res.status(400).json({ user: null });
+    }
   } catch (error) {
-    console.error(error);
-    res.status(401).json({ msg: "error", error: error });
+    res.status(404).json({ msg: "Error" });
   }
 };
 
-export const addCommentUser = async (req: Request, res: Response) => {
+export const addUser = async (req: Request, res: Response) => {
   try {
-    const { userId, productId, contentReview, pointProduct } = req.body;
-    if (!userId || !productId || !contentReview || !pointProduct)
-      throw new Error();
-
-    const user = await addNewComment(req.body);
-    res.status(201).send({ msg: "Comentario creado exitosamente", user: user });
+    const { userId, name, name_user, email, direction } = req.body;
+    const data: any = { userId, name, name_user, email, direction };
+    const user = await saveNewUser(data);
+    res.status(201).send({ msj: "Usuario creado correctamente", user: user });
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
@@ -291,10 +355,25 @@ export const createOrden = async (req: Request, res: Response) => {
     const { userId, shopId, products } = req.body;
     const respu = await createNewOrden(userId, shopId, products)
     res.json(respu)
-  } catch (error) {
-    
-  }
+  } catch (error) {}
 }
+    
+export const getCarrito = async (req: Request, res: Response) => {
+  try {
+    const { idUser } = req.params;
+    //TODO buscamos el usuario para verificar que el id que pasan por params es válido
+
+    const carrito = await getCarritoUser(idUser);
+
+    if (carrito) {
+      return res.json(carrito);
+    }
+
+    res.status(404).json({ msg: "Carrito no encontrado." });
+  } catch (error) {
+    res.status(500).json({ msg: errores[1] });
+  }
+};
 
 
 export const updateOrden = async (req: Request, res: Response) => {
@@ -303,7 +382,41 @@ export const updateOrden = async (req: Request, res: Response) => {
     const repu = await updateOrdenById(ordenId, products)
 
     res.json(repu)
-  } catch (error) {
-    
-  }
+  } catch(e) {}
 }
+export const saveCarrito = async (req: Request, res: Response) => {
+  try {
+    const idUser = req.params.idUser;
+    console.log(Array.from(req.body.products));
+
+    res.json({ msg: "ok" });
+  } catch (error) {}
+};
+/* -------------------------------------------------------------------------------------------- */
+
+// REVIEWS
+
+export const addCommentUser = async (req: Request, res: Response) => {
+  try {
+    const { userId, productId, contentReview, pointProduct } = req.body;
+    if (!userId || !productId || !contentReview || !pointProduct)
+      throw new Error();
+
+    const review = await addNewComment(req.body);
+    res.status(201).send({ msg: "Comentario creado exitosamente", review });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const getReviews = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const reviews = await getProductReviews(id);
+    res.status(201).send(reviews);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};

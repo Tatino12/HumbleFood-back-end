@@ -28,7 +28,7 @@ export const getProducts = async (page: number, shopId?: string) => {
         take: 10,
       });
     } else {
-      total = await prisma.products.count({where: {stock: {not: 0}}});
+      total = await prisma.products.count({ where: { stock: { not: 0 } } });
       //console.log(total);
       products = await prisma.products.findMany({
         // where: {
@@ -52,6 +52,7 @@ export const getProducts = async (page: number, shopId?: string) => {
         discount: products[i].discount,
         stock: products[i].stock,
         categories: arrCategories.map((el) => el.name),
+        shopId: products[i].shopId,
       };
       //console.log(products[i]);
     }
@@ -236,19 +237,13 @@ export const updateInfoProduct = async (
   }
 };
 
-
 const orden = () => {
   try {
     prisma.orders.findUnique({
-      where: {
-        
-      }
-    })
-  } catch (error) {
-    
-  }
-}
-
+      where: {},
+    });
+  } catch (error) {}
+};
 
 const getProductoCarrito = async (id: string) => {
   try {
@@ -260,8 +255,8 @@ const getProductoCarrito = async (id: string) => {
         price: true,
         discount: true,
         stock: true,
-        shopId: true
-      }
+        shopId: true,
+      },
     });
     return product;
   } catch (error) {
@@ -269,23 +264,23 @@ const getProductoCarrito = async (id: string) => {
   }
 };
 
-
-
 export const getInforOfManyProducts = async (idProducts: string[]) => {
   try {
-    let productosInfo = []
+    let productosInfo = [];
 
-    for await (const iterator of idProducts.map(produc => getProductoCarrito(produc))) {
-      productosInfo.push(iterator)
+    for await (const iterator of idProducts.map((produc) =>
+      getProductoCarrito(produc)
+    )) {
+      productosInfo.push(iterator);
     }
 
-    let newArra: any = []
-    let index: number
+    let newArra: any = [];
+    let index: number;
 
     for (const produc of productosInfo) {
-      index = newArra.findIndex((ele: any) => ele.id === produc?.id)
-      if(index >= 0) {
-        newArra[index].amount = newArra[index].amount + 1
+      index = newArra.findIndex((ele: any) => ele.id === produc?.id);
+      if (index >= 0) {
+        newArra[index].amount = newArra[index].amount + 1;
       } else {
         newArra.push({
           id: produc?.id,
@@ -295,13 +290,12 @@ export const getInforOfManyProducts = async (idProducts: string[]) => {
           stock: produc?.stock,
           shopId: produc?.shopId,
           amount: 1,
-        })
+        });
       }
     }
 
-    return newArra
+    return newArra;
   } catch (error) {
-    return null
+    return null;
   }
-}
-
+};

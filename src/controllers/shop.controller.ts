@@ -41,3 +41,16 @@ export async function getShops() {
     return null;
   }
 }
+
+export async function getShopId(shopId: string) {
+  try {
+    const shop = await prisma.shops.findMany({
+      where: {
+        id: shopId,
+      },
+    });
+    if (shop) {
+      return shop[0];
+    } else return null;
+  } catch (error) {}
+}

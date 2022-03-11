@@ -1,7 +1,7 @@
 export enum estado {
   "pendienteDeProcesamiento",
-  "procesando",
   "creado",
+  "procesando",
   "enviando",
   "completado",
   "cancelado",
@@ -20,4 +20,4 @@ export type ProductOrderType = {
   productId?:  string
   ordenId?:    string
   cantidad?:   number
-}
+};

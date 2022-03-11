@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import prisma from "../database/db";
 import { User } from "../Items/User.interface";
 import { createNewCarrito } from "./cart.controller";
+import { Cart } from "../Items/Cart.interface";
 
 export const allUsersList = async (page: number): Promise<null | User[]> => {
   try {
@@ -30,8 +31,13 @@ export const allUsersList = async (page: number): Promise<null | User[]> => {
 
 export const saveNewUser = async (data: any) => {
   try {
-    const newUser = await prisma.users.create({
-      data,
+    const info: any = {
+      ...data,
+      rol: 0,
+      shopsId: []
+    }
+    const newUser: any | null = await prisma.users.create({
+      data: info,
     });
     if (newUser) {
       await createNewCarrito(newUser.id)
@@ -42,6 +48,21 @@ export const saveNewUser = async (data: any) => {
   }
 };
 
+export const getUserId = async (userId :string) => {
+  try {
+    const encontrado: User[] | null = await prisma.users.findMany({
+      where: {
+        userId: userId
+      }
+    })
+    if(encontrado){
+      return encontrado
+    }
+    else return null
+  } catch (error) {
+    return null
+  }
+};
 export const userToAdmin = async (email: any) => {
   try {
     const user = await prisma.users.findUnique({
