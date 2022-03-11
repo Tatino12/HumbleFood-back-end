@@ -15,7 +15,7 @@ import {
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop } from "./shop.controller";
 import { addNewComment } from "./review.controller";
-import { getOrders } from "./order.controller";
+import { createNewOrden, getOrders, updateOrdenById } from "./order.controller";
 import { getCarritoUser, getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
 import { errores } from "../Items/errors";
@@ -286,33 +286,23 @@ export const postCategory = async (req: Request, res: Response) => {
 //   }
 // }
 
-export const getCarrito = async (req: Request, res: Response) => {
+export const createOrden = async (req: Request, res: Response) => {
   try {
-    const { idUser } = req.params
-    //TODO buscamos el usuario para verificar que el id que pasan por params es válido
-
-    const carrito = await getCarritoUser(idUser);
-    
-    if(carrito) {
-      return res.json(carrito)
-    }
-
-    res.status(404).json({msg: "Carrito no encontrado."})
+    const { userId, shopId, products } = req.body;
+    const respu = await createNewOrden(userId, shopId, products)
+    res.json(respu)
   } catch (error) {
-    res.status(500).json({msg: errores[1]})
+    
   }
 }
 
-export const saveCarrito = async (req: Request, res: Response) => {
+
+export const updateOrden = async (req: Request, res: Response) => {
   try {
-    const idUser = req.params.idUser;
-    console.log(Array.from(req.body.products))
+    const { ordenId, products } = req.body;
+    const repu = await updateOrdenById(ordenId, products)
 
-    res.json({msg: "ok"})
-
-
-
-
+    res.json(repu)
   } catch (error) {
     
   }

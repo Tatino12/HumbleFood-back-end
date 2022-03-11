@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import prisma from "../database/db";
 import { User } from "../Items/User.interface";
+import { createNewCarrito } from "./cart.controller";
 
 export const allUsersList = async (page: number): Promise<null | User[]> => {
   try {
@@ -32,7 +33,10 @@ export const saveNewUser = async (data: any) => {
     const newUser = await prisma.users.create({
       data,
     });
-    if (newUser) return newUser;
+    if (newUser) {
+      await createNewCarrito(newUser.id)
+      return newUser
+    }
   } catch (error) {
     return null;
   }

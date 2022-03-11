@@ -1,4 +1,4 @@
-enum estado {
+export enum estado {
   "pendienteDeProcesamiento",
   "procesando",
   "creado",
@@ -12,4 +12,12 @@ export type Order = {
   productsId:    string[];
   cartId:        string;
   total:         number;
+}
+
+
+export type ProductOrderType = {
+  id?:         string
+  productId?:  string
+  ordenId?:    string
+  cantidad?:   number
 }

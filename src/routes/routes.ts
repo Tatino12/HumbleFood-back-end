@@ -15,9 +15,9 @@ import {
   getAllOrders,
   deleteProduct,
   updateProduct,
-  getCarrito,
-  saveCarrito,
   updateToAdmin,
+  createOrden,
+  updateOrden,
 } from "../controllers";
 
 /**
@@ -46,8 +46,10 @@ router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
 
+router.post("/orden", createOrden)
+router.put('/orden', updateOrden)
 router.get("/orders/:id", getAllOrders);
 
-router.get("/carrito/:idUser", getCarrito)
-router.post('/carrito/:idUser', saveCarrito)
+
+
 
