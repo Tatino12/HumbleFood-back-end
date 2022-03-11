@@ -248,10 +248,10 @@ const addOrUpdateProductOrder = async (ordenId: string, product: any) => {
 export async function updateInfoOrder(id: string, state: any) {
   const newState: any = estado[state];
   if (newState === 1) {
-    // notify(id, "Se ha registrado su compra!");
+    notify(id, "Se ha registrado su compra!"); // --> Notifica por mail al user comprador
     await updateProductsStocks(id); // --> Actualiza el stock de los productos comprados.
   }
-  if (newState === 3) notify(id, "Su orden ha sido enviada!");
+  if (newState === 3) notify(id, "Su orden ha sido enviada!"); // --> Notifica por mail al user comprador
   const orderUpdate = await prisma.orders.update({
     where: {
       id,
@@ -263,6 +263,7 @@ export async function updateInfoOrder(id: string, state: any) {
 }
 
 export async function updateProductsStocks(id: string) {
+  // --> Updatea el stock de los productos contenidos dentro de una Order.
   try {
     const orders: any = await prisma.orders.findUnique({
       where: {
@@ -287,7 +288,6 @@ export async function updateProductsStocks(id: string) {
       if (!products) products = [product];
       else products = [...products, product];
     }
-    console.log(products.length);
     let prevStock: any;
     let newStock: any;
     for (let j = 0; j < products.length; j++) {
