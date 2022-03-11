@@ -15,19 +15,20 @@ import {
   getAllOrders,
   deleteProduct,
   updateProduct,
-  createOrden,
-  updateOrden,
+  // createOrden,
+  updateOrderProducts,
   getUser,
   getShop,
-  getCarrito,
-  saveCarrito,
+  // getCarrito,
+  // saveCarrito,
   updateToAdmin,
   getReviews,
-  saveOrder,
+  createOrder,
   getEveryOrder,
   updateOrder,
   banUser,
   deleteReview,
+  getOrderProducts,
 } from "../controllers";
 
 /**
@@ -61,13 +62,13 @@ router.post("/review", addCommentUser);
 router.get("/reviews/:id", getReviews);
 router.delete("/review/:id", deleteReview);
 
-router.post("/orden", createOrden)
-router.put('/orden', updateOrden)
-
-router.get("/orders/:id", getAllOrders);
 router.get("/orders", getEveryOrder);
-router.put("/order/:id/:state", updateOrder);
-router.post("/order", saveOrder);
+router.get("/orders/:id", getAllOrders); //id de shops o users o orders
+router.get("/orderProducts/:id", getOrderProducts);
+router.put("/order", updateOrderProducts); //recibe id, products por body
+router.put("/order/:id/:state", updateOrder); // recibe id de la orden
+router.post("/order", createOrder);
+// router.post("/order", saveOrder);
 
-router.get("/carrito/:idUser", getCarrito);
-router.post("/carrito/:idUser", saveCarrito);
+// router.get("/carrito/:idUser", getCarrito);
+// router.post("/carrito/:idUser", saveCarrito);
