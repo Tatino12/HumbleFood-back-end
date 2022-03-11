@@ -18,7 +18,7 @@ import {
   updateInfoProduct,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
-import { getShops, saveNewShop, getShopIdUser } from "./shop.controller";
+import { getShops, saveNewShop, getShopId } from "./shop.controller";
 import { addNewComment, getProductReviews } from "./review.controller";
 import {
   createOrder,
@@ -42,11 +42,11 @@ export const getAllShops = async (req: Request, res: Response) => {
   }
 };
 
-export const getShopUser = async (req: Request, res: Response) => {
+export const getShop = async (req: Request, res: Response) => {
   try {
-    const { idUser } = req.params;
+    const { shopId } = req.params;
 
-    const result = await getShopIdUser(idUser);
+    const result = await getShopId(shopId);
     if (result) {
       res.status(200).json({ msg: "Tienda Encontrada", shop: result });
     } else {
