@@ -11,9 +11,6 @@ import {
 import {
   getProducts,
   saveNewProduct,
-  filterbyCategory,
-  filterByName,
-  filterById,
   deletePro,
   updateInfoProduct,
 } from "./product.controller";
@@ -134,7 +131,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { id } = req.query;
     let { shopId } = req.params;
 
-    //  console.log(req.query);
+    //console.log(req.query);
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
     const pageAsNumber: number = parseInt(myPage);
@@ -142,24 +139,10 @@ export const getAllProducts = async (req: Request, res: Response) => {
     if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
       pageBase = pageAsNumber;
     }
-
-    let products = await getProducts(pageBase);
-    if (category) {
-      filteredProducts = await filterbyCategory(category);
-      res.status(200).json(filteredProducts);
-    } else if (name) {
-      filteredProducts = await filterByName(name, pageBase);
-      res.status(200).json(filteredProducts);
-    } else if (id) {
-      filteredProducts = await filterById(id);
-      res.status(200).json(filteredProducts);
-    } else if (shopId) {
-      //console.log(shopId);
-      products = await getProducts(pageBase, shopId);
-      res.status(200).json(products);
-    } else {
-      res.status(200).json(products);
-    }
+    
+    let products = await getProducts(pageBase, shopId, category as string, name as string, id as string);
+    res.status(200).json(products);
+    
   } catch (error) {
     res.send(error);
   }
