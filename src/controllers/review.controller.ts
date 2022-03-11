@@ -27,3 +27,16 @@ export const getProductReviews = async (id: string) => {
     return null;
   }
 };
+
+export const deleteReviewId = async (id: string) => {
+  try {
+    const deletedReview = prisma.reviews.delete({
+      where: {
+        id,
+      },
+    });
+    return deletedReview;
+  } catch (error) {
+    return null;
+  }
+};
