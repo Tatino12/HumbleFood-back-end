@@ -357,7 +357,16 @@ export const createOrden = async (req: Request, res: Response) => {
     res.json(respu)
   } catch (error) {}
 }
-    
+
+export const updateOrden = async (req: Request, res: Response) => {
+  try {
+    const { ordenId, products } = req.body;
+    const repu = await updateOrdenById(ordenId, products)
+
+    res.json(repu)
+  } catch(e) {}
+}
+
 export const getCarrito = async (req: Request, res: Response) => {
   try {
     const { idUser } = req.params;
@@ -376,14 +385,7 @@ export const getCarrito = async (req: Request, res: Response) => {
 };
 
 
-export const updateOrden = async (req: Request, res: Response) => {
-  try {
-    const { ordenId, products } = req.body;
-    const repu = await updateOrdenById(ordenId, products)
 
-    res.json(repu)
-  } catch(e) {}
-}
 export const saveCarrito = async (req: Request, res: Response) => {
   try {
     const idUser = req.params.idUser;

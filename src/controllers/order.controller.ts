@@ -155,6 +155,8 @@ export const createNewOrden = async (
   }
 };
 
+
+
 export const updateOrdenById = async (ordenId: string, products: any) => {
   try {
     const newProducts = []
@@ -162,11 +164,80 @@ export const updateOrdenById = async (ordenId: string, products: any) => {
       newProducts.push(iterator)
     }
 
-    return newProducts
+    const existenProducts = await prisma.orders.findUnique({
+      where: { id: ordenId},
+      select: { ordenProductsId: true }
+    })
+
+    const prod = new Set([...newProducts, ...existenProducts!.ordenProductsId])
+
+    const orden = await prisma.orders.update({
+      where: {
+        id: ordenId
+      },
+      data : {
+        ordenProductsId: [...prod]
+      },
+    })
+
+    return orden
   } catch (error) {
     
   }
 }
+
+const addOrUpdateProductOrder = async (ordenId: string, product: any) => {
+  try {
+    const isproductSave = await prisma.orderProducts.findFirst({
+      where: {
+        AND: [
+          {
+            ordenId,
+          },
+          {
+            productId: product.id
+          },
+        ],
+      },
+      select: {
+        id: true
+      }
+    });
+    
+    let id = null
+    if(isproductSave?.id) {
+      id = await prisma.orderProducts.update({
+        where: {
+          id: isproductSave.id
+        },
+        data: {
+          cantidad: product.cantidad
+        },
+        select: {
+          id: true
+        }
+      })
+    } else {
+      id = await prisma.orderProducts.create({
+        data: {
+          ordenId,
+          productId: product.id,
+          cantidad: product.cantidad
+        },
+        select: {
+          id: true
+        }
+      })
+    }
+
+    return id.id
+  } catch (error) {
+    console.error(error)
+  }
+};
+
+// ================ ================ ================ ================ ================
+
 export async function updateInfoOrder(id: string, state: any) {
   const newState: any = estado[state];
   if (newState === 3) notify(id, "Su orden ha sido enviada!");
@@ -208,52 +279,4 @@ export async function createOrder(data: any) {
   return newOrder;
 }
 
-const addOrUpdateProductOrder = async (ordenId: string, product: any) => {
-  try {
-    const isproductSave = await prisma.orderProducts.findFirst({
-      where: {
-        AND: [
-          {
-            ordenId,
-          },
-          {
-            productId: product.id
-          },
-        ],
-      },
-      select: {
-        id: true
-      }
-    });
-    console.log(isproductSave?.id)
-    let id = null
-    if(isproductSave?.id) {
-      id = await prisma.orderProducts.update({
-        where: {
-          id: isproductSave.id
-        },
-        data: {
-          cantidad: product.cantidad
-        },
-        select: {
-          id: true
-        }
-      })
-    } else {
-      id = await prisma.orderProducts.create({
-        data: {
-          ordenId,
-          productId: product.id,
-          cantidad: product.cantidad
-        },
-        select: {
-          id: true
-        }
-      })
-    }
 
-    return id.id
-  } catch (error) {
-    console.error(error)
-  }
-};
