@@ -16,7 +16,7 @@ import {
   deleteProduct,
   updateProduct,
   getUser,
-  getShopUser,
+  getShop,
   getCarrito,
   saveCarrito,
   updateToAdmin,
@@ -35,7 +35,7 @@ export const router = Router();
  * Controller Definitions
  */
 router.get("/shops", getAllShops);
-router.get("/shop/:idUser", getShopUser);
+router.get("/shop/:shopId", getShop);
 router.post("/shop", addShop);
 
 router.get("/users", getAllUsers);
