@@ -26,10 +26,12 @@ import {
   getProductReviews,
 } from "./review.controller";
 import {
+  createNewOrden,
   createOrder,
   getOrders,
   Orders,
   updateInfoOrder,
+  updateOrdenById,
 } from "./order.controller";
 import { getCarritoUser, getInfoCart } from "./cart.controller";
 import { Producto } from "../Items/Product.interface";
@@ -359,6 +361,33 @@ export const postCategory = async (req: Request, res: Response) => {
 
 // CART
 
+// export const getCart = async (req: Request, res: Response) => {
+//   try {
+//     const {total, productos, userId} = req.body
+//     const cart = await getInfoCart(total, productos, userId)
+//     res.status(201).send( {msg: "ok"})
+//   } catch (error) {
+//     res.status(401).json({ msg: "error", error: error });
+//   }
+// }
+
+export const createOrden = async (req: Request, res: Response) => {
+  try {
+    const { userId, shopId, products } = req.body;
+    const respu = await createNewOrden(userId, shopId, products)
+    res.json(respu)
+  } catch (error) {}
+}
+
+export const updateOrden = async (req: Request, res: Response) => {
+  try {
+    const { ordenId, products } = req.body;
+    const repu = await updateOrdenById(ordenId, products)
+
+    res.json(repu)
+  } catch(e) {}
+}
+
 export const getCarrito = async (req: Request, res: Response) => {
   try {
     const { idUser } = req.params;
@@ -375,6 +404,8 @@ export const getCarrito = async (req: Request, res: Response) => {
     res.status(500).json({ msg: errores[1] });
   }
 };
+
+
 
 export const saveCarrito = async (req: Request, res: Response) => {
   try {
