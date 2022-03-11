@@ -24,6 +24,8 @@ import {
   saveOrder,
   getEveryOrder,
   updateOrder,
+  banUser,
+  deleteReview,
 } from "../controllers";
 
 /**
@@ -41,6 +43,7 @@ router.post("/shop", addShop);
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
 router.post("/user", addUser);
+router.put("/user/:userId", banUser);
 router.put("/user/:email", updateToAdmin);
 
 router.get("/products", getAllProducts);
@@ -54,6 +57,7 @@ router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
 router.get("/reviews/:id", getReviews);
+router.delete("/review/:id", deleteReview);
 
 router.get("/orders/:id", getAllOrders);
 router.get("/orders", getEveryOrder);

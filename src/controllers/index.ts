@@ -7,6 +7,7 @@ import {
   saveNewUser,
   userToAdmin,
   getUserId,
+  ban,
 } from "./user.controller";
 import {
   getProducts,
@@ -19,7 +20,11 @@ import {
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
 import { getShops, saveNewShop, getShopId } from "./shop.controller";
-import { addNewComment, getProductReviews } from "./review.controller";
+import {
+  addNewComment,
+  deleteReviewId,
+  getProductReviews,
+} from "./review.controller";
 import {
   createOrder,
   getOrders,
@@ -129,6 +134,7 @@ export const updateOrder = async (req: Request, res: Response) => {
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
     let filteredProducts = {};
+    let products;
     let { category } = req.query; //nombre de la categoria, no el id
     let { name } = req.query;
     let { id } = req.query;
@@ -143,7 +149,6 @@ export const getAllProducts = async (req: Request, res: Response) => {
       pageBase = pageAsNumber;
     }
 
-    let products = await getProducts(pageBase);
     if (category) {
       filteredProducts = await filterbyCategory(category);
       res.status(200).json(filteredProducts);
@@ -158,6 +163,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       products = await getProducts(pageBase, shopId);
       res.status(200).json(products);
     } else {
+      products = await getProducts(pageBase);
       res.status(200).json(products);
     }
   } catch (error) {
@@ -309,6 +315,21 @@ export const updateToAdmin = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
+export const banUser = async (req: Request, res: Response) => {
+  try {
+    let { userId } = req.params;
+    const bannedUser = await ban(userId);
+    res.status(201).send({
+      msg: `El user ${bannedUser?.name} ha sido banneado satisfactoriamente`,
+      bannedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // CATEGORIES
@@ -386,6 +407,22 @@ export const getReviews = async (req: Request, res: Response) => {
     const { id } = req.params;
     const reviews = await getProductReviews(id);
     res.status(201).send(reviews);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const deleteReview = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const deletedReview = await deleteReviewId(id);
+    res
+      .status(201)
+      .send({
+        msg: `Se ha eliminado el comentario: ${deletedReview?.contentReview}`,
+        deletedReview,
+      });
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });

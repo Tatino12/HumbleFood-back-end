@@ -13,7 +13,7 @@ datasource db {
 
 model Users {
   id        String @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String
+  userId    String @unique
   name      String
   name_user String
   email     String @unique

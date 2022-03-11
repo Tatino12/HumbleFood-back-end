@@ -33,35 +33,36 @@ export const saveNewUser = async (data: any) => {
     const info: any = {
       ...data,
       rol: 0,
-      shopsId: []
-    }
+      shopsId: [],
+    };
     const newUser: any | null = await prisma.users.create({
       data: info,
     });
-    const cart = await prisma.cart.create({data:{
-      total: 0,
-      ordersId: [],
-      userId: newUser.id
-    }})
+    const cart = await prisma.cart.create({
+      data: {
+        total: 0,
+        ordersId: [],
+        userId: newUser.id,
+      },
+    });
     if (newUser) return newUser;
   } catch (error) {
     return null;
   }
 };
 
-export const getUserId = async (userId :string) => {
+export const getUserId = async (userId: string) => {
   try {
     const encontrado: User[] | null = await prisma.users.findMany({
       where: {
-        userId: userId
-      }
-    })
-    if(encontrado){
-      return encontrado
-    }
-    else return null
+        userId: userId,
+      },
+    });
+    if (encontrado) {
+      return encontrado;
+    } else return null;
   } catch (error) {
-    return null
+    return null;
   }
 };
 export const userToAdmin = async (email: any) => {
@@ -86,6 +87,23 @@ export const userToAdmin = async (email: any) => {
     } else {
       return null;
     }
+  } catch (error) {
+    return null;
+  }
+};
+
+export const ban = async (userId: any) => {
+  try {
+    const bannedUser = await prisma.users.update({
+      where: {
+        userId,
+      },
+      data: {
+        rol: 3,
+      },
+    });
+    console.log(bannedUser);
+    return bannedUser;
   } catch (error) {
     return null;
   }
