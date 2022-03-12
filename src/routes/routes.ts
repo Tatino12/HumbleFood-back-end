@@ -26,7 +26,7 @@ import {
   createOrder,
   getEveryOrder,
   updateOrder,
-  banUser,
+  banUnbanUser,
   deleteReview,
   getOrderProducts,
 } from "../controllers";
@@ -46,8 +46,8 @@ router.post("/shop", addShop);
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
 router.post("/user", addUser);
-router.put("/user/ban/:userId", banUser);
-router.put("/user/admin/:userId", updateToAdmin);
+router.put("/user/alter/:banUnban/:userId", banUnbanUser); //Misma funcion para ban/unban -> se define por string :banUnban 'ban', 'unban'
+router.put("/user/:makeAdmin/:userId", updateToAdmin); // --> makeAdmin / takeAdmin
 
 router.get("/products", getAllProducts);
 router.get("/productShop/:shopId", getAllProducts);
