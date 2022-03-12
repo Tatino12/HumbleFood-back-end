@@ -99,7 +99,7 @@ export const userToAdmin = async (userId: string, makeAdmin: string) => {
   }
 };
 
-export const ban = async (userId: string, banUnban: string) => {
+export const banUser = async (userId: string, banUnban: string) => {
   try {
     const currentRol: any = await prisma.users.findUnique({
       where: {
@@ -110,7 +110,7 @@ export const ban = async (userId: string, banUnban: string) => {
         rol: true,
       },
     });
-    if (currentRol.rol === 1 && banUnban === "ban") {
+    if (currentRol.rol === 0 && banUnban === "ban") {
       const bannedUser = await prisma.users.update({
         where: {
           userId,
@@ -126,7 +126,7 @@ export const ban = async (userId: string, banUnban: string) => {
           userId,
         },
         data: {
-          rol: 1,
+          rol: 0,
         },
       });
       return unBannedUser;
