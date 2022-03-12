@@ -337,9 +337,9 @@ export const addUser = async (req: Request, res: Response) => {
 
 export const updateToAdmin = async (req: Request, res: Response) => {
   try {
-    const { email } = req.params;
-    if (!email) throw new Error();
-    const user = await userToAdmin(email);
+    const { userId } = req.params;
+    if (!userId) throw new Error();
+    const user = await userToAdmin(userId);
     if (user) {
       res
         .status(201)
