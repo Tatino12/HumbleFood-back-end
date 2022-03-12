@@ -126,7 +126,7 @@ export const ban = async (userId: string, banUnban: string) => {
           userId,
         },
         data: {
-          rol: 1,
+          rol: 0,
         },
       });
       return unBannedUser;
