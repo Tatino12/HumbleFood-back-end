@@ -170,8 +170,10 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { category } = req.query; //nombre de la categoria, no el id
     let { name } = req.query;
     let { id } = req.query;
+    let { discount } = req.query;
     let { shopId } = req.params;
 
+    
     //console.log(req.query);
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
@@ -180,14 +182,8 @@ export const getAllProducts = async (req: Request, res: Response) => {
     if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
       pageBase = pageAsNumber;
     }
-
-    let products = await getProducts(
-      pageBase,
-      shopId,
-      category as string,
-      name as string,
-      id as string
-    );
+    
+    let products = await getProducts(pageBase, shopId, category as string, name as string, id as string, Number(discount));
     res.status(200).json(products);
   } catch (error) {
     res.send(error);
