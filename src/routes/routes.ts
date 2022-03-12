@@ -15,15 +15,20 @@ import {
   getAllOrders,
   deleteProduct,
   updateProduct,
+  // createOrden,
+  updateOrderProducts,
   getUser,
   getShop,
-  getCarrito,
-  saveCarrito,
+  // getCarrito,
+  // saveCarrito,
   updateToAdmin,
   getReviews,
-  saveOrder,
+  createOrder,
   getEveryOrder,
   updateOrder,
+  banUnbanUser,
+  deleteReview,
+  getOrderProducts,
 } from "../controllers";
 
 /**
@@ -41,7 +46,8 @@ router.post("/shop", addShop);
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
 router.post("/user", addUser);
-router.put("/user/:email", updateToAdmin);
+router.put("/user/alter/:banUnban/:userId", banUnbanUser); //Misma funcion para ban/unban -> se define por string :banUnban 'ban', 'unban'
+router.put("/user/:makeAdmin/:userId", updateToAdmin); // --> makeAdmin / takeAdmin
 
 router.get("/products", getAllProducts);
 router.get("/productShop/:shopId", getAllProducts);
@@ -54,12 +60,15 @@ router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
 router.get("/reviews/:id", getReviews)
+router.delete("/review/:id", deleteReview);
 
-
-router.get("/orders/:id", getAllOrders);
 router.get("/orders", getEveryOrder);
-router.put("/order/:id/:state", updateOrder);
-router.post("/order", saveOrder);
+router.get("/orders/:id", getAllOrders); //id de shops o users o orders
+router.get("/orderProducts/:id", getOrderProducts);
+router.put("/order", updateOrderProducts); //recibe id, products por body
+router.put("/order/:id/:state", updateOrder); // recibe id de la orden
+router.post("/order", createOrder);
+// router.post("/order", saveOrder);
 
-router.get("/carrito/:idUser", getCarrito);
-router.post("/carrito/:idUser", saveCarrito);
+// router.get("/carrito/:idUser", getCarrito);
+// router.post("/carrito/:idUser", saveCarrito);
