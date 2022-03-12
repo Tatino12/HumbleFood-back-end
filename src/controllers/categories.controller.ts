@@ -4,7 +4,8 @@ const prisma: PrismaClient = new PrismaClient();
 
 export const getCategories = async () => {
   try {
-    const cat: any[] = await prisma.categories.findMany();
+    const cat: any = await prisma.categories.findMany();
+    
     return cat;
   } catch (error) {
     return null;
