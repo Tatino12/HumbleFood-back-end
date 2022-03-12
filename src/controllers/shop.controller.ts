@@ -35,7 +35,7 @@ export async function saveNewShop(data: any) {
 
 export async function getShops() {
   try {
-    const shops: any = await prisma.shops.findMany({});
+    const shops: any = await prisma.shops.findMany();
     if (shops) return shops;
   } catch (error) {
     return null;

@@ -62,15 +62,15 @@ export const getUserId = async (userId: string) => {
     return null;
   }
 };
-export const userToAdmin = async (userId: any) => {
+export const userToAdmin = async (userId: string, makeAdmin: string) => {
   try {
     const user = await prisma.users.findUnique({
       where: {
         userId,
       },
     });
-    if (user) {
-      const updatedUser = await prisma.users.update({
+    if (user && makeAdmin === "makeAdmin") {
+      const updatedAdmin = await prisma.users.update({
         where: {
           userId,
         },
@@ -79,27 +79,59 @@ export const userToAdmin = async (userId: any) => {
         },
       });
 
+      return updatedAdmin;
+    } else if (user && makeAdmin === "takeAdmin") {
+      const updatedUser = await prisma.users.update({
+        where: {
+          userId,
+        },
+        data: {
+          rol: 1,
+        },
+      });
+
       return updatedUser;
     } else {
-      return null;
+      return user;
     }
   } catch (error) {
     return null;
   }
 };
 
-export const ban = async (userId: any) => {
+export const ban = async (userId: string, banUnban: string) => {
   try {
-    const bannedUser = await prisma.users.update({
+    const currentRol: any = await prisma.users.findUnique({
       where: {
         userId,
       },
-      data: {
-        rol: 3,
+      select: {
+        name: true,
+        rol: true,
       },
     });
-    console.log(bannedUser);
-    return bannedUser;
+    if (currentRol.rol === 1 && banUnban === "ban") {
+      const bannedUser = await prisma.users.update({
+        where: {
+          userId,
+        },
+        data: {
+          rol: 3,
+        },
+      });
+      return bannedUser;
+    } else if (currentRol.rol === 3 && banUnban === "unban") {
+      const unBannedUser = await prisma.users.update({
+        where: {
+          userId,
+        },
+        data: {
+          rol: 1,
+        },
+      });
+      return unBannedUser;
+    }
+    return currentRol;
   } catch (error) {
     return null;
   }

@@ -185,7 +185,6 @@ export const getAllProducts = async (req: Request, res: Response) => {
     
     let products = await getProducts(pageBase, shopId, category as string, name as string, id as string, Number(discount));
     res.status(200).json(products);
-    
   } catch (error) {
     res.send(error);
   }
@@ -320,15 +319,18 @@ export const addUser = async (req: Request, res: Response) => {
 
 export const updateToAdmin = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params;
+    const { userId, makeAdmin } = req.params;
     if (!userId) throw new Error();
-    const user = await userToAdmin(userId);
+    const user = await userToAdmin(userId, makeAdmin);
     if (user) {
-      res
-        .status(201)
-        .send({ msg: `Se cambio el rol de ${user.name} a Admin`, user: user });
+      res.status(201).send({
+        msg: `Se cambio el rol de ${user.name} a ${
+          user.rol === 2 ? "Admin" : "User"
+        }`,
+        user: user,
+      });
     } else {
-      res.status(401).json({ msg: "No se encontro user con ese Mail" });
+      res.status(401).json({ msg: "No se encontro user con ese userId" });
     }
   } catch (error) {
     console.error(error);
@@ -336,12 +338,12 @@ export const updateToAdmin = async (req: Request, res: Response) => {
   }
 };
 
-export const banUser = async (req: Request, res: Response) => {
+export const banUnbanUser = async (req: Request, res: Response) => {
   try {
-    let { userId } = req.params;
-    const bannedUser = await ban(userId);
+    const { userId, banUnban } = req.params;
+    const bannedUser = await ban(userId, banUnban);
     res.status(201).send({
-      msg: `El user ${bannedUser?.name} ha sido banneado satisfactoriamente`,
+      msg: `El user ${bannedUser?.name} ha sido ${banUnban}ned satisfactoriamente`,
       bannedUser,
     });
   } catch (error) {
