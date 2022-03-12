@@ -29,6 +29,7 @@ import {
   banUnbanUser,
   deleteReview,
   getOrderProducts,
+  banUnbanShop,
 } from "../controllers";
 
 /**
@@ -42,6 +43,7 @@ export const router = Router();
 router.get("/shops", getAllShops);
 router.get("/shop/:shopId", getShop);
 router.post("/shop", addShop);
+router.put("/shop/alter/:banUnban/:userId", banUnbanShop);
 
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
