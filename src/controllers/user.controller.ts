@@ -62,18 +62,17 @@ export const getUserId = async (userId: string) => {
     return null;
   }
 };
-export const userToAdmin = async (email: any) => {
+export const userToAdmin = async (userId: any) => {
   try {
     const user = await prisma.users.findUnique({
       where: {
-        email,
+        userId,
       },
     });
-
     if (user) {
       const updatedUser = await prisma.users.update({
         where: {
-          email,
+          userId,
         },
         data: {
           rol: 2,

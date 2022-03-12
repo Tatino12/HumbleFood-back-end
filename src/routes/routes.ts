@@ -46,8 +46,8 @@ router.post("/shop", addShop);
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
 router.post("/user", addUser);
-router.put("/user/:userId", banUser);
-router.put("/user/:email", updateToAdmin);
+router.put("/user/ban/:userId", banUser);
+router.put("/user/admin/:userId", updateToAdmin);
 
 router.get("/products", getAllProducts);
 router.get("/productShop/:shopId", getAllProducts);

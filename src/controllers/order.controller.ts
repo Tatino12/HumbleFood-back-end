@@ -247,8 +247,11 @@ const addOrUpdateProductOrder = async (ordenId: string, product: any) => {
 
 export async function updateInfoOrder(id: string, state: any) {
   const newState: any = estado[state];
-  if (newState === 1) notify(id, "Se ha registrado su compra!");
-  if (newState === 3) notify(id, "Su orden ha sido enviada!");
+  if (newState === 1) {
+    notify(id, "Se ha registrado su compra!"); // --> Notifica por mail al user comprador
+    await updateProductsStocks(id); // --> Actualiza el stock de los productos comprados.
+  }
+  if (newState === 3) notify(id, "Su orden ha sido enviada!"); // --> Notifica por mail al user comprador
   const orderUpdate = await prisma.orders.update({
     where: {
       id,
@@ -258,6 +261,59 @@ export async function updateInfoOrder(id: string, state: any) {
 
   return orderUpdate;
 }
+
+export async function updateProductsStocks(id: string) {
+  // --> Updatea el stock de los productos contenidos dentro de una Order.
+  try {
+    const orders: any = await prisma.orders.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        ordenProductsId: true,
+      },
+    });
+    let products: any;
+    let product;
+    for (let i = 0; i < orders.ordenProductsId.length; i++) {
+      product = await prisma.orderProducts.findUnique({
+        where: {
+          id: orders.ordenProductsId[i],
+        },
+        select: {
+          cantidad: true,
+          productId: true,
+        },
+      });
+      if (!products) products = [product];
+      else products = [...products, product];
+    }
+    let prevStock: any;
+    let newStock: any;
+    for (let j = 0; j < products.length; j++) {
+      prevStock = await prisma.products.findUnique({
+        where: {
+          id: products[j].productId,
+        },
+        select: {
+          stock: true,
+        },
+      });
+      newStock = prevStock.stock - products[j].cantidad;
+      await prisma.products.update({
+        where: {
+          id: products[j].productId,
+        },
+        data: {
+          stock: newStock,
+        },
+      });
+    }
+  } catch (error) {
+    return null;
+  }
+}
+
 //Enviar Email cuando state se cambia a Enviando
 async function notify(id: string, message: string) {
   const userId: any = await prisma.orders.findUnique({
