@@ -64,62 +64,6 @@ export async function validateOrder(userId: string, shopId: string) {
   }
 }
 
-// export async function updateOrder(id: string) {
-//   const orderUpdate = await prisma.orders.update({
-//     where: {
-//       id: id,
-//     },
-//     data: { productsId: { push: "ethan" } },
-//   });
-//   return orderUpdate;
-// }
-
-// export async function createOrder(data: any) {
-//   const newOrders = await prisma.orders.create({
-//     data: {
-//       total: 20,
-//       state: 2,
-//       shopId: "1233123",
-//       productsId: [],
-//       cartId: "121312312",
-//       userId: "42334534",
-//     },
-//   });
-//   return newOrders;
-// }
-
-// export const getOrderByCartId = async (ordersId: string[]) => {
-//   try {
-//     const orden = await prisma.orders.findMany({
-//       where: {
-//         id: {
-//           in: ordersId,
-//         },
-//       },
-//       select: {
-//         productsId: true,
-//       },
-//     });
-//     let arrayProducts;
-//     for await (const iterator of orden.map((productsId) =>
-//       getInforOfManyProducts(productsId.productsId)
-//     )) {
-//       arrayProducts = iterator;
-//     }
-//     //console.log(arrayProducts)
-//     return arrayProducts;
-//   } catch (error) {}
-// };
-
-// export const upsertNewOrden = async (cartId: string) => {
-//   try {
-//     const orden = await prisma.orders.upsert({
-//       where
-//     })
-//   } catch (error) {
-
-//   }
-// }
 
 // ================ ================ ================ ================ ================
 

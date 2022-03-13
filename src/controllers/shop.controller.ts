@@ -33,10 +33,20 @@ export async function saveNewShop(data: any) {
   }
 }
 
-export async function getShops() {
+export async function getShops(page: number) {
   try {
-    const shops: any = await prisma.shops.findMany();
-    if (shops) return shops;
+    const total = await prisma.shops.count();
+
+    const shops: any = await prisma.shops.findMany({
+      skip: 10 * page,
+      take: 10
+    });
+    const totalPages = Math.ceil(total / 10)
+    if (shops) return {
+      next: page < totalPages - 1 ? true : false,
+      prev: page > 0 ? true : false,
+      shops
+    };
   } catch (error) {
     return null;
   }
