@@ -39,7 +39,15 @@ import { errores } from "../Items/errors";
 // SHOPS
 export const getAllShops = async (req: Request, res: Response) => {
   try {
-    const shops = await getShops();
+    let pageBase = 0
+    const page = req.query.page as string;
+
+    const pageAsNumber: number = parseInt(page);
+    if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+      pageBase = pageAsNumber;
+    }
+
+    const shops = await getShops(pageBase);
     res.status(200).send(shops);
   } catch (error) {
     console.error(error);
