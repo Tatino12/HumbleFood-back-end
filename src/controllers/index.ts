@@ -273,13 +273,13 @@ export const getAllUsers = async (req: Request, res: Response) => {
   try {
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
-    const pageAsNumber: number = parseInt(myPage);
+    const pageAsNumber: number = Number(myPage);
 
     if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
       pageBase = pageAsNumber;
     }
 
-    const userList = await allUsersList(pageBase);
+    const userList = await allUsersList(Number(pageBase));
     //console.log(userList);
 
     if (!userList) throw new Error();

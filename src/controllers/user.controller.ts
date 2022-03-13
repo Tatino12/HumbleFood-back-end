@@ -11,9 +11,12 @@ export const allUsersList = async (page: number): Promise<null | User[]> => {
       take: 10,
       where: {},
     });
-
+    console.log(usersLis);
+    
     return usersLis;
   } catch (error) {
+    console.log(error);
+    
     return null;
   }
 };
