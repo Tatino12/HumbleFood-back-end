@@ -100,9 +100,7 @@ export const filterbyCategory = async (category: any, shopId: string) => {
         shopId: shopId,
       },
     });
-    return {
-      filterCategory,
-    };
+    return filterCategory
   }
   else{
     return []
