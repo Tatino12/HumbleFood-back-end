@@ -117,11 +117,10 @@ export const filterByName = async (name: any, page: number, shopId: string) => {
     skip: 10 * page,
     take: 10,
     where: {
-      shopId: shopId,
+      shopId: shopId
     },
   });
 
-  //console.log(name);
   const filteredByName: any[] = all.filter((e) =>
     e.name.toLowerCase().includes(name.toLowerCase())
   );

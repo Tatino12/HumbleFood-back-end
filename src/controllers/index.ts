@@ -304,11 +304,11 @@ export const getAllUsers = async (req: Request, res: Response) => {
     const userList = await allUsersList(pageBase);
     //console.log(userList);
 
-    if (!userList) throw new Error();
+    //if (!userList) throw new Error();
 
     res.status(200).json(userList);
   } catch (error) {
-    //console.log(error)
+    console.log(error)
     res.status(500).json({ msg: "Error" });
   }
 };

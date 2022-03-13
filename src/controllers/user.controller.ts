@@ -4,16 +4,24 @@ import { User } from "../Items/User.interface";
 // import { createNewCarrito } from "./cart.controller";
 import { Cart } from "../Items/Cart.interface";
 
-export const allUsersList = async (page: number): Promise<null | User[]> => {
+export const allUsersList = async (page: number) => {
   try {
+    const total = await prisma.users.count(); 
     const usersLis: any = await prisma.users.findMany({
       skip: 10 * page,
       take: 10,
-      where: {},
     });
 
-    return usersLis;
+    const pagesTotal = Math.ceil(total / 10);
+
+    return {
+      next: page < pagesTotal - 1 ? true : false,
+      prev: page > 0 ? true : false,
+      pagesTotal,
+      usersLis
+    };
   } catch (error) {
+    console.log(error)
     return null;
   }
 };
