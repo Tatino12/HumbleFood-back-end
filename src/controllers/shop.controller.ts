@@ -44,6 +44,7 @@ export async function getShops(page: number) {
     const totalPages = Math.ceil(total / 10)
     if (shops) return {
       next: page < totalPages - 1 ? true : false,
+      pagesTotal: totalPages,
       prev: page > 0 ? true : false,
       shops
     };
