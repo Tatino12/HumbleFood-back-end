@@ -33,10 +33,20 @@ export async function saveNewShop(data: any) {
   }
 }
 
-export async function getShops() {
+export async function getShops(page: number) {
   try {
-    const shops: any = await prisma.shops.findMany();
-    if (shops) return shops;
+    const total = await prisma.shops.count();
+
+    const shops: any = await prisma.shops.findMany({
+      skip: 10 * page,
+      take: 10
+    });
+    const totalPages = Math.ceil(total / 10)
+    if (shops) return {
+      next: page < totalPages - 1 ? true : false,
+      prev: page > 0 ? true : false,
+      shops
+    };
   } catch (error) {
     return null;
   }
@@ -54,3 +64,41 @@ export async function getShopId(shopId: string) {
     } else return null;
   } catch (error) {}
 }
+
+export const banShop = async (userId: string, banUnban: string) => {
+  try {
+    const currentRol: any = await prisma.users.findUnique({
+      where: {
+        userId,
+      },
+      select: {
+        name: true,
+        rol: true,
+      },
+    });
+    if (currentRol.rol === 1 && banUnban === "ban") {
+      const bannedShop = await prisma.users.update({
+        where: {
+          userId,
+        },
+        data: {
+          rol: 3,
+        },
+      });
+      return bannedShop;
+    } else if (currentRol.rol === 3 && banUnban === "unban") {
+      const unBannedShop = await prisma.users.update({
+        where: {
+          userId,
+        },
+        data: {
+          rol: 1,
+        },
+      });
+      return unBannedShop;
+    }
+    return currentRol;
+  } catch (error) {
+    return null;
+  }
+};

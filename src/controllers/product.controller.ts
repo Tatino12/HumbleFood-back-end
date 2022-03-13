@@ -30,7 +30,7 @@ export const getProducts = async (page: number, shopId?: string, category?: stri
       });
     } else if (shopId && name) {
       products = await filterByName(name, page, shopId);
-      //console.log(products);
+      console.log(products);
     } else if(shopId && id){
       products = await filterById(id)
     } else if(shopId && category){
@@ -125,9 +125,7 @@ export const filterByName = async (name: any, page: number, shopId: string) => {
   const filteredByName: any[] = all.filter((e) =>
     e.name.toLowerCase().includes(name.toLowerCase())
   );
-  return {
-     filteredByName,
-  };
+  return filteredByName
 };
 
 export const filterById = async (id: any) => {

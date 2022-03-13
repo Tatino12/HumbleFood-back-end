@@ -7,7 +7,7 @@ import {
   saveNewUser,
   userToAdmin,
   getUserId,
-  ban,
+  banUser,
 } from "./user.controller";
 import {
   getProducts,
@@ -16,7 +16,7 @@ import {
   updateInfoProduct,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
-import { getShops, saveNewShop, getShopId } from "./shop.controller";
+import { getShops, saveNewShop, getShopId, banShop } from "./shop.controller";
 import {
   addNewComment,
   deleteReviewId,
@@ -39,7 +39,15 @@ import { errores } from "../Items/errors";
 // SHOPS
 export const getAllShops = async (req: Request, res: Response) => {
   try {
-    const shops = await getShops();
+    let pageBase = 0
+    const page = req.query.page as string;
+
+    const pageAsNumber: number = parseInt(page);
+    if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+      pageBase = pageAsNumber;
+    }
+
+    const shops = await getShops(pageBase);
     res.status(200).send(shops);
   } catch (error) {
     console.error(error);
@@ -73,6 +81,20 @@ export const addShop = async (req: Request, res: Response) => {
       res.status(401).json({ msg: "Error! no se pudo crear la Tienda" });
     }
     console.log(shop);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const banUnbanShop = async (req: Request, res: Response) => {
+  try {
+    const { userId, banUnban } = req.params;
+    const bannedUser = await banShop(userId, banUnban);
+    res.status(201).send({
+      msg: `El shop ${bannedUser?.name} ha sido ${banUnban}ned satisfactoriamente`,
+      bannedUser,
+    });
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
@@ -341,7 +363,7 @@ export const updateToAdmin = async (req: Request, res: Response) => {
 export const banUnbanUser = async (req: Request, res: Response) => {
   try {
     const { userId, banUnban } = req.params;
-    const bannedUser = await ban(userId, banUnban);
+    const bannedUser = await banUser(userId, banUnban);
     res.status(201).send({
       msg: `El user ${bannedUser?.name} ha sido ${banUnban}ned satisfactoriamente`,
       bannedUser,
