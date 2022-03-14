@@ -52,8 +52,8 @@ export async function getShops(page: number) {
           notIn: use
         }
       },
-      skip: 10 * page,
-      take: 10
+      skip: 9 * page,
+      take: 9
       
     });
     const totalPages = Math.ceil(total / 10)
