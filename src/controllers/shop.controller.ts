@@ -38,31 +38,31 @@ export async function getShops(page: number) {
     const total = await prisma.shops.count();
     const users = await prisma.users.findMany({
       where: {
-        rol: 3
+        rol: 3,
       },
-      select:{
+      select: {
         userId: true,
-      }
-    })
-    const use = users.map(obj => obj.userId)
-    console.log(users)
+      },
+    });
+    const use = users.map((obj) => obj.userId);
+    console.log(users);
     const shops: any = await prisma.shops.findMany({
-      where:{
+      where: {
         userId: {
-          notIn: use
-        }
+          notIn: use,
+        },
       },
       skip: 9 * page,
-      take: 9
-      
+      take: 9,
     });
-    const totalPages = Math.ceil(total / 10)
-    if (shops) return {
-      next: page < totalPages - 1 ? true : false,
-      pagesTotal: totalPages,
-      prev: page > 0 ? true : false,
-      shops
-    };
+    const totalPages = Math.ceil(total / 10);
+    if (shops)
+      return {
+        next: page < totalPages - 1 ? true : false,
+        pagesTotal: totalPages,
+        prev: page > 0 ? true : false,
+        shops,
+      };
   } catch (error) {
     return null;
   }
@@ -114,6 +114,26 @@ export const banShop = async (userId: string, banUnban: string) => {
       return unBannedShop;
     }
     return currentRol;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getShopDiscounts = async (shopId: string) => {
+  try {
+    const products = await prisma.products.findMany({
+      where: {
+        shopId,
+      },
+      select: {
+        discount: true,
+      },
+    });
+    const arrayDiscount = products.map((e) => e.discount);
+    const uniqueDiscount = arrayDiscount.filter(
+      (value, index, self) => self.indexOf(value) === index
+    );
+    return uniqueDiscount.sort();
   } catch (error) {
     return null;
   }

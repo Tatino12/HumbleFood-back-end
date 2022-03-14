@@ -16,7 +16,13 @@ import {
   updateInfoProduct,
 } from "./product.controller";
 import { getCategories, saveNewCategory } from "./categories.controller";
-import { getShops, saveNewShop, getShopId, banShop } from "./shop.controller";
+import {
+  getShops,
+  saveNewShop,
+  getShopId,
+  banShop,
+  getShopDiscounts,
+} from "./shop.controller";
 import {
   addNewComment,
   deleteReviewId,
@@ -39,7 +45,7 @@ import { errores } from "../Items/errors";
 // SHOPS
 export const getAllShops = async (req: Request, res: Response) => {
   try {
-    let pageBase = 0
+    let pageBase = 0;
     const page = req.query.page as string;
 
     const pageAsNumber: number = parseInt(page);
@@ -95,6 +101,17 @@ export const banUnbanShop = async (req: Request, res: Response) => {
       msg: `El shop ${bannedUser?.name} ha sido ${banUnban}ned satisfactoriamente`,
       bannedUser,
     });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const getDiscounts = async (req: Request, res: Response) => {
+  try {
+    const { shopId } = req.params;
+    const discounts = await getShopDiscounts(shopId);
+    res.status(201).send(discounts);
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
@@ -195,7 +212,6 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { discount } = req.query;
     let { shopId } = req.params;
 
-    
     //console.log(req.query);
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
@@ -204,8 +220,15 @@ export const getAllProducts = async (req: Request, res: Response) => {
     if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
       pageBase = pageAsNumber;
     }
-    
-    let products = await getProducts(pageBase, shopId, category as string, name as string, id as string, Number(discount));
+
+    let products = await getProducts(
+      pageBase,
+      shopId,
+      category as string,
+      name as string,
+      id as string,
+      Number(discount)
+    );
     res.status(200).json(products);
   } catch (error) {
     res.send(error);
@@ -287,6 +310,25 @@ export const updateProduct = async (req: Request, res: Response) => {
   }
 };
 
+// export const getAllProductsDiscount = async (req: Request, res: Response) => {
+//   try {
+//     let { order } = req.params;
+//     let pageBase: number = 0,
+//       myPage: string = req.query.page as string;
+//     const pageAsNumber: number = parseInt(myPage);
+
+//     if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+//       pageBase = pageAsNumber;
+//     }
+
+//     let products = await filterByDiscount(pageBase, order);
+//     res.status(200).json(products);
+//   } catch (error) {
+//     console.log(error);
+//     res.status(400).json({ msg: "Datos requeridos no enviados" });
+//   }
+// };
+
 /* -------------------------------------------------------------------------------------------- */
 
 // USERS
@@ -308,7 +350,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
 
     res.status(200).json(userList);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ msg: "Error" });
   }
 };
