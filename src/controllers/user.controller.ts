@@ -56,6 +56,7 @@ export const saveNewUser = async (data: any) => {
   }
 };
 
+
 export const getUserId = async (userId: string) => {
   try {
     const encontrado: User[] | null = await prisma.users.findMany({
