@@ -30,6 +30,7 @@ import {
   deleteReview,
   getOrderProducts,
   banUnbanShop,
+  getDiscounts,
 } from "../controllers";
 
 /**
@@ -43,7 +44,7 @@ export const router = Router();
 router.get("/shops", getAllShops);
 router.get("/shop/:shopId", getShop);
 router.post("/shop", addShop);
-router.put("/shop/alter/:banUnban/:userId", banUnbanShop);
+router.put("/shop/alter/:banUnban/:userId", banUnbanShop); // Funcion para bannear shops, 'ban'/'unban'
 
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
@@ -53,9 +54,12 @@ router.put("/user/:makeAdmin/:userId", updateToAdmin); // --> makeAdmin / takeAd
 
 router.get("/products", getAllProducts);
 router.get("/productShop/:shopId", getAllProducts);
+router.get("/productShop/:shopId/discounts", getDiscounts); // --> Devuelte un array con los descuentos contenidos por productos dentro de una misma tienda.
 router.post("/product", saveProduct);
 router.delete("/product/delete/:productId", deleteProduct);
 router.put("/product/update", updateProduct);
+
+router.get("/products/discount/:order"); // --> order: 'asc' / 'des'
 
 router.get("/categories", getAllCategories);
 router.post("/category", postCategory);

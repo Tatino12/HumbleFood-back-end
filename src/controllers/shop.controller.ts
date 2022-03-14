@@ -39,15 +39,16 @@ export async function getShops(page: number) {
 
     const shops: any = await prisma.shops.findMany({
       skip: 10 * page,
-      take: 10
+      take: 10,
     });
-    const totalPages = Math.ceil(total / 10)
-    if (shops) return {
-      next: page < totalPages - 1 ? true : false,
-      pagesTotal: totalPages,
-      prev: page > 0 ? true : false,
-      shops
-    };
+    const totalPages = Math.ceil(total / 10);
+    if (shops)
+      return {
+        next: page < totalPages - 1 ? true : false,
+        pagesTotal: totalPages,
+        prev: page > 0 ? true : false,
+        shops,
+      };
   } catch (error) {
     return null;
   }
@@ -99,6 +100,26 @@ export const banShop = async (userId: string, banUnban: string) => {
       return unBannedShop;
     }
     return currentRol;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getShopDiscounts = async (shopId: string) => {
+  try {
+    const products = await prisma.products.findMany({
+      where: {
+        shopId,
+      },
+      select: {
+        discount: true,
+      },
+    });
+    const arrayDiscount = products.map((e) => e.discount);
+    const uniqueDiscount = arrayDiscount.filter(
+      (value, index, self) => self.indexOf(value) === index
+    );
+    return uniqueDiscount.sort();
   } catch (error) {
     return null;
   }
