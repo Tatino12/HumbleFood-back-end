@@ -61,7 +61,7 @@ router.get("/categories", getAllCategories);
 router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
-router.get("/reviews/:id", getReviews);
+router.get("/reviews/:id", getReviews)
 router.delete("/review/:id", deleteReview);
 
 router.get("/orders", getEveryOrder);
