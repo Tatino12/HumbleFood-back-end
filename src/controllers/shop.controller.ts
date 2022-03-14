@@ -36,10 +36,25 @@ export async function saveNewShop(data: any) {
 export async function getShops(page: number) {
   try {
     const total = await prisma.shops.count();
-
+    const users = await prisma.users.findMany({
+      where: {
+        rol: 3
+      },
+      select:{
+        userId: true,
+      }
+    })
+    const use = users.map(obj => obj.userId)
+    console.log(users)
     const shops: any = await prisma.shops.findMany({
+      where:{
+        userId: {
+          notIn: use
+        }
+      },
       skip: 10 * page,
       take: 10
+      
     });
     const totalPages = Math.ceil(total / 10)
     if (shops) return {
