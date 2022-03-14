@@ -45,7 +45,7 @@ export async function getShops(page: number) {
       }
     })
     const use = users.map(obj => obj.userId)
-    console.log(users)
+    //console.log(users)
     const shops: any = await prisma.shops.findMany({
       where:{
         userId: {
