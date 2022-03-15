@@ -62,6 +62,7 @@ export const getProducts = async (
 
     for (let i = 0; i < products.length; i++) {
       let arrCategories: any[] = await namesCategories(products[i]);
+      
       products[i] = {
         id: products[i].id,
         name: products[i].name,
@@ -73,7 +74,7 @@ export const getProducts = async (
         categories: arrCategories.map((el) => el.name),
         shopId: products[i].shopId,
       };
-      //console.log(products[i]);
+      //console.log(products);
     }
 
     const pagesTotal = Math.ceil(total / 10);
@@ -173,8 +174,7 @@ export const filterByDiscount = async (discount: number, shopId: string) => {
         discount,
       },
     });
-    //console.log(discount);
-
+    
     for (let i = 0; i < products.length; i++) {
       let arrCategories = await namesCategories(products[i]);
       products[i] = {
@@ -188,6 +188,8 @@ export const filterByDiscount = async (discount: number, shopId: string) => {
         //categories: arrCategories.map((el) => el.name),
       };
     }
+    console.log(products);
+    
     return products;
   } catch (error) {
     console.log(error, "!=");
