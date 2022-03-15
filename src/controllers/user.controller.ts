@@ -94,7 +94,7 @@ export const userToAdmin = async (userId: string, makeAdmin: string) => {
           userId,
         },
         data: {
-          rol: 1,
+          rol: 0,
         },
       });
 
