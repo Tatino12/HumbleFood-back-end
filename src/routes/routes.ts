@@ -69,7 +69,7 @@ router.put("/product/update", updateProduct);
 router.get("/products/discount/:order"); // --> order: 'asc' / 'des'
 
 router.get("/categories", getAllCategories);
-router.post("/category", postCategory);
+router.post("/category", postCategory); 
 
 router.post("/review", addCommentUser);
 router.get("/reviews/:id", getReviews);

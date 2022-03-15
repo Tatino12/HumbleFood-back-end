@@ -64,20 +64,21 @@ export async function validateOrder(userId: string, shopId: string) {
   }
 }
 
+
 // ================ ================ ================ ================ ================
 
 export const createNewOrden = async (
   userId: string,
   shopId: string,
-  products: any, // array de productos,
-  total: any
+  products: any, // array de productos
+  total: any,
 ) => {
   try {
     const orden = await prisma.orders.create({
       data: {
         userId,
         shopId,
-        total,
+        total: total,
         ordenProductsId: [],
         state: estado.creado,
       },
@@ -281,11 +282,12 @@ async function notify(id: string, message: string) {
 
 export async function orderProducts(id: string) {
   try {
-    const orderProducts = await prisma.orderProducts.findUnique({
+    const orderProducts = await prisma.orders.findUnique({
       where: {
         id,
       },
     });
+    console.log(orderProducts)
     return orderProducts;
   } catch (error) {
     return null;
