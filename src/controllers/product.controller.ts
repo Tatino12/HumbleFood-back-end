@@ -172,7 +172,7 @@ export const filterByDiscount = async (discount: number, shopId: string) => {
        price: products[i]?.price,
        discount: products[i]?.discount,
        stock: products[i]?.stock,
-       categories: arrCategories.map((el) => el.name),
+       //categories: arrCategories.map((el) => el.name),
      };
     }
     return products;
