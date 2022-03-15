@@ -4,6 +4,7 @@ export interface BaseShop {
   image: string;
   description: string;
   userId: string;
+  email: string;
 }
 
 export interface Shop extends BaseShop {
