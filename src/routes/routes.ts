@@ -30,6 +30,10 @@ import {
   deleteReview,
   getOrderProducts,
   banUnbanShop,
+  getDiscounts,
+  saveFavouriteShop,
+  getAllFavouriteShops,
+  removeFavouriteShop,
 } from "../controllers";
 
 /**
@@ -43,7 +47,7 @@ export const router = Router();
 router.get("/shops", getAllShops);
 router.get("/shop/:shopId", getShop);
 router.post("/shop", addShop);
-router.put("/shop/alter/:banUnban/:userId", banUnbanShop);
+router.put("/shop/alter/:banUnban/:userId", banUnbanShop); // Funcion para bannear shops, 'ban'/'unban'
 
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
@@ -51,17 +55,24 @@ router.post("/user", addUser);
 router.put("/user/alter/:banUnban/:userId", banUnbanUser); //Misma funcion para ban/unban -> se define por string :banUnban 'ban', 'unban'
 router.put("/user/:makeAdmin/:userId", updateToAdmin); // --> makeAdmin / takeAdmin
 
+router.get("/user/:userId/favouriteShops", getAllFavouriteShops); // --> Toma userId por params, devuelve un array contenedor de todas las shops guardadas en favoritos.
+router.post("/user/:userId/favouriteShop/:shopId", saveFavouriteShop); // --> Toma userId, shopId por params, la guarda en el arreglo de user favouriteShops
+router.put("/user/:userId/deleteFavouriteShop/:shopId", removeFavouriteShop); // --> Toma userId, shopId por params, remueve una tienda de favoritos, devuelve el array actualizado de favoritos.
+
 router.get("/products", getAllProducts);
 router.get("/productShop/:shopId", getAllProducts);
+router.get("/productShop/:shopId/discounts", getDiscounts); // --> Devuelte un array con los descuentos contenidos por productos dentro de una misma tienda.
 router.post("/product", saveProduct);
 router.delete("/product/delete/:productId", deleteProduct);
 router.put("/product/update", updateProduct);
 
+router.get("/products/discount/:order"); // --> order: 'asc' / 'des'
+
 router.get("/categories", getAllCategories);
-router.post("/category", postCategory);
+router.post("/category", postCategory); 
 
 router.post("/review", addCommentUser);
-router.get("/reviews/:id", getReviews)
+router.get("/reviews/:id", getReviews);
 router.delete("/review/:id", deleteReview);
 
 router.get("/orders", getEveryOrder);

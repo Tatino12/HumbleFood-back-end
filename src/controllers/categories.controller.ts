@@ -1,11 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import { nextTick } from "process";
 
 const prisma: PrismaClient = new PrismaClient();
 
 export const getCategories = async () => {
   try {
     const cat: any = await prisma.categories.findMany();
-
     return cat;
   } catch (error) {
     return null;

@@ -20,7 +20,7 @@ model Users {
   direction String
   rol       Int  // 0 = User / 1 = User with Shop / 2 = Admin
   shopsId     String[] 
-  
+  favouriteShops String[]
 }
 
 model Shops {
