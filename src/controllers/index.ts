@@ -138,7 +138,8 @@ export const getEveryOrder = async (req: Request, res: Response) => {
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const orders = await getOrders(id);
+   
+    const orders = await getOrders(id );
     res.status(201).send(orders);
   } catch (error) {
     console.error(error);
@@ -197,6 +198,7 @@ export const getOrderProducts = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const productOrder = await orderProducts(id);
+    console.log(productOrder)
     res.status(201).send(productOrder);
   } catch (error) {
     console.error(error);
