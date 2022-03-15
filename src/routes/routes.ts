@@ -30,7 +30,7 @@ import {
   deleteReview,
   getOrderProducts,
   banUnbanShop,
-  getDiscounts,
+  getDiscounts
 } from "../controllers";
 
 /**

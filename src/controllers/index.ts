@@ -15,7 +15,7 @@ import {
   deletePro,
   updateInfoProduct,
 } from "./product.controller";
-import { getCategories, saveNewCategory } from "./categories.controller";
+import { getCategories, saveNewCategory} from "./categories.controller";
 import {
   getShops,
   saveNewShop,
@@ -423,7 +423,8 @@ export const banUnbanUser = async (req: Request, res: Response) => {
 
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
-    const info = await getCategories();
+    const {shopId} = req.query;
+    const info = await getCategories(shopId as string);
     res.status(200).json(info);
   } catch (error) {
     res.status(400).json({ msg: "error", error: error });
@@ -441,6 +442,7 @@ export const postCategory = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
 
 /* -------------------------------------------------------------------------------------------- */
 
