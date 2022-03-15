@@ -78,7 +78,7 @@ export const createNewOrden = async (
       data: {
         userId,
         shopId,
-        total: 0,
+        total: total,
         ordenProductsId: [],
         state: estado.creado,
       },
