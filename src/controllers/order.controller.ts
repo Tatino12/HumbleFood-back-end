@@ -20,7 +20,7 @@ export async function getOrders(id: string) {
       },
     });
 
-    if (orders.lenght > 0) {
+    if (orders.length > 0) {
       return orders;
     } else {
       const userOrders: any = await prisma.orders.findMany({
@@ -28,7 +28,7 @@ export async function getOrders(id: string) {
           userId: id,
         },
       });
-      if (userOrders.lenght > 0) {
+      if (userOrders.length > 0) {
         return userOrders;
       } else {
         const orderOrder: any = await prisma.orders.findMany({
@@ -64,22 +64,22 @@ export async function validateOrder(userId: string, shopId: string) {
   }
 }
 
-
 // ================ ================ ================ ================ ================
 
 export const createNewOrden = async (
   userId: string,
   shopId: string,
-  products: any // array de productos
+  products: any, // array de productos,
+  total: any
 ) => {
   try {
     const orden = await prisma.orders.create({
       data: {
         userId,
         shopId,
-        total: 0,
+        total,
         ordenProductsId: [],
-        state: estado.pendienteDeProcesamiento,
+        state: estado.creado,
       },
       // select: {
       //   id: true,
