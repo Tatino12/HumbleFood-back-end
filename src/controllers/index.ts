@@ -8,6 +8,9 @@ import {
   userToAdmin,
   getUserId,
   banUser,
+  saveFavourite,
+  getFavouriteShops,
+  removeFavourite,
 } from "./user.controller";
 import {
   getProducts,
@@ -46,6 +49,7 @@ import { errores } from "../Items/errors";
 export const getAllShops = async (req: Request, res: Response) => {
   try {
     let pageBase = 0;
+    const { name } = req.query;
     const page = req.query.page as string;
 
     const pageAsNumber: number = parseInt(page);
@@ -53,7 +57,7 @@ export const getAllShops = async (req: Request, res: Response) => {
       pageBase = pageAsNumber;
     }
 
-    const shops = await getShops(pageBase);
+    const shops = await getShops(pageBase, name as string);
     res.status(200).send(shops);
   } catch (error) {
     console.error(error);
@@ -169,8 +173,8 @@ export const updateOrder = async (req: Request, res: Response) => {
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { userId, shopId, products } = req.body;
-    const respu = await createNewOrden(userId, shopId, products);
+    const { userId, shopId, products, total } = req.body;
+    const respu = await createNewOrden(userId, shopId, products, total);
     res.json(respu);
   } catch (error) {
     console.error(error);
@@ -338,13 +342,13 @@ export const getAllUsers = async (req: Request, res: Response) => {
   try {
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
-    const pageAsNumber: number = parseInt(myPage);
+    const pageAsNumber: number = Number(myPage);
 
     if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
       pageBase = pageAsNumber;
     }
 
-    const userList = await allUsersList(pageBase);
+    const userList = await allUsersList(Number(pageBase));
     //console.log(userList);
 
     //if (!userList) throw new Error();
@@ -417,12 +421,46 @@ export const banUnbanUser = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllFavouriteShops = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const favouriteShops = await getFavouriteShops(userId);
+    res.status(201).send(favouriteShops);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const saveFavouriteShop = async (req: Request, res: Response) => {
+  try {
+    const { userId, shopId } = req.params;
+    const favouriteShop = await saveFavourite(userId, shopId);
+    res.status(201).send(favouriteShop);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const removeFavouriteShop = async (req: Request, res: Response) => {
+  try {
+    const { userId, shopId } = req.params;
+    const deletedFavourite = await removeFavourite(userId, shopId);
+    res.status(201).send(deletedFavourite);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // CATEGORIES
 
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
+    // const { shopId } = req.params;
     const info = await getCategories();
     res.status(200).json(info);
   } catch (error) {

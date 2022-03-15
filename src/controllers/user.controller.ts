@@ -6,7 +6,7 @@ import { Cart } from "../Items/Cart.interface";
 
 export const allUsersList = async (page: number) => {
   try {
-    const total = await prisma.users.count(); 
+    const total = await prisma.users.count();
     const usersLis: any = await prisma.users.findMany({
       skip: 10 * page,
       take: 10,
@@ -18,10 +18,10 @@ export const allUsersList = async (page: number) => {
       next: page < pagesTotal - 1 ? true : false,
       prev: page > 0 ? true : false,
       pagesTotal,
-      usersLis
+      usersLis,
     };
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return null;
   }
 };
@@ -55,7 +55,6 @@ export const saveNewUser = async (data: any) => {
     return null;
   }
 };
-
 
 export const getUserId = async (userId: string) => {
   try {
@@ -95,7 +94,7 @@ export const userToAdmin = async (userId: string, makeAdmin: string) => {
           userId,
         },
         data: {
-          rol: 1,
+          rol: 0,
         },
       });
 
@@ -141,6 +140,105 @@ export const banUser = async (userId: string, banUnban: string) => {
       return unBannedUser;
     }
     return currentRol;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const saveFavourite = async (userId: string, shopId: string) => {
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        userId,
+      },
+      select: {
+        favouriteShops: true,
+      },
+    });
+    const shop: any = await prisma.shops.findUnique({
+      where: {
+        id: shopId,
+      },
+      // select:{
+      //   id: true
+      // }
+    });
+
+    user?.favouriteShops.push(shop?.id);
+
+    const updateUserFavourites = await prisma.users.update({
+      where: {
+        userId,
+      },
+      data: {
+        favouriteShops: user?.favouriteShops,
+      },
+    });
+
+    return updateUserFavourites;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getFavouriteShops = async (userId: string) => {
+  try {
+    const shopsId = await prisma.users.findUnique({
+      where: {
+        userId,
+      },
+      select: {
+        favouriteShops: true,
+      },
+    });
+
+    const favouriteShops = shopsId?.favouriteShops.map((e) => e);
+
+    const allShops = await prisma.shops.findMany({
+      where: {
+        id: {
+          in: favouriteShops,
+        },
+      },
+    });
+
+    return allShops;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const removeFavourite = async (userId: string, shopId: string) => {
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        userId,
+      },
+      select: {
+        favouriteShops: true,
+      },
+    });
+
+    const newFavourites = user?.favouriteShops.filter((e) => e !== shopId);
+
+    const updatedUser = await prisma.users.update({
+      where: {
+        userId,
+      },
+      data: {
+        favouriteShops: newFavourites,
+      },
+    });
+
+    const allShops = await prisma.shops.findMany({
+      where: {
+        id: {
+          in: newFavourites,
+        },
+      },
+    });
+
+    return allShops;
   } catch (error) {
     return null;
   }
