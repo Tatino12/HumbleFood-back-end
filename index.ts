@@ -2,7 +2,7 @@ import express from "express";
 import { router } from "./src/routes/routes";
 const morgan = require('morgan');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 
 const server = express();
 

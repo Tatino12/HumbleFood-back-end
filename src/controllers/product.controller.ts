@@ -84,7 +84,7 @@ export const getProducts = async (
       products,
     };
   } catch (error) {
-    //console.error(error);
+    console.error(error);
     return null;
   }
 };
@@ -106,8 +106,8 @@ export const filterbyCategory = async (category: any, shopId: string) => {
       productId: true,
     },
   });
+  
   //console.log(idProduct);
-
   if (idProduct.length) {
     const filterCategory: any[] = await prisma.products.findMany({
       where: {
