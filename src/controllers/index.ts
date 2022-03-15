@@ -8,6 +8,9 @@ import {
   userToAdmin,
   getUserId,
   banUser,
+  saveFavourite,
+  getFavouriteShops,
+  removeFavourite,
 } from "./user.controller";
 import {
   getProducts,
@@ -169,8 +172,8 @@ export const updateOrder = async (req: Request, res: Response) => {
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { userId, shopId, products } = req.body;
-    const respu = await createNewOrden(userId, shopId, products);
+    const { userId, shopId, products, total } = req.body;
+    const respu = await createNewOrden(userId, shopId, products, total);
     res.json(respu);
   } catch (error) {
     console.error(error);
@@ -411,6 +414,39 @@ export const banUnbanUser = async (req: Request, res: Response) => {
       msg: `El user ${bannedUser?.name} ha sido ${banUnban}ned satisfactoriamente`,
       bannedUser,
     });
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const getAllFavouriteShops = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const favouriteShops = await getFavouriteShops(userId);
+    res.status(201).send(favouriteShops);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const saveFavouriteShop = async (req: Request, res: Response) => {
+  try {
+    const { userId, shopId } = req.params;
+    const favouriteShop = await saveFavourite(userId, shopId);
+    res.status(201).send(favouriteShop);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const removeFavouriteShop = async (req: Request, res: Response) => {
+  try {
+    const { userId, shopId } = req.params;
+    const deletedFavourite = await removeFavourite(userId, shopId);
+    res.status(201).send(deletedFavourite);
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });

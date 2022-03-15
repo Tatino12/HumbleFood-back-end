@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { nextTick } from "process";
 
 const prisma: PrismaClient = new PrismaClient();
 
