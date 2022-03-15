@@ -270,7 +270,7 @@ async function notify(id: string, message: string) {
   });
   const email: any = await prisma.users.findMany({
     where: {
-      userId: userId.userId,
+      id: userId.userId,
     },
     select: {
       email: true,
