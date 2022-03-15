@@ -2,12 +2,12 @@ import express from "express";
 import { router } from "./src/routes/routes";
 const morgan = require('morgan');
 
+
 const PORT = process.env.PORT || 3002;
 
 const server = express();
 
 // midlewares
-
 server.use(express.json({ limit: '50mb' }));
 server.use(express.urlencoded({ extended: true, limit: '50mb' }));
 server.use(morgan('dev'));
