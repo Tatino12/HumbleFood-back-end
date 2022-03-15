@@ -33,8 +33,9 @@ export async function saveNewShop(data: any) {
   }
 }
 
-export async function getShops(page: number) {
+export async function getShops(page: number, name: string) {
   try {
+    
     const total = await prisma.shops.count();
     const users = await prisma.users.findMany({
       where: {
@@ -45,8 +46,8 @@ export async function getShops(page: number) {
       },
     });
     const use = users.map((obj) => obj.userId);
-    console.log(users);
-    const shops: any = await prisma.shops.findMany({
+    let shops: any;
+    shops = await prisma.shops.findMany({
       where: {
         userId: {
           notIn: use,
@@ -55,6 +56,11 @@ export async function getShops(page: number) {
       skip: 9 * page,
       take: 9,
     });
+    //console.log(shops);
+    if(name){
+      name = name.toLowerCase();
+      shops = shops.filter((elem: any) => elem.name.toLowerCase().includes(name))
+    }
     const totalPages = Math.ceil(total / 10);
     if (shops)
       return {

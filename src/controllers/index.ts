@@ -46,6 +46,7 @@ import { errores } from "../Items/errors";
 export const getAllShops = async (req: Request, res: Response) => {
   try {
     let pageBase = 0;
+    const { name } = req.query;
     const page = req.query.page as string;
 
     const pageAsNumber: number = parseInt(page);
@@ -53,7 +54,7 @@ export const getAllShops = async (req: Request, res: Response) => {
       pageBase = pageAsNumber;
     }
 
-    const shops = await getShops(pageBase);
+    const shops = await getShops(pageBase, name as string);
     res.status(200).send(shops);
   } catch (error) {
     console.error(error);
