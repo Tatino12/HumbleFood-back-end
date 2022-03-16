@@ -1,6 +1,7 @@
 import { Products } from "@prisma/client";
 import prisma from "../database/db";
 import { Product, Producto, ProductOptions } from "../Items/Product.interface";
+import { sendEmail } from "./email.controller";
 
 async function namesCategories(product: any) {
   let arrCategories: any[] = await prisma.categories.findMany({
@@ -199,9 +200,11 @@ export const filterByDiscount = async (discount: number, shopId: string) => {
 export const saveNewProduct = async (data: any) => {
   // TODO: especificar los datos que se deben de recibir de forma obligatoria
   try {
+    notifyMailingList(data.shopId);
     const newProduct: any = await prisma.products.create({
       data: data,
     });
+    console.log(newProduct);
     for (let i = 0; i < data.categoriesId.length; i++) {
       let idPro = await prisma.categories.findUnique({
         where: {
@@ -375,6 +378,36 @@ export const getProductsNames = async (shopId: string) => {
     });
     const namesArray = products.map((e) => e.name);
     return namesArray;
+  } catch (error) {
+    return null;
+  }
+};
+
+const notifyMailingList = async (shopId: string) => {
+  try {
+    const users = await prisma.users.findMany({
+      where: {
+        mailingList: true,
+      },
+    });
+    const usersFavourited = users.filter((e) =>
+      e.favouriteShops.includes(shopId)
+    );
+    const shop = await prisma.shops.findUnique({
+      where: {
+        id: shopId,
+      },
+      select: {
+        name: true,
+      },
+    });
+    const emails = usersFavourited.map((e) => e.email);
+    for (let i = 0; i < emails.length; i++) {
+      sendEmail(
+        emails[i],
+        ` Tu tienda favorita ${shop?.name} ha publicado un nuevo producto!!! \n Ven antes de que se lo lleven! \n https://humblefood.vercel.app/productShop/${shopId}`
+      );
+    }
   } catch (error) {
     return null;
   }

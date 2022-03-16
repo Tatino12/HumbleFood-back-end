@@ -64,14 +64,13 @@ export async function validateOrder(userId: string, shopId: string) {
   }
 }
 
-
 // ================ ================ ================ ================ ================
 
 export const createNewOrden = async (
   userId: string,
   shopId: string,
   products: any, // array de productos
-  total: any,
+  total: any
 ) => {
   try {
     const orden = await prisma.orders.create({
@@ -259,15 +258,15 @@ export async function updateProductsStocks(id: string) {
   }
 }
 
-//Enviar Email cuando state se cambia a Enviando
-async function notify(id: string, message: string) {
+//Enviar Email cuando state se cambia a Enviando / Creado
+export async function notify(id: string, message: string) {
   const userId: any = await prisma.orders.findUnique({
     where: {
       id,
     },
-    select: {
-      userId: true,
-    },
+    // select: {
+    //   userId: true,
+    // },
   });
   const email: any = await prisma.users.findMany({
     where: {
@@ -277,6 +276,7 @@ async function notify(id: string, message: string) {
       email: true,
     },
   });
+  message = message + `\n Detalles de su Orden: \n ${userId.data}`;
   sendEmail(email[0].email, message);
 }
 
@@ -287,7 +287,7 @@ export async function orderProducts(id: string) {
         id,
       },
     });
-    console.log(orderProducts)
+    console.log(orderProducts);
     return orderProducts;
   } catch (error) {
     return null;

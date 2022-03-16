@@ -85,7 +85,7 @@ router.get("/orders/:id", getAllOrders); //id de shops o users o orders
 router.get("/orderProducts/:id", getOrderProducts);
 router.put("/order", updateOrderProducts); //recibe id, products por body
 router.put("/order/:id/:state", updateOrder); // recibe id de la orden
-router.post("/order", createOrder);
+router.post("/order", createOrder); // --> necesita: shopId, total int, userId, products [id, cantidad int]
 // router.post("/order", saveOrder);
 
 // router.get("/carrito/:idUser", getCarrito);

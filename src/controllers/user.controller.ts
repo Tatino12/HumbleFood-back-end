@@ -247,8 +247,10 @@ export const removeFavourite = async (userId: string, shopId: string) => {
 
 export const updateUserMailingState = async (userId: string, boolean: any) => {
   try {
-    let bool = boolean as boolean;
-    const updatedUser = await prisma.users.update({
+    let bool: boolean;
+    if (boolean === "true") bool = true;
+    else bool = false;
+    const updatedUser: any = await prisma.users.update({
       where: {
         id: userId,
       },
@@ -256,7 +258,6 @@ export const updateUserMailingState = async (userId: string, boolean: any) => {
         mailingList: bool,
       },
     });
-
     return updatedUser;
   } catch (error) {
     return null;
