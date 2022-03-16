@@ -59,9 +59,7 @@ export const getProducts = async (
         });
       }
       total = await prisma.products.count({ where: { stock: { not: 0 } } });
-      console.log(total);
     }
-    console.log(products);
 
     for (let i = 0; i < products.length; i++) {
       let arrCategories: any[] = await namesCategories(products[i]);
@@ -168,7 +166,6 @@ export const filterById = async (id: any) => {
       id,
     },
   });
-  console.log(filterID?.shopId);
   let arrCategories: any[] = await namesCategories(filterID);
   let shop = await prisma.shops.findUnique({
     where: { id: filterID?.shopId },
@@ -205,7 +202,6 @@ export const saveNewProduct = async (data: any) => {
     const newProduct: any = await prisma.products.create({
       data: data,
     });
-    console.log(newProduct);
     for (let i = 0; i < data.categoriesId.length; i++) {
       let idPro = await prisma.categories.findUnique({
         where: {
