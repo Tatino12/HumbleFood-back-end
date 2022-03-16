@@ -35,6 +35,7 @@ import {
   getAllFavouriteShops,
   removeFavouriteShop,
   getAllProductsNames,
+  updateMailingListState,
 } from "../controllers";
 
 /**
@@ -60,6 +61,8 @@ router.get("/user/:userId/favouriteShops", getAllFavouriteShops); // --> Toma us
 router.post("/user/:userId/favouriteShop/:shopId", saveFavouriteShop); // --> Toma userId, shopId por params, la guarda en el arreglo de user favouriteShops
 router.put("/user/:userId/deleteFavouriteShop/:shopId", removeFavouriteShop); // --> Toma userId, shopId por params, remueve una tienda de favoritos, devuelve el array actualizado de favoritos.
 
+router.put("/user/:userId/mailingList/:boolean", updateMailingListState); // --> Toma userId y true/false por params, devuelve un objeto usuario con el estado de mailingList modificado.
+
 router.get("/products", getAllProducts);
 router.get("/productShop/:shopId", getAllProducts);
 router.get("/productShop/:shopId/productNames", getAllProductsNames); // --> Toma el shopId por params, devuelve un array con los nombres de todos los productos contenidos en la tienda.
@@ -82,7 +85,7 @@ router.get("/orders/:id", getAllOrders); //id de shops o users o orders
 router.get("/orderProducts/:id", getOrderProducts);
 router.put("/order", updateOrderProducts); //recibe id, products por body
 router.put("/order/:id/:state", updateOrder); // recibe id de la orden
-router.post("/order", createOrder);
+router.post("/order", createOrder); // --> necesita: shopId, total int, userId, products [id, cantidad int]
 // router.post("/order", saveOrder);
 
 // router.get("/carrito/:idUser", getCarrito);
