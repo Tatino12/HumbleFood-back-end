@@ -85,7 +85,7 @@ export const createNewOrden = async (
       //   id: true,
       // },
     });
-    // notify(orden.id, "Se ha registrado su compra");
+    notify(orden.id, "Se ha registrado su compra");
     const productsID = [];
     for await (const iterator of products.map((product: any) =>
       addOrUpdateProductOrder(orden.id, product)
@@ -276,7 +276,6 @@ export async function notify(id: string, message: string) {
       email: true,
     },
   });
-  message = message + `\n Detalles de su Orden: \n ${userId.data}`;
   sendEmail(email[0].email, message);
 }
 
