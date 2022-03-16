@@ -11,6 +11,7 @@ import {
   saveFavourite,
   getFavouriteShops,
   removeFavourite,
+  updateUserMailingState,
 } from "./user.controller";
 import {
   getProducts,
@@ -461,6 +462,17 @@ export const removeFavouriteShop = async (req: Request, res: Response) => {
     const { userId, shopId } = req.params;
     const deletedFavourite = await removeFavourite(userId, shopId);
     res.status(201).send(deletedFavourite);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
+export const updateMailingListState = async (req: Request, res: Response) => {
+  try {
+    const { userId, boolean } = req.params;
+    const updatedUser = await updateUserMailingState(userId, boolean);
+    res.status(201).send(updatedUser);
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });

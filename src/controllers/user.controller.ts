@@ -43,6 +43,7 @@ export const saveNewUser = async (data: any) => {
       ...data,
       rol: 0,
       shopsId: [],
+      mailingList: false,
     };
     const newUser: any | null = await prisma.users.create({
       data: info,
@@ -239,6 +240,24 @@ export const removeFavourite = async (userId: string, shopId: string) => {
     });
 
     return allShops;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const updateUserMailingState = async (userId: string, boolean: any) => {
+  try {
+    let bool = boolean as boolean;
+    const updatedUser = await prisma.users.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        mailingList: bool,
+      },
+    });
+
+    return updatedUser;
   } catch (error) {
     return null;
   }
