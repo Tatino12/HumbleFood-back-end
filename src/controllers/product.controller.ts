@@ -51,33 +51,19 @@ export const getProducts = async (
       products = await filterByDiscount(page, discount as number, shopId);
       total = products.length;
     } else {
-<<<<<<< HEAD
       if(shopId && discount && category){
         products = await filterByCatDis(page, discount as number, category, shopId as string);
         total = products.length;
       }
       else if(!products.length){
-=======
-      if (shopId && discount && category) {
-        products = await filterByCatDis(
-          discount as number,
-          category,
-          shopId as string
-        );
-      } else if (!products.length) {
->>>>>>> main
         products = await prisma.products.findMany({
           skip: 9 * page,
           take: 9,
         });
         total = await prisma.products.count({ where: { stock: { not: 0 } } });
       }
-<<<<<<< HEAD
       //console.log(total);
       
-=======
-      total = await prisma.products.count({ where: { stock: { not: 0 } } });
->>>>>>> main
     }
 
     for (let i = 0; i < products.length; i++) {
@@ -105,15 +91,7 @@ export const getProducts = async (
   }
 };
 
-<<<<<<< HEAD
 const filterByCatDis =async (page:number ,discount:number, category: string, shopId:string) => {
-=======
-const filterByCatDis = async (
-  discount: number,
-  category: string,
-  shopId: string
-) => {
->>>>>>> main
   try {
     let products: any = await prisma.products.findMany({
       skip: 9 * page,
