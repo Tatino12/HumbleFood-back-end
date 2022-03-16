@@ -20,7 +20,7 @@ export async function getOrders(id: string) {
       },
     });
 
-    if (orders.lenght > 0) {
+    if (orders.length > 0) {
       return orders;
     } else {
       const userOrders: any = await prisma.orders.findMany({
@@ -28,7 +28,7 @@ export async function getOrders(id: string) {
           userId: id,
         },
       });
-      if (userOrders.lenght > 0) {
+      if (userOrders.length > 0) {
         return userOrders;
       } else {
         const orderOrder: any = await prisma.orders.findMany({
@@ -78,7 +78,7 @@ export const createNewOrden = async (
       data: {
         userId,
         shopId,
-        total: 0,
+        total: total,
         ordenProductsId: [],
         state: estado.creado,
       },
@@ -282,9 +282,9 @@ async function notify(id: string, message: string) {
 
 export async function orderProducts(id: string) {
   try {
-    const orderProducts = await prisma.orders.findUnique({
+    const orderProducts = await prisma.orderProducts.findUnique({
       where: {
-        id,
+        id
       },
     });
     console.log(orderProducts)
