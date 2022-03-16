@@ -34,6 +34,7 @@ import {
   saveFavouriteShop,
   getAllFavouriteShops,
   removeFavouriteShop,
+  getAllProductsNames,
 } from "../controllers";
 
 /**
@@ -61,6 +62,7 @@ router.put("/user/:userId/deleteFavouriteShop/:shopId", removeFavouriteShop); //
 
 router.get("/products", getAllProducts);
 router.get("/productShop/:shopId", getAllProducts);
+router.get("/productShop/:shopId/productNames", getAllProductsNames); // --> Toma el shopId por params, devuelve un array con los nombres de todos los productos contenidos en la tienda.
 router.get("/productShop/:shopId/discounts", getDiscounts); // --> Devuelte un array con los descuentos contenidos por productos dentro de una misma tienda.
 router.post("/product", saveProduct);
 router.delete("/product/delete/:productId", deleteProduct);
@@ -69,7 +71,7 @@ router.put("/product/update", updateProduct);
 router.get("/products/discount/:order"); // --> order: 'asc' / 'des'
 
 router.get("/categories", getAllCategories);
-router.post("/category", postCategory); 
+router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
 router.get("/reviews/:id", getReviews);
