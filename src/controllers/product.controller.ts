@@ -25,7 +25,7 @@ export const getProducts = async (
 ) => {
   try {
     let total: number;
-    let products: any;
+    let products: any = [];
     total = await prisma.products.count({ where: { shopId: shopId } });
 
     //console.log(`${category} y ${discount}`);
