@@ -31,7 +31,7 @@ export const getProducts = async (
     //console.log(`${category} y ${discount}`);
     
     if (shopId && !category && !name && !id && !discount) {
-      console.log(shopId);
+      //console.log(shopId);
       products = await prisma.products.findMany({
         where: { shopId: shopId },
         skip: 10 * page,
@@ -39,46 +39,39 @@ export const getProducts = async (
       });
     } else if (shopId && name) {
       products = await filterByName(name, page, shopId);
-      console.log(products);
     } else if (shopId && id) {
       products = await filterById(id);
     } else if (shopId && category && !discount) {
       products = await filterbyCategory(category, shopId as string);
     } else if (shopId && discount && !category) {
       products = await filterByDiscount(discount as number, shopId);
-    } else if(shopId && discount && category){
-      products = await filterByCatDis(discount as number, category, shopId as string);
     } else {
+      if(shopId && discount && category){
+        products = await filterByCatDis(discount as number, category, shopId as string);
+      }
+      else if(!products.length){
+        products = await prisma.products.findMany({
+          skip: 10 * page,
+          take: 10,
+        });
+      }
       total = await prisma.products.count({ where: { stock: { not: 0 } } });
       console.log(total);
-      products = await prisma.products.findMany({
-        // where: {
-        //   stock: {
-        //     not: 0,
-        //   },
-        // },
-        skip: 10 * page,
-        take: 10,
-      });
-      for (let i = 0; i < products.length; i++) {
-        let arrCategories: any[] = await namesCategories(products[i]);
-        //console.log(arrCategories);
-        
-        products[i] = {
-          id: products[i].id,
-          name: products[i].name,
-          image: products[i].image,
-          description: products[i].description,
-          price: products[i].price,
-          discount: products[i].discount,
-          stock: products[i].stock,
-          categories: arrCategories.map((el) => el.name),
-          shopId: products[i].shopId,
-        };
-      }
+      
     }
+    console.log(products);
+    
+    for (let i = 0; i < products.length; i++) {
+      let arrCategories: any[] = await namesCategories(products[i]);
+      //console.log(arrCategories);
+      
+      products[i] = {
+        ...products[i],
+        categories: arrCategories.map((el) => el.name),
+      };
+    }
+    
     //console.log(products);
-
 
     const pagesTotal = Math.ceil(total / 10);
     return {
@@ -106,20 +99,8 @@ const filterByCatDis =async (discount:number, category: string, shopId:string) =
       let arrCategories = await namesCategories(products[i]);
       arrCategories.forEach(e => {
         //console.log(e);
-        if(e.name.toLowerCase() === category.toLowerCase()){
+        if(e.name.toLowerCase() !== category.toLowerCase()){
           
-          products[i] = {
-            id: products[i]?.id,
-            name: products[i]?.name,
-            image: products[i]?.image,
-            description: products[i]?.description,
-            price: products[i]?.price,
-            discount: products[i]?.discount,
-            stock: products[i]?.stock,
-            categories: arrCategories.map((el) => el.name),
-          };
-        }
-        else{
           products[i] = []; 
         }
       })
@@ -189,18 +170,11 @@ export const filterById = async (id: any) => {
     select: { name: true },
   });
 
-  return {
-    id: filterID?.id,
-    name: filterID?.name,
-    image: filterID?.image,
-    description: filterID?.description,
-    price: filterID?.price,
-    discount: filterID?.discount,
-    stock: filterID?.stock,
-
-    categories: arrCategories.map((el) => el.name),
-    shop: shop?.name,
-  };
+  return [{
+    ...filterID,
+    shop: shop?.name
+  }]
+  
 };
 export const filterByDiscount = async (discount: number, shopId: string) => {
   try {
@@ -210,22 +184,7 @@ export const filterByDiscount = async (discount: number, shopId: string) => {
         discount,
       },
     });
-    
-    for (let i = 0; i < products.length; i++) {
-      let arrCategories = await namesCategories(products[i]);
-      products[i] = {
-        id: products[i]?.id,
-        name: products[i]?.name,
-        image: products[i]?.image,
-        description: products[i]?.description,
-        price: products[i]?.price,
-        discount: products[i]?.discount,
-        stock: products[i]?.stock,
-        categories: arrCategories.map((el) => el.name),
-      };
-    }
-    console.log(products);
-    
+    //console.log(products);
     return products;
   } catch (error) {
     console.log(error, "!=");
