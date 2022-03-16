@@ -282,12 +282,24 @@ export const updateInfoProduct = async (
   producto: Producto
 ) => {
   try {
+    const prevStock = await prisma.products.findUnique({
+      where: {
+        id: idProduct,
+      },
+      select: {
+        stock: true,
+      },
+    });
     const product = await prisma.products.update({
       where: {
         id: idProduct,
       },
       data: producto,
     });
+    if (prevStock?.stock === 0 && product.stock > 0) {
+      console.log("hola");
+      notifyMailingList(product.shopId);
+    }
 
     for (let i = 0; i < producto.categoriesId.length; i++) {
       let idPro = await prisma.categories.findUnique({
