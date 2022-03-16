@@ -85,7 +85,6 @@ export const createNewOrden = async (
       //   id: true,
       // },
     });
-    notify(orden.id, "Se ha registrado su compra");
     const productsID = [];
     for await (const iterator of products.map((product: any) =>
       addOrUpdateProductOrder(orden.id, product)
@@ -101,7 +100,8 @@ export const createNewOrden = async (
         ordenProductsId: productsID,
       },
     });
-
+    notify(orden.id, "Se ha registrado su compra");
+    await updateProductsStocks(orden.id);
     return finalOrder;
   } catch (error) {
     console.log(error);
@@ -244,6 +244,7 @@ export async function updateProductsStocks(id: string) {
         },
       });
       newStock = prevStock.stock - products[j].cantidad;
+
       await prisma.products.update({
         where: {
           id: products[j].productId,
