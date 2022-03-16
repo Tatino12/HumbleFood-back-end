@@ -17,8 +17,9 @@ import {
   saveNewProduct,
   deletePro,
   updateInfoProduct,
+  getProductsNames,
 } from "./product.controller";
-import { getCategories, saveNewCategory} from "./categories.controller";
+import { getCategories, saveNewCategory } from "./categories.controller";
 import {
   getShops,
   saveNewShop,
@@ -138,8 +139,8 @@ export const getEveryOrder = async (req: Request, res: Response) => {
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-   
-    const orders = await getOrders(id );
+
+    const orders = await getOrders(id);
     res.status(201).send(orders);
   } catch (error) {
     console.error(error);
@@ -198,7 +199,7 @@ export const getOrderProducts = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const productOrder = await orderProducts(id);
-    console.log(productOrder)
+    console.log(productOrder);
     res.status(201).send(productOrder);
   } catch (error) {
     console.error(error);
@@ -335,6 +336,17 @@ export const updateProduct = async (req: Request, res: Response) => {
 //   }
 // };
 
+export const getAllProductsNames = async (req: Request, res: Response) => {
+  try {
+    const { shopId } = req.params;
+    const allProductNames = await getProductsNames(shopId);
+    res.status(201).send(allProductNames);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ msg: "Datos requeridos no enviados" });
+  }
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // USERS
@@ -461,7 +473,7 @@ export const removeFavouriteShop = async (req: Request, res: Response) => {
 
 export const getAllCategories = async (req: Request, res: Response) => {
   try {
-    const {shopId} = req.query;
+    const { shopId } = req.query;
     const info = await getCategories(shopId as string);
     res.status(200).json(info);
   } catch (error) {
@@ -480,7 +492,6 @@ export const postCategory = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
-
 
 /* -------------------------------------------------------------------------------------------- */
 
