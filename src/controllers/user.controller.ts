@@ -3,6 +3,7 @@ import prisma from "../database/db";
 import { User } from "../Items/User.interface";
 // import { createNewCarrito } from "./cart.controller";
 import { Cart } from "../Items/Cart.interface";
+import { sendEmail } from "./email.controller";
 
 export const allUsersList = async (page: number) => {
   try {
@@ -45,6 +46,10 @@ export const saveNewUser = async (data: any) => {
       shopsId: [],
       mailingList: false,
     };
+    sendEmail(
+      info.email,
+      `Hola ${info.name} \n Se ha registrado en HumbleFoods exitosamente! \n Bienvenido!!`
+    );
     const newUser: any | null = await prisma.users.create({
       data: info,
     });

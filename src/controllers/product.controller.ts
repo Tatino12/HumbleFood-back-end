@@ -1,6 +1,7 @@
 import { Products } from "@prisma/client";
 import prisma from "../database/db";
 import { Product, Producto, ProductOptions } from "../Items/Product.interface";
+import { saveNewCategory } from "./categories.controller";
 import { sendEmail } from "./email.controller";
 
 async function namesCategories(product: any) {
@@ -218,10 +219,39 @@ export const saveNewProduct = async (data: any) => {
   // TODO: especificar los datos que se deben de recibir de forma obligatoria
   try {
     notifyMailingList(data.shopId);
+    let categoryExist;
+    let newCategory;
+    data.categoriesId = [];
+    const categoriesId = [];
+    for (let i = 0; i < data.categories.length; i++) {
+      categoryExist = await prisma.categories.findUnique({
+        where: {
+          name: data.categories[i],
+        },
+      });
+      if (!categoryExist) {
+        newCategory = await prisma.categories.create({
+          data: { name: data.categories[i] },
+        });
+        data.categoriesId = [...data.categoriesId, newCategory?.id];
+      } else {
+        data.categoriesId.push(categoryExist.id);
+      }
+    }
+
     const newProduct: any = await prisma.products.create({
-      data: data,
+      data: {
+        name: data.name,
+        image: data.image,
+        description: data.description,
+        price: data.price,
+        discount: data.discount,
+        stock: data.stock,
+        categoriesId: data.categoriesId,
+        shopId: data.shopId,
+      },
     });
-    console.log(newProduct);
+    // console.log(newProduct);
     for (let i = 0; i < data.categoriesId.length; i++) {
       let idPro = await prisma.categories.findUnique({
         where: {
