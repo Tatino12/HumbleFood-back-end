@@ -42,6 +42,7 @@ export const getProducts = async (
       products = await filterByName(name, page, shopId);
       total = products.length;
     } else if (shopId && id) {
+      console.log("hola");
       products = await filterById(id);
       total = products.length;
     } else if (shopId && category && !discount) {
@@ -111,8 +112,8 @@ const filterByCatDis = async (
     });
 
     for (let i = 0; i < products.length; i++) {
-      let arrCategories = await namesCategories(products[i]);
-      arrCategories.forEach((e) => {
+      let arrCategories: any = await namesCategories(products[i]);
+      arrCategories.forEach((e: any) => {
         //console.log(e);
         if (e.name.toLowerCase() !== category.toLowerCase()) {
           products[i] = [];
@@ -297,7 +298,6 @@ export const updateInfoProduct = async (
       data: producto,
     });
     if (prevStock?.stock === 0 && product.stock > 0) {
-      console.log("hola");
       notifyMailingList(product.shopId);
     }
 

@@ -36,6 +36,7 @@ import {
   removeFavouriteShop,
   getAllProductsNames,
   updateMailingListState,
+  getCategoriesId,
 } from "../controllers";
 
 /**
@@ -74,6 +75,7 @@ router.put("/product/update", updateProduct);
 router.get("/products/discount/:order"); // --> order: 'asc' / 'des'
 
 router.get("/categories", getAllCategories);
+router.get("/categoriesId", getCategoriesId); // gets categories {Id, Name}.
 router.post("/category", postCategory);
 
 router.post("/review", addCommentUser);
