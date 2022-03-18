@@ -17,6 +17,7 @@ model Users {
   name      String
   name_user String
   email     String @unique
+  mailingList Boolean
   direction String
   rol       Int  // 0 = User / 1 = User with Shop / 2 = Admin
   shopsId     String[] 

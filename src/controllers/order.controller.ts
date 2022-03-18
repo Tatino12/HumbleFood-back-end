@@ -64,14 +64,13 @@ export async function validateOrder(userId: string, shopId: string) {
   }
 }
 
-
 // ================ ================ ================ ================ ================
 
 export const createNewOrden = async (
   userId: string,
   shopId: string,
   products: any, // array de productos
-  total: any,
+  total: any
 ) => {
   try {
     const orden = await prisma.orders.create({
@@ -86,7 +85,6 @@ export const createNewOrden = async (
       //   id: true,
       // },
     });
-    // notify(orden.id, "Se ha registrado su compra");
     const productsID = [];
     for await (const iterator of products.map((product: any) =>
       addOrUpdateProductOrder(orden.id, product)
@@ -102,7 +100,8 @@ export const createNewOrden = async (
         ordenProductsId: productsID,
       },
     });
-
+    notify(orden.id, "Se ha registrado su compra");
+    await updateProductsStocks(orden.id);
     return finalOrder;
   } catch (error) {
     console.log(error);
@@ -245,6 +244,7 @@ export async function updateProductsStocks(id: string) {
         },
       });
       newStock = prevStock.stock - products[j].cantidad;
+
       await prisma.products.update({
         where: {
           id: products[j].productId,
@@ -259,15 +259,15 @@ export async function updateProductsStocks(id: string) {
   }
 }
 
-//Enviar Email cuando state se cambia a Enviando
-async function notify(id: string, message: string) {
+//Enviar Email cuando state se cambia a Enviando / Creado
+export async function notify(id: string, message: string) {
   const userId: any = await prisma.orders.findUnique({
     where: {
       id,
     },
-    select: {
-      userId: true,
-    },
+    // select: {
+    //   userId: true,
+    // },
   });
   const email: any = await prisma.users.findMany({
     where: {
@@ -287,7 +287,7 @@ export async function orderProducts(id: string) {
         id,
       },
     });
-    console.log(orderProducts)
+    console.log(orderProducts);
     return orderProducts;
   } catch (error) {
     return null;

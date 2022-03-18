@@ -1,6 +1,7 @@
 import { Products } from "@prisma/client";
 import prisma from "../database/db";
 import { Product, Producto, ProductOptions } from "../Items/Product.interface";
+import { sendEmail } from "./email.controller";
 
 async function namesCategories(product: any) {
   let arrCategories: any[] = await prisma.categories.findMany({
@@ -26,7 +27,7 @@ export const getProducts = async (
   try {
     let total: number = 0;
     let products: any = [];
-    
+
     //console.log(`${category} y ${discount}`);
 
     if (shopId && !category && !name && !id && !discount) {
@@ -41,6 +42,7 @@ export const getProducts = async (
       products = await filterByName(name, page, shopId);
       total = products.length;
     } else if (shopId && id) {
+      console.log("hola");
       products = await filterById(id);
       total = products.length;
     } else if (shopId && category && !discount) {
@@ -50,18 +52,22 @@ export const getProducts = async (
       products = await filterByDiscount(page, discount as number, shopId);
       total = products.length;
     } else {
-      if(shopId && discount && category){
-        products = await filterByCatDis(page, discount as number, category, shopId as string);
+      if (shopId && discount && category) {
+        products = await filterByCatDis(
+          page,
+          discount as number,
+          category,
+          shopId as string
+        );
         total = products.length;
-      }
-      else if(!products.length){
+      } else if (!products.length) {
         products = await prisma.products.findMany({
           skip: 9 * page,
           take: 9,
         });
         total = await prisma.products.count({ where: { stock: { not: 0 } } });
       }
-      total = await prisma.products.count({ where: { stock: { not: 0 } } });
+      //console.log(total);
     }
 
     for (let i = 0; i < products.length; i++) {
@@ -89,7 +95,12 @@ export const getProducts = async (
   }
 };
 
-const filterByCatDis =async (page:number ,discount:number, category: string, shopId:string) => {
+const filterByCatDis = async (
+  page: number,
+  discount: number,
+  category: string,
+  shopId: string
+) => {
   try {
     let products: any = await prisma.products.findMany({
       skip: 9 * page,
@@ -101,8 +112,8 @@ const filterByCatDis =async (page:number ,discount:number, category: string, sho
     });
 
     for (let i = 0; i < products.length; i++) {
-      let arrCategories = await namesCategories(products[i]);
-      arrCategories.forEach((e) => {
+      let arrCategories: any = await namesCategories(products[i]);
+      arrCategories.forEach((e: any) => {
         //console.log(e);
         if (e.name.toLowerCase() !== category.toLowerCase()) {
           products[i] = [];
@@ -148,8 +159,8 @@ export const filterByName = async (name: any, page: number, shopId: string) => {
     where: { name: name, shopId: shopId },
   });
   const all: any[] = await prisma.products.findMany({
-    skip: 9 * page,
-    take: 9,
+    // skip: 9 * page,
+    // take: 9,
     where: {
       shopId: shopId,
     },
@@ -180,7 +191,11 @@ export const filterById = async (id: any) => {
     },
   ];
 };
-export const filterByDiscount = async (page: number, discount: number, shopId: string) => {
+export const filterByDiscount = async (
+  page: number,
+  discount: number,
+  shopId: string
+) => {
   try {
     let products: any = await prisma.products.findMany({
       skip: 9 * page,
@@ -202,9 +217,11 @@ export const filterByDiscount = async (page: number, discount: number, shopId: s
 export const saveNewProduct = async (data: any) => {
   // TODO: especificar los datos que se deben de recibir de forma obligatoria
   try {
+    notifyMailingList(data.shopId);
     const newProduct: any = await prisma.products.create({
       data: data,
     });
+    console.log(newProduct);
     for (let i = 0; i < data.categoriesId.length; i++) {
       let idPro = await prisma.categories.findUnique({
         where: {
@@ -266,12 +283,23 @@ export const updateInfoProduct = async (
   producto: Producto
 ) => {
   try {
+    const prevStock = await prisma.products.findUnique({
+      where: {
+        id: idProduct,
+      },
+      select: {
+        stock: true,
+      },
+    });
     const product = await prisma.products.update({
       where: {
         id: idProduct,
       },
       data: producto,
     });
+    if (prevStock?.stock === 0 && product.stock > 0) {
+      notifyMailingList(product.shopId);
+    }
 
     for (let i = 0; i < producto.categoriesId.length; i++) {
       let idPro = await prisma.categories.findUnique({
@@ -378,6 +406,36 @@ export const getProductsNames = async (shopId: string) => {
     });
     const namesArray = products.map((e) => e.name);
     return namesArray;
+  } catch (error) {
+    return null;
+  }
+};
+
+const notifyMailingList = async (shopId: string) => {
+  try {
+    const users = await prisma.users.findMany({
+      where: {
+        mailingList: true,
+      },
+    });
+    const usersFavourited = users.filter((e) =>
+      e.favouriteShops.includes(shopId)
+    );
+    const shop = await prisma.shops.findUnique({
+      where: {
+        id: shopId,
+      },
+      select: {
+        name: true,
+      },
+    });
+    const emails = usersFavourited.map((e) => e.email);
+    for (let i = 0; i < emails.length; i++) {
+      sendEmail(
+        emails[i],
+        ` Tu tienda favorita ${shop?.name} ha publicado un nuevo producto!!! \n Ven antes de que se lo lleven! \n https://humblefood.vercel.app/productShop/${shopId}`
+      );
+    }
   } catch (error) {
     return null;
   }
