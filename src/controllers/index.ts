@@ -11,6 +11,7 @@ import {
   saveFavourite,
   getFavouriteShops,
   removeFavourite,
+  updateUserMailingState,
 } from "./user.controller";
 import {
   getProducts,
@@ -19,7 +20,11 @@ import {
   updateInfoProduct,
   getProductsNames,
 } from "./product.controller";
-import { getCategories, saveNewCategory } from "./categories.controller";
+import {
+  getCategories,
+  getCategoriesObject,
+  saveNewCategory,
+} from "./categories.controller";
 import {
   getShops,
   saveNewShop,
@@ -219,7 +224,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { discount } = req.query;
     let { shopId } = req.params;
 
-    //console.log(req.query);
+    console.log("hola1");
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
     const pageAsNumber: number = parseInt(myPage);
@@ -467,6 +472,17 @@ export const removeFavouriteShop = async (req: Request, res: Response) => {
   }
 };
 
+export const updateMailingListState = async (req: Request, res: Response) => {
+  try {
+    const { userId, boolean } = req.params;
+    const updatedUser = await updateUserMailingState(userId, boolean);
+    res.status(201).send(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // CATEGORIES
@@ -493,6 +509,14 @@ export const postCategory = async (req: Request, res: Response) => {
   }
 };
 
+export const getCategoriesId = async (req: Request, res: Response) => {
+  try {
+    const categories = await getCategoriesObject();
+    res.status(201).send(categories);
+  } catch (error) {
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
 /* -------------------------------------------------------------------------------------------- */
 
 // CART

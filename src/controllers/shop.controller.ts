@@ -1,5 +1,6 @@
 import prisma from "../database/db";
 import { Shops } from "@prisma/client";
+import { sendEmail } from "./email.controller";
 
 export async function saveNewShop(data: any) {
   try {
@@ -8,10 +9,16 @@ export async function saveNewShop(data: any) {
         id: data.userId,
       },
       select: {
+        name: true,
         shopsId: true,
+        email: true,
       },
     });
     if (user) {
+      sendEmail(
+        user.email,
+        ` Hola ${user.name}! \n  Has registrado una tienda con exito!\n   Empieza a publicar tus productos, nuevos clientes te esperan!`
+      );
       const newShop: any = await prisma.shops.create({ data: data });
       user.shopsId.push(newShop.id);
 
@@ -35,7 +42,6 @@ export async function saveNewShop(data: any) {
 
 export async function getShops(page: number, name: string) {
   try {
-    
     const total = await prisma.shops.count();
     const users = await prisma.users.findMany({
       where: {
@@ -57,9 +63,11 @@ export async function getShops(page: number, name: string) {
       take: 9,
     });
     //console.log(shops);
-    if(name){
+    if (name) {
       name = name.toLowerCase();
-      shops = shops.filter((elem: any) => elem.name.toLowerCase().includes(name))
+      shops = shops.filter((elem: any) =>
+        elem.name.toLowerCase().includes(name)
+      );
     }
     const totalPages = Math.ceil(total / 10);
     if (shops)

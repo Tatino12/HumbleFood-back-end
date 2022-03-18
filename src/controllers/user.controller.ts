@@ -3,6 +3,7 @@ import prisma from "../database/db";
 import { User } from "../Items/User.interface";
 // import { createNewCarrito } from "./cart.controller";
 import { Cart } from "../Items/Cart.interface";
+import { sendEmail } from "./email.controller";
 
 export const allUsersList = async (page: number) => {
   try {
@@ -43,7 +44,12 @@ export const saveNewUser = async (data: any) => {
       ...data,
       rol: 0,
       shopsId: [],
+      mailingList: false,
     };
+    sendEmail(
+      info.email,
+      `Hola ${info.name} \n Se ha registrado en HumbleFoods exitosamente! \n Bienvenido!!`
+    );
     const newUser: any | null = await prisma.users.create({
       data: info,
     });
@@ -239,6 +245,25 @@ export const removeFavourite = async (userId: string, shopId: string) => {
     });
 
     return allShops;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const updateUserMailingState = async (userId: string, boolean: any) => {
+  try {
+    let bool: boolean;
+    if (boolean === "true") bool = true;
+    else bool = false;
+    const updatedUser: any = await prisma.users.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        mailingList: bool,
+      },
+    });
+    return updatedUser;
   } catch (error) {
     return null;
   }
