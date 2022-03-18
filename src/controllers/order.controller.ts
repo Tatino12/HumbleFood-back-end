@@ -42,16 +42,18 @@ export async function getOrders(id: string) {
               image: true,
               price: true,
               discount: true,
+              id: true,
             },
           });
           if (product.name) {
+            product.id = product.name.id;
             product.discount = product.name.discount;
             product.price = product.name.price;
             product.image = product.name.image;
             product.name = product.name.name;
           }
           
-          productsInfo.push({ name: product.name, cantidad: product.cantidad, 
+          productsInfo.push({  id: product.id, name: product.name, cantidad: product.cantidad, 
             image: product.image, price: product.price, discount: product.discount});
         }
         orders[j].userInfo = userInfo;
@@ -88,20 +90,24 @@ export async function getOrders(id: string) {
                 image: true,
                 price: true,
                 discount: true, 
+                id: true,
               },
             });
             if (product.name){
+              product.id = product.name.id
               product.discount = product.name.discount
               product.price = product.name.price
               product.image = product.name.image
               product.name = product.name.name;
             } 
             productsInfo.push({
+              id: product.id, 
               name: product.name,
               cantidad: product.cantidad,
               image: product.image,
               price: product.price,
-              discount: product.discount
+              discount: product.discount,
+              
             });
           }
           userOrders[j].shopInfo = shopInfo;
