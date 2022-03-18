@@ -39,10 +39,15 @@ export async function getOrders(id: string) {
             },
             select: {
               name: true,
+              image: true,
             },
           });
-          if (product.name) product.name = product.name.name;
-          productsInfo.push({ name: product.name, cantidad: product.cantidad });
+          if (product.name) {
+            product.image = product.name.image
+            product.name = product.name.name;
+          }
+          
+          productsInfo.push({ name: product.name, cantidad: product.cantidad, image: product.image});
         }
         orders[j].userInfo = userInfo;
         orders[j].productsInfo = productsInfo;
@@ -64,6 +69,7 @@ export async function getOrders(id: string) {
             },
             select: {
               name: true,
+              
             },
           });
           for (let i = 0; i < userOrders[j].ordenProductsId.length; i++) {
@@ -74,12 +80,17 @@ export async function getOrders(id: string) {
               },
               select: {
                 name: true,
+                image: true,
               },
             });
-            if (product.name) product.name = product.name.name;
+            if (product.name){
+              product.image = product.name.image
+              product.name = product.name.name;
+            } 
             productsInfo.push({
               name: product.name,
               cantidad: product.cantidad,
+              image: product.image
             });
           }
           userOrders[j].shopInfo = shopInfo;
