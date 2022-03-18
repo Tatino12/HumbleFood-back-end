@@ -40,14 +40,19 @@ export async function getOrders(id: string) {
             select: {
               name: true,
               image: true,
+              price: true,
+              discount: true,
             },
           });
           if (product.name) {
-            product.image = product.name.image
+            product.discount = product.name.discount;
+            product.price = product.name.price;
+            product.image = product.name.image;
             product.name = product.name.name;
           }
           
-          productsInfo.push({ name: product.name, cantidad: product.cantidad, image: product.image});
+          productsInfo.push({ name: product.name, cantidad: product.cantidad, 
+            image: product.image, price: product.price, discount: product.discount});
         }
         orders[j].userInfo = userInfo;
         orders[j].productsInfo = productsInfo;
@@ -81,16 +86,22 @@ export async function getOrders(id: string) {
               select: {
                 name: true,
                 image: true,
+                price: true,
+                discount: true, 
               },
             });
             if (product.name){
+              product.discount = product.name.discount
+              product.price = product.name.price
               product.image = product.name.image
               product.name = product.name.name;
             } 
             productsInfo.push({
               name: product.name,
               cantidad: product.cantidad,
-              image: product.image
+              image: product.image,
+              price: product.price,
+              discount: product.discount
             });
           }
           userOrders[j].shopInfo = shopInfo;
