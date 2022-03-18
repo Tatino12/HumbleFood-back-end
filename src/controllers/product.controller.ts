@@ -160,8 +160,8 @@ export const filterByName = async (name: any, page: number, shopId: string) => {
     where: { name: name, shopId: shopId },
   });
   const all: any[] = await prisma.products.findMany({
-    skip: 9 * page,
-    take: 9,
+    // skip: 9 * page,
+    // take: 9,
     where: {
       shopId: shopId,
     },

@@ -341,7 +341,7 @@ export async function orderProducts(id: string) {
   try {
     const orderProducts = await prisma.orderProducts.findUnique({
       where: {
-        id,
+        id
       },
     });
     return orderProducts;
