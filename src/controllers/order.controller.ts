@@ -19,8 +19,34 @@ export async function getOrders(id: string) {
         shopId: id,
       },
     });
-
     if (orders.length > 0) {
+      for (let j = 0; j < orders.length; j++) {
+        let product: any;
+        let productsInfo = [];
+        let userInfo = await prisma.users.findUnique({
+          where: {
+            id: orders[j].userId,
+          },
+          select: {
+            name: true,
+          },
+        });
+        for (let i = 0; i < orders[j].ordenProductsId.length; i++) {
+          product = await orderProducts(orders[j].ordenProductsId[i]);
+          product.name = await prisma.products.findUnique({
+            where: {
+              id: product?.productId,
+            },
+            select: {
+              name: true,
+            },
+          });
+          if (product.name) product.name = product.name.name;
+          productsInfo.push({ name: product.name, cantidad: product.cantidad });
+        }
+        orders[j].userInfo = userInfo;
+        orders[j].productsInfo = productsInfo;
+      }
       return orders;
     } else {
       const userOrders: any = await prisma.orders.findMany({
@@ -29,6 +55,37 @@ export async function getOrders(id: string) {
         },
       });
       if (userOrders.length > 0) {
+        for (let j = 0; j < userOrders.length; j++) {
+          let product: any;
+          let productsInfo = [];
+          let shopInfo = await prisma.shops.findUnique({
+            where: {
+              id: userOrders[j].shopId,
+            },
+            select: {
+              name: true,
+            },
+          });
+          for (let i = 0; i < userOrders[j].ordenProductsId.length; i++) {
+            product = await orderProducts(userOrders[j].ordenProductsId[i]);
+            product.name = await prisma.products.findUnique({
+              where: {
+                id: product?.productId,
+              },
+              select: {
+                name: true,
+              },
+            });
+            if (product.name) product.name = product.name.name;
+            productsInfo.push({
+              name: product.name,
+              cantidad: product.cantidad,
+            });
+          }
+          userOrders[j].shopInfo = shopInfo;
+          userOrders[j].productsInfo = productsInfo;
+        }
+
         return userOrders;
       } else {
         const orderOrder: any = await prisma.orders.findMany({
@@ -282,22 +339,13 @@ export async function notify(id: string, message: string) {
 
 export async function orderProducts(id: string) {
   try {
-    const orderProducts = await prisma.orders.findUnique({
+    const orderProducts = await prisma.orderProducts.findUnique({
       where: {
         id,
       },
     });
-    console.log(orderProducts);
     return orderProducts;
   } catch (error) {
     return null;
   }
 }
-
-// export async function createOrder(data: any) {
-//   const newOrder = await prisma.orders.create({
-//     data,
-//   });
-//   notify(newOrder.id, "Se ha registrado su compra");
-//   return newOrder;
-// }
