@@ -44,7 +44,7 @@ export const saveNewUser = async (data: any) => {
       ...data,
       rol: 0,
       shopsId: [],
-      mailingList: false,
+      mailingList: true,
     };
     sendEmail(
       info.email,
