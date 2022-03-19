@@ -39,10 +39,22 @@ export async function getOrders(id: string) {
             },
             select: {
               name: true,
+              image: true,
+              price: true,
+              discount: true,
+              id: true,
             },
           });
-          if (product.name) product.name = product.name.name;
-          productsInfo.push({ name: product.name, cantidad: product.cantidad });
+          if (product.name) {
+            product.id = product.name.id;
+            product.discount = product.name.discount;
+            product.price = product.name.price;
+            product.image = product.name.image;
+            product.name = product.name.name;
+          }
+          
+          productsInfo.push({  id: product.id, name: product.name, cantidad: product.cantidad, 
+            image: product.image, price: product.price, discount: product.discount});
         }
         orders[j].userInfo = userInfo;
         orders[j].productsInfo = productsInfo;
@@ -64,6 +76,7 @@ export async function getOrders(id: string) {
             },
             select: {
               name: true,
+              
             },
           });
           for (let i = 0; i < userOrders[j].ordenProductsId.length; i++) {
@@ -74,12 +87,27 @@ export async function getOrders(id: string) {
               },
               select: {
                 name: true,
+                image: true,
+                price: true,
+                discount: true, 
+                id: true,
               },
             });
-            if (product.name) product.name = product.name.name;
+            if (product.name){
+              product.id = product.name.id
+              product.discount = product.name.discount
+              product.price = product.name.price
+              product.image = product.name.image
+              product.name = product.name.name;
+            } 
             productsInfo.push({
+              id: product.id, 
               name: product.name,
               cantidad: product.cantidad,
+              image: product.image,
+              price: product.price,
+              discount: product.discount,
+              
             });
           }
           userOrders[j].shopInfo = shopInfo;
@@ -341,7 +369,7 @@ export async function orderProducts(id: string) {
   try {
     const orderProducts = await prisma.orderProducts.findUnique({
       where: {
-        id,
+        id
       },
     });
     return orderProducts;
