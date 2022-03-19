@@ -179,8 +179,8 @@ export const updateOrder = async (req: Request, res: Response) => {
 
 export const createOrder = async (req: Request, res: Response) => {
   try {
-    const { userId, shopId, products, total } = req.body;
-    const respu = await createNewOrden(userId, shopId, products, total);
+    const { userId, shopId, products, total, date } = req.body;
+    const respu = await createNewOrden(userId, shopId, products, total, date);
     res.json(respu);
   } catch (error) {
     console.error(error);
