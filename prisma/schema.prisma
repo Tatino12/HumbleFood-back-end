@@ -76,6 +76,7 @@ model Orders {
   total           Float
   userId          String 
   ordenProductsId String[]
+  date            String
 }
 
 model OrderProducts {
