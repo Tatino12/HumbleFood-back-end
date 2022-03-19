@@ -165,6 +165,7 @@ export const createNewOrden = async (
         total: total,
         ordenProductsId: [],
         state: estado.creado,
+        date: new Date().toLocaleString(),
       },
       // select: {
       //   id: true,
