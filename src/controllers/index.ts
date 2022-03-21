@@ -90,8 +90,11 @@ export const getShopsinAwait = async (req: Request, res: Response) => {
 }
 export const putShopsinAwait = async (req: Request, res: Response) => {
   try {
-    const {shopId} = req.query;
-    const shop = await autorizheShop(shopId as string);
+    const {shopId} = req.params;
+    const authorize = req.query.authorize as string;
+    //console.log(Boolean(parseInt(authorize)));
+    
+    const shop = await autorizheShop(shopId as string, Boolean(parseInt(authorize)));
     if(shop)  res.status(200).json({ msg: "Tienda autorizada", shop: shop })
     else  res.status(400).json({ msg: "Tienda no encontrada", shop: shop })
   } catch (error) {

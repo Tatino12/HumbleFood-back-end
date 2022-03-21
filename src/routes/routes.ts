@@ -54,7 +54,7 @@ router.get("/shop/:shopId", getShop);
 router.post("/shop", addShop);
 router.put("/shop/alter/:banUnban/:userId", banUnbanShop); // Funcion para bannear shops, 'ban'/'unban'
 router.get("/authorization",getShopsinAwait);
-router.put("/authorize",putShopsinAwait);
+router.put("/authorize/:shopId",putShopsinAwait);
 
 
 router.get("/users", getAllUsers);

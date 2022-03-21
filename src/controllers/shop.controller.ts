@@ -154,14 +154,14 @@ export const getShopDiscounts = async (shopId: string) => {
   }
 };
 
-export const autorizheShop = async (shopId: string) => {
+export const autorizheShop = async (shopId: string, authorize: boolean) => {
 try {
   const shop = await prisma.shops.update({
     where:{
       id: shopId
     },
     data:{
-      authorization: true
+      authorization: authorize
     }
   })
   if(shop)  return shop
