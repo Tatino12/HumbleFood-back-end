@@ -397,7 +397,15 @@ export const addUser = async (req: Request, res: Response) => {
     const { userId, name, name_user, email, direction } = req.body;
     const data: any = { userId, name, name_user, email, direction };
     const user = await saveNewUser(data);
-    res.status(201).send({ msj: "Usuario creado correctamente", user: user });
+    if (user)
+      res.status(201).send({
+        msj: "El usuario " + user.name + " se ha creado correctamente",
+        user: user,
+      });
+    if (!user)
+      res.status(201).send({
+        msj: "El usuario " + name + " ya se encontraba registrado!",
+      });
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
