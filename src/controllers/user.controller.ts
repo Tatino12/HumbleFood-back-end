@@ -44,18 +44,26 @@ export const saveNewUser = async (data: any) => {
       ...data,
       rol: 0,
       shopsId: [],
-      mailingList: false,
+      mailingList: true,
+      favouriteShops: [],
     };
-    sendEmail(
-      info.email,
-      `Hola ${info.name} \n Se ha registrado en HumbleFoods exitosamente! \n Bienvenido!!`
-    );
-    const newUser: any | null = await prisma.users.create({
-      data: info,
+    const userExist = await prisma.users.findUnique({
+      where: {
+        userId: info.userId,
+      },
     });
-    if (newUser) {
-      // await createNewCarrito(newUser.id);
-      return newUser;
+
+    if (!userExist) {
+      sendEmail(
+        info.email,
+        `Hola ${info.name} \n Se ha registrado en HumbleFoods exitosamente! \n Bienvenido!!`
+      );
+
+      const newUser: any | null = await prisma.users.create({
+        data: info,
+      });
+
+      if (newUser) return newUser;
     }
   } catch (error) {
     return null;
