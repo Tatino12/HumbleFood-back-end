@@ -155,7 +155,8 @@ export const createNewOrden = async (
   userId: string,
   shopId: string,
   products: any, // array de productos
-  total: any
+  total: any,
+  date: string,
 ) => {
   try {
     const orden = await prisma.orders.create({
@@ -165,6 +166,7 @@ export const createNewOrden = async (
         total: total,
         ordenProductsId: [],
         state: estado.creado,
+        date,
       },
       // select: {
       //   id: true,

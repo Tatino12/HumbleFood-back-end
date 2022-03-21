@@ -33,6 +33,7 @@ model Shops {
   //user        Users @relation(fields: [userId], references: [id])
   userId      String
   email       String
+  authorization Boolean
   //products    Products[]
   
 }
@@ -76,6 +77,7 @@ model Orders {
   total           Float
   userId          String 
   ordenProductsId String[]
+  date            String
 }
 
 model OrderProducts {

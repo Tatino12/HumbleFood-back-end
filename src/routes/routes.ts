@@ -1,5 +1,5 @@
 /**
- * Required External Modules
+ * Required External Modules 
  */
 import { Router } from "express";
 import {
@@ -37,6 +37,8 @@ import {
   getAllProductsNames,
   updateMailingListState,
   getCategoriesId,
+  getShopsinAwait,
+  putShopsinAwait
 } from "../controllers";
 
 /**
@@ -51,6 +53,9 @@ router.get("/shops", getAllShops);
 router.get("/shop/:shopId", getShop);
 router.post("/shop", addShop);
 router.put("/shop/alter/:banUnban/:userId", banUnbanShop); // Funcion para bannear shops, 'ban'/'unban'
+router.get("/authorization",getShopsinAwait);
+router.put("/authorize/:shopId",putShopsinAwait);
+
 
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
