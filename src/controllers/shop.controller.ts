@@ -39,8 +39,8 @@ export async function saveNewShop(data: any) {
     return null;
   }
 }
-
-export async function getShops(page: number, name: string) {
+ 
+export async function getShops(page: number, authorization: boolean, name?: string ) {
   try {
     const total = await prisma.shops.count();
     const users = await prisma.users.findMany({
@@ -55,6 +55,7 @@ export async function getShops(page: number, name: string) {
     let shops: any;
     shops = await prisma.shops.findMany({
       where: {
+        authorization: authorization,
         userId: {
           notIn: use,
         },
@@ -152,3 +153,20 @@ export const getShopDiscounts = async (shopId: string) => {
     return null;
   }
 };
+
+export const autorizheShop = async (shopId: string) => {
+try {
+  const shop = await prisma.shops.update({
+    where:{
+      id: shopId
+    },
+    data:{
+      authorization: true
+    }
+  })
+  if(shop)  return shop
+  else return []
+} catch (error) {
+  return null;
+}
+}

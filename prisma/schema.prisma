@@ -33,6 +33,7 @@ model Shops {
   //user        Users @relation(fields: [userId], references: [id])
   userId      String
   email       String
+  authorization Boolean
   //products    Products[]
   
 }

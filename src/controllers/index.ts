@@ -31,6 +31,7 @@ import {
   getShopId,
   banShop,
   getShopDiscounts,
+  autorizheShop
 } from "./shop.controller";
 import {
   addNewComment,
@@ -62,14 +63,41 @@ export const getAllShops = async (req: Request, res: Response) => {
     if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
       pageBase = pageAsNumber;
     }
-
-    const shops = await getShops(pageBase, name as string);
+    
+    const shops = await getShops(pageBase, true as boolean, name as string );
     res.status(200).send(shops);
   } catch (error) {
     console.error(error);
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
+export const getShopsinAwait = async (req: Request, res: Response) => {
+  try {
+    let pageBase = 0;
+    const page = req.query.page as string;
+    const pageAsNumber: number = parseInt(page);
+    if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+      pageBase = pageAsNumber;
+    }
+    
+    const shops = await getShops(pageBase, false as boolean, undefined )
+    res.status(200).send(shops);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+}
+export const putShopsinAwait = async (req: Request, res: Response) => {
+  try {
+    const {shopId} = req.query;
+    const shop = await autorizheShop(shopId as string);
+    if(shop)  res.status(200).json({ msg: "Tienda autorizada", shop: shop })
+    else  res.status(400).json({ msg: "Tienda no encontrada", shop: shop })
+  } catch (error) {
+    res.status(401).json({ msg: "error", error: error });
+  }
+}
 
 export const getShop = async (req: Request, res: Response) => {
   try {
@@ -88,7 +116,10 @@ export const getShop = async (req: Request, res: Response) => {
 
 export const addShop = async (req: Request, res: Response) => {
   try {
-    const data = req.body;
+    const data = {
+      ...req.body,
+      authorization: false
+    }
 
     const shop = await saveNewShop(data);
     if (shop) {
