@@ -270,7 +270,21 @@ export const updateUserMailingState = async (userId: string, boolean: any) => {
       data: {
         mailingList: bool,
       },
+      select: {
+        email: true,
+      },
     });
+    if (bool) {
+      sendEmail(
+        updatedUser.email,
+        "Te has suscripto al newsletter de HumbleFoods!"
+      );
+    } else {
+      sendEmail(
+        updatedUser.email,
+        "Has cancelado tu suscripción al newsletter de HumbleFoods!"
+      );
+    }
     return updatedUser;
   } catch (error) {
     return null;
