@@ -72,3 +72,16 @@ export const getCategoriesObject = async () => {
     return null;
   }
 };
+
+export const deleteNamedCategory = async (name: string) => {
+  try {
+    const deletedCategory = await prisma.categories.delete({
+      where: {
+        name,
+      },
+    });
+    return deletedCategory;
+  } catch (error) {
+    return null;
+  }
+};

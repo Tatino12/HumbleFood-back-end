@@ -1,5 +1,5 @@
 /**
- * Required External Modules 
+ * Required External Modules
  */
 import { Router } from "express";
 import {
@@ -38,7 +38,8 @@ import {
   updateMailingListState,
   getCategoriesId,
   getShopsinAwait,
-  putShopsinAwait
+  putShopsinAwait,
+  deleteCategory,
 } from "../controllers";
 
 /**
@@ -53,9 +54,8 @@ router.get("/shops", getAllShops);
 router.get("/shop/:shopId", getShop);
 router.post("/shop", addShop);
 router.put("/shop/alter/:banUnban/:userId", banUnbanShop); // Funcion para bannear shops, 'ban'/'unban'
-router.get("/authorization",getShopsinAwait);
-router.put("/authorize/:shopId",putShopsinAwait);
-
+router.get("/authorization", getShopsinAwait);
+router.put("/authorize/:shopId", putShopsinAwait);
 
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);
@@ -82,6 +82,7 @@ router.get("/products/discount/:order"); // --> order: 'asc' / 'des'
 router.get("/categories", getAllCategories);
 router.get("/categoriesId", getCategoriesId); // gets categories {Id, Name}.
 router.post("/category", postCategory);
+router.delete("/category/:name", deleteCategory); // Recibe un string name, returna y elimina la categoria.
 
 router.post("/review", addCommentUser);
 router.get("/reviews/:id", getReviews);

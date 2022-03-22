@@ -21,6 +21,7 @@ import {
   getProductsNames,
 } from "./product.controller";
 import {
+  deleteNamedCategory,
   getCategories,
   getCategoriesObject,
   saveNewCategory,
@@ -561,6 +562,18 @@ export const getCategoriesId = async (req: Request, res: Response) => {
     res.status(401).json({ msg: "error", error: error });
   }
 };
+
+export const deleteCategory = async (req: Request, res: Response) => {
+  try {
+    const { name } = req.params;
+    console.log(name);
+    const deletedCategory = await deleteNamedCategory(name);
+    res.status(201).send(deletedCategory);
+  } catch (error) {
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // CART
