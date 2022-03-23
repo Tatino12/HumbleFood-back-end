@@ -17,7 +17,7 @@ export async function saveNewShop(data: any) {
     if (user) {
       sendEmail(
         user.email,
-        ` Hola ${user.name}! \n  Has registrado una tienda con exito!\n   Empieza a publicar tus productos, nuevos clientes te esperan!`
+        ` Hola ${user.name}! \n  Has registrado una tienda con exito!\n   Se encuentra pendiente de autorización por el Admin, te notificaremos por mail cuando puedas empezar a publicar productos!`
       );
       const newShop: any = await prisma.shops.create({ data: data });
       user.shopsId.push(newShop.id);
@@ -39,8 +39,12 @@ export async function saveNewShop(data: any) {
     return null;
   }
 }
- 
-export async function getShops(page: number, authorization: boolean, name?: string ) {
+
+export async function getShops(
+  page: number,
+  authorization: boolean,
+  name?: string
+) {
   try {
     const total = await prisma.shops.count();
     const users = await prisma.users.findMany({
@@ -155,18 +159,51 @@ export const getShopDiscounts = async (shopId: string) => {
 };
 
 export const autorizheShop = async (shopId: string, authorize: boolean) => {
-try {
-  const shop = await prisma.shops.update({
-    where:{
-      id: shopId
-    },
-    data:{
-      authorization: authorize
+  try {
+    const shop = await prisma.shops.update({
+      where: {
+        id: shopId,
+      },
+      data: {
+        authorization: authorize,
+      },
+    });
+    if (authorize) email(shopId);
+    if (shop) return shop;
+    else return [];
+  } catch (error) {
+    return null;
+  }
+};
+
+export const email = async (shopId: string) => {
+  try {
+    const userId = await prisma.shops.findUnique({
+      where: {
+        id: shopId,
+      },
+      select: {
+        userId: true,
+      },
+    });
+
+    if (userId) {
+      const userEmail = await prisma.users.findUnique({
+        where: {
+          id: userId.userId,
+        },
+        select: {
+          email: true,
+        },
+      });
+      if (userEmail) {
+        sendEmail(
+          userEmail.email,
+          `Su tienda ha sido autorizada por el admin! \n Empieze a publicar sus productos ya! \n https://humblefood.vercel.app/productShop/${shopId}`
+        );
+      }
     }
-  })
-  if(shop)  return shop
-  else return []
-} catch (error) {
-  return null;
-}
-}
+  } catch (error) {
+    return null;
+  }
+};
