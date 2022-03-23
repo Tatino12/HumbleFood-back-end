@@ -211,3 +211,16 @@ export const email = async (shopId: string) => {
     return null;
   }
 };
+
+export const deleteShop = async (shopId: string) => {
+  try {
+    const deletedShop = await prisma.shops.delete({
+      where: {
+        id: shopId,
+      },
+    });
+    return deletedShop;
+  } catch (error) {
+    return null;
+  }
+};
