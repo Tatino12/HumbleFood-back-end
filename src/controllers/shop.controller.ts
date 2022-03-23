@@ -46,7 +46,11 @@ export async function getShops(
   name?: string
 ) {
   try {
-    const total = await prisma.shops.count();
+    const total = await prisma.shops.count({
+      where: {
+        authorization,
+      },
+    });
     const users = await prisma.users.findMany({
       where: {
         rol: 3,
