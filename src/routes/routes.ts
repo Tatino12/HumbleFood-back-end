@@ -57,7 +57,7 @@ router.post("/shop", addShop);
 router.put("/shop/alter/:banUnban/:userId", banUnbanShop); // Funcion para bannear shops, 'ban'/'unban'
 router.get("/authorization", getShopsinAwait);
 router.put("/authorize/:shopId", putShopsinAwait);
-router.delete("/shop/shopId", deleteShopId); // --> Recibe shopId por params, deletea una shop de la DB
+router.delete("/shop/:shopId", deleteShopId); // --> Recibe shopId por params, deletea una shop de la DB
 
 router.get("/users", getAllUsers);
 router.get("/user/:userId", getUser);

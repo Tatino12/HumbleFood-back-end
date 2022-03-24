@@ -219,6 +219,15 @@ export const deleteShop = async (shopId: string) => {
         id: shopId,
       },
     });
+    const user = await prisma.users.update({
+      where: {
+        id: deletedShop.userId,
+      },
+      data: {
+        shopsId: [],
+        rol: 0,
+      },
+    });
     return deletedShop;
   } catch (error) {
     return null;
