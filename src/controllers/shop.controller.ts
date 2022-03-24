@@ -228,6 +228,10 @@ export const deleteShop = async (shopId: string) => {
         rol: 0,
       },
     });
+    sendEmail(
+      user.email,
+      "Su solicitud de tienda fue rechazada, por favor intente nuevamente!"
+    );
     return deletedShop;
   } catch (error) {
     return null;
