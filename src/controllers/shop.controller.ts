@@ -46,7 +46,11 @@ export async function getShops(
   name?: string
 ) {
   try {
-    const total = await prisma.shops.count();
+    const total = await prisma.shops.count({
+      where: {
+        authorization,
+      },
+    });
     const users = await prisma.users.findMany({
       where: {
         rol: 3,
@@ -203,6 +207,28 @@ export const email = async (shopId: string) => {
         );
       }
     }
+  } catch (error) {
+    return null;
+  }
+};
+
+export const deleteShop = async (shopId: string) => {
+  try {
+    const deletedShop = await prisma.shops.delete({
+      where: {
+        id: shopId,
+      },
+    });
+    const user = await prisma.users.update({
+      where: {
+        id: deletedShop.userId,
+      },
+      data: {
+        shopsId: [],
+        rol: 0,
+      },
+    });
+    return deletedShop;
   } catch (error) {
     return null;
   }

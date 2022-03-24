@@ -33,6 +33,7 @@ import {
   banShop,
   getShopDiscounts,
   autorizheShop,
+  deleteShop,
 } from "./shop.controller";
 import {
   addNewComment,
@@ -166,6 +167,17 @@ export const getDiscounts = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteShopId = async (req: Request, res: Response) => {
+  try {
+    const { shopId } = req.params;
+    const deletedShop = await deleteShop(shopId);
+    res.status(201).send(deletedShop);
+  } catch (error) {
+    console.error(error);
+    res.status(401).json({ msg: "error", error: error });
+  }
+};
+
 /* -------------------------------------------------------------------------------------------- */
 
 // ORDERS
@@ -262,7 +274,6 @@ export const getAllProducts = async (req: Request, res: Response) => {
     let { discount } = req.query;
     let { shopId } = req.params;
 
-    console.log("hola1");
     let pageBase: number = 0,
       myPage: string = req.query.page as string;
     const pageAsNumber: number = parseInt(myPage);
