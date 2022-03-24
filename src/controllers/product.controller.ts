@@ -83,7 +83,7 @@ export const getProducts = async (
 
     //console.log(products);
 
-    const pagesTotal = Math.ceil(total / 10);
+    const pagesTotal = Math.ceil(total / 9);
     return {
       next: page < pagesTotal - 1 ? true : false,
       prev: page > 0 ? true : false,
